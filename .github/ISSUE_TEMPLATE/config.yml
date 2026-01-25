@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: General Discussion
+    url: https://github.com/emergentvibe/constitution/discussions
+    about: For questions, ideas, or general conversation about democratic AI governance
+  - name: Read the Constitution
+    url: https://github.com/emergentvibe/constitution/tree/main/constitution
+    about: Read the full constitution before signing or proposing amendments
