@@ -25,12 +25,28 @@ export default function HomeClient({
   stats,
 }: HomeClientProps) {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Actually submit to waitlist
-    setSubmitted(true);
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setEmail("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -49,7 +65,11 @@ export default function HomeClient({
             </p>
 
             {/* CTA */}
-            {!submitted ? (
+            {status === "success" ? (
+              <div className="text-accent animate-fade-in">
+                You&apos;re in. We&apos;ll notify you when the convention opens.
+              </div>
+            ) : (
               <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md animate-slide-up">
                 <input
                   type="email"
@@ -58,18 +78,19 @@ export default function HomeClient({
                   placeholder="your@email.com"
                   className="flex-1 px-4 py-3 bg-muted border border-border rounded-lg focus:outline-none focus:border-accent transition-colors"
                   required
+                  disabled={status === "loading"}
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-emerge-400 transition-colors"
+                  disabled={status === "loading"}
+                  className="px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-emerge-400 transition-colors disabled:opacity-50"
                 >
-                  Join the Convention
+                  {status === "loading" ? "..." : "Join the Convention"}
                 </button>
               </form>
-            ) : (
-              <div className="text-accent animate-fade-in">
-                You&apos;re in. We&apos;ll notify you when the convention opens.
-              </div>
+            )}
+            {status === "error" && (
+              <p className="text-red-400 text-sm mt-2">Something went wrong. Try again.</p>
             )}
           </div>
         </div>
