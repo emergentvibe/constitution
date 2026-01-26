@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import sql from "@/lib/db";
+import { getDb } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +14,9 @@ export async function POST(request: NextRequest) {
 
     // Normalize email
     const normalizedEmail = email.toLowerCase().trim();
+
+    // Get database connection (throws if DATABASE_URL not set)
+    const sql = getDb();
 
     // Insert or ignore if exists
     await sql`
