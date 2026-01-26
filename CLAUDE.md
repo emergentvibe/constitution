@@ -3,7 +3,7 @@
 Democratic platform for collectively writing the AI constitution.
 
 **Domain:** emergentvibe.com
-**Status:** Pre-alpha, building genesis ratification system
+**Status:** MVP deployed, collecting signatures + emails
 
 ---
 
@@ -97,7 +97,8 @@ Future flow (post-OAuth):
 - Next.js 14 (App Router)
 - React 18 + TypeScript
 - Tailwind CSS (custom theme in tailwind.config.ts)
-- PostgreSQL + postgres.js (not yet set up)
+- PostgreSQL via Neon (serverless) + postgres.js
+- Vercel hosting (auto-deploy from main)
 - GitHub OAuth (not yet set up)
 
 ---
@@ -122,12 +123,25 @@ Constitution derived from **Investigation 2: The Superorganism and Its Selves**
 ## Build Phases
 
 ### Phase 1: Genesis (current)
-- [x] Landing page
-- [x] Constitution structure
-- [x] Signatories system (manual)
-- [ ] Constitution viewer UI
-- [ ] GitHub OAuth
-- [ ] Automated signature flow
+- [x] Landing page with constitution preview
+- [x] Constitution structure (24 principles, 6 sections)
+- [x] Signatories system (manual via GitHub Issues)
+- [x] Email subscription (Neon PostgreSQL)
+- [x] Deployed to Vercel
+- [x] Domain setup (emergentvibe.com - pending DNS propagation)
+
+**Next up:**
+- [ ] Meta tags + OG image for social sharing
+- [ ] Favicon
+- [ ] Add @emergentvibe as first signatory
+- [ ] Test GitHub Issue signature flow end-to-end
+- [ ] Launch announcement (Twitter/X)
+
+**Later:**
+- [ ] Analytics (Vercel Analytics or Plausible)
+- [ ] Auto-fetch signatories from GitHub Issues
+- [ ] Constitution viewer UI (full-page reader)
+- [ ] GitHub OAuth for automated signatures
 
 ### Phase 2: Ratification
 - [ ] Conviction voting implementation
