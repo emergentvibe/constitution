@@ -6,6 +6,9 @@ This directory contains the living constitution for democratic AI governance.
 
 - `principles/` - The 24 constitutional principles organized by section
 - `meta/` - How the constitution itself works (amendment process, enforcement, versioning)
+- `research/` - Background research grounding the principles
+  - `companion.md` - Research companion (the "why" behind the principles)
+  - `bibliography.md` - 80 academic sources with principle mapping
 
 ## Current Version
 
