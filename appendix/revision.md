@@ -1,40 +1,70 @@
-# VI. Revision and Enforcement
+# VI. Revision — Deep Reasoning
 
-How the constitution evolves and takes effect.
-
----
-
-## Principle 21: Regular Amendment
-
-**Participatory revision every 2 years using deliberative democracy tools.**
-
-The constitution is living, not frozen:
-
-- **Scheduled revision**: Every 2 years, systematic review of all principles
-- **Deliberative process**: Not just voting, but structured deliberation (citizens assemblies, Pol.is-style consensus mapping, expert input phases)
-- **Participatory**: Open to all who meet sybil-resistance thresholds, not just elites
-- **Documented**: All deliberation recorded, reasoning transparent, dissent preserved
-
-Between scheduled revisions, amendments can be proposed at any time through the standard process (see below).
-
-**Grounding**: Panel 6 (AI Governance) - vTaiwan as deliberative democracy model; constitutional process as ongoing, not one-time; 2-year cycle balances stability with adaptation.
+How the constitution evolves and takes effect. This appendix provides the detailed reasoning from our expert panel investigations.
 
 ---
 
-## Principle 22: Certification and Compliance
+## Principle 21: Adaptive Cycles
+
+**Participatory revision on cycles appropriate to constituent lifecycles. For current human-AI coordination: every 2 years using deliberative democracy tools.**
+
+### Why Regular Revision
+
+From Panel 6:
+
+> "Constitutional process is ongoing, not one-time. The world changes. AI changes. What was appropriate governance in 2026 may be inadequate in 2030. The constitution must adapt."
+
+Fixed constitutions become obsolete. But constant revision creates instability. The balance: scheduled revision cycles with clear processes.
+
+### Cycles Tied to Lifecycles
+
+From gtech's feedback on this constitution (Discussion #3):
+
+> "Time horizons must be dependent on the construction of the constituents (agents, humans, transindividuals etc.). Very soon years will be much longer than it will take for the equivalence of empires to rise and fall."
+
+For current human-AI coordination, 2-year cycles balance stability with adaptation. As AI systems develop faster lifecycles, revision cycles may need to compress. The principle establishes the meta-rule: cycles adapt to constituent lifecycles.
+
+### Deliberative Democracy Tools
+
+From Audrey Tang (Panel 6) on vTaiwan:
+
+> "Pol.is for rapid consensus-finding. Quadratic voting for resource allocation. Radical transparency. 'Rough consensus' not majority rule."
+
+Revision should use:
+- **Structured deliberation**: Not just voting, but discussion that surfaces reasons
+- **Consensus-mapping**: Tools that visualize areas of agreement and disagreement
+- **Expert input phases**: Technical knowledge integrated into deliberation
+- **Participation thresholds**: Sybil-resistant, open to all legitimate constituents
+
+---
+
+## Principle 22: Certification
 
 **Certified systems receive preferential treatment; non-certified face restrictions.**
 
-The constitution has teeth through certification:
+### Carrots and Sticks
 
-- **Certification process**: Independent assessment of whether AI systems comply with constitutional principles
-- **Preferential treatment**: Certified systems eligible for public procurement, partnership with municipal networks, reduced liability exposure
-- **Restrictions**: Non-certified systems face procurement bans, increased regulatory scrutiny, civil liability exposure
-- **Transparency**: Certification status and assessment details publicly available
+From Panel 6's enforcement analysis:
 
-This creates market incentives for compliance without requiring universal agreement.
+> "Make democracy cheaper and extraction expensive through regulation, procurement, liability."
 
-**Grounding**: Panel 6 (AI Governance) - make democracy cheaper and extraction expensive through regulation, procurement, liability; certification as enforcement mechanism; coalition strategy creates market pressure.
+Certification creates market incentives for compliance:
+
+**Preferential treatment for certified systems**:
+- Eligible for public procurement (governments buy only certified AI)
+- Partnership with municipal networks
+- Reduced liability exposure (compliance is defense against claims)
+- Reputational benefits (certification as quality signal)
+
+**Restrictions for non-certified systems**:
+- Procurement bans (excluded from government contracts)
+- Increased regulatory scrutiny
+- Greater civil liability exposure
+- Reputational costs
+
+### Without Requiring Universal Agreement
+
+Not everyone must agree to the constitution for certification to matter. If enough municipalities, governments, and procurement processes require certification, market pressure drives compliance. Companies that want access to these markets must comply—regardless of their personal views on democratic governance.
 
 ---
 
@@ -42,38 +72,72 @@ This creates market incentives for compliance without requiring universal agreem
 
 **Multiple reinforcing mechanisms: regulatory penalties, civil liability, collective bargaining pressure, municipal non-adoption, algorithmic audits, cultural stigma.**
 
-No single enforcement mechanism is sufficient. Constitutional principles are enforced through:
+### Why Multiple Mechanisms
 
-- **Regulatory penalties**: Fines, operational restrictions, required remediation
-- **Civil liability**: Private right of action for harms from non-compliant systems
-- **Collective bargaining**: Unions and creator organizations refuse to work with non-compliant systems
-- **Municipal non-adoption**: City networks refuse to deploy or integrate non-compliant systems
-- **Algorithmic audits**: Independent technical assessment with public reporting
-- **Cultural stigma**: Social disapproval of companies that violate constitutional principles
+From Panel 6:
 
-These mechanisms reinforce each other. Regulatory penalties make civil liability easier to prove. Municipal non-adoption creates market pressure. Cultural stigma affects talent recruitment.
+> "No single enforcement mechanism is sufficient. Any single one can be captured or circumvented. Multiple mechanisms reinforce each other."
 
-**Grounding**: Panel 6 (AI Governance) - coalition power as enforcement; multiple mechanisms necessary because any single one can be captured or circumvented; Panel 2 (Game Theory) - changing payoffs to shift Nash equilibrium.
+**Regulatory penalties**: Fines, operational restrictions, required remediation. Government enforcement with legal authority.
+
+**Civil liability**: Private right of action for harms from non-compliant systems. Affected parties can sue.
+
+**Collective bargaining**: Unions and creator organizations refuse to work with non-compliant systems. Labor power.
+
+**Municipal non-adoption**: City networks refuse to deploy or integrate non-compliant systems. Market exclusion.
+
+**Algorithmic audits**: Independent technical assessment with public reporting. Transparency enforcement.
+
+**Cultural stigma**: Social disapproval of companies that violate constitutional principles. Reputational costs, talent recruitment difficulty.
+
+### Reinforcement
+
+These mechanisms reinforce each other:
+- Regulatory penalties make civil liability easier to prove (violation = evidence)
+- Municipal non-adoption creates market pressure for certification
+- Cultural stigma affects talent recruitment (engineers don't want to work for bad actors)
+- Collective bargaining provides organized power behind other mechanisms
+- Algorithmic audits generate evidence for all other mechanisms
 
 ---
 
 ## Principle 24: Coalition Power
 
-**Enforced through organized coalitions: tech workers, creators, labor, civil society, municipal networks. Architecture alone is insufficient.**
+**Enforced through organized coalitions: tech workers, creators, labor, civil society, municipal networks. Architecture alone insufficient.**
 
-The constitution is enforced by organized people, not just by rules:
+### Rules Need Power
 
-- **Tech workers**: Can refuse to build systems that violate principles, organize within companies
-- **Creators**: Can withhold content from non-compliant training, collectively license through democratic terms
-- **Labor**: Can negotiate AI deployment terms in contracts, strike over violations
-- **Civil society**: Can mobilize public pressure, coordinate campaigns, provide monitoring
-- **Municipal networks**: Can create alternative infrastructure, demonstrate different possibilities
+From Panel 6's synthesis:
 
-Architecture matters - good rules make enforcement easier. But rules without organized power behind them are suggestions. Power requires coalition: diverse groups finding common cause.
+> "Architecture matters—good rules make enforcement easier. But rules without organized power behind them are suggestions. Power requires coalition: diverse groups finding common cause."
 
-**Target scale**: 50-100 cities + 1M+ creators + 100K+ workers = companies must comply or lose access to markets, talent, content, infrastructure.
+The constitution is enforced by organized people:
 
-**Grounding**: Panel 6 (AI Governance) - coalition strategy as highest leverage; Panel 4 - historical movements required material base and organized power; Panel 7 - "don't do this alone" as key guidance.
+**Tech workers**: Can refuse to build systems that violate principles, organize within companies, blow whistles, change jobs to ethical alternatives.
+
+**Creators**: Can withhold content from non-compliant training, collectively license through democratic terms, refuse to create for non-compliant systems.
+
+**Labor**: Can negotiate AI deployment terms in contracts, strike over violations, organize across industries.
+
+**Civil society**: Can mobilize public pressure, coordinate campaigns, provide monitoring, support legal challenges.
+
+**Municipal networks**: Can create alternative infrastructure, demonstrate different possibilities, exclude non-compliant systems.
+
+### Target Scale
+
+From Panel 6's coalition analysis:
+
+> "50-100 cities + 1M+ creators + 100K+ workers = companies must comply or lose access to markets, talent, content, infrastructure."
+
+This is the threshold where coalition power becomes undeniable. Below it, corporations can route around resistance. Above it, compliance is the path of least resistance.
+
+### Building Coalition
+
+From Panel 7's action guidance:
+
+> "DON'T DO THIS ALONE. Highest leverage is building/strengthening coalitions. Every decision: does this help diverse groups coordinate? Does this build collective power? This is 5-10 year commitment minimum."
+
+Constitutional principles are starting points. Coalition-building is the work.
 
 ---
 
@@ -81,39 +145,50 @@ Architecture matters - good rules make enforcement easier. But rules without org
 
 ### Genesis Ratification
 
-The initial constitution (v1.0) is ratified through:
-
-1. **Publication**: Full text made available for review (30 days)
+The initial constitution is ratified through:
+1. **Publication**: Full text available for review (30 days)
 2. **Deliberation**: Open discussion, questions, proposed modifications
-3. **Conviction voting**: 30-day voting period with time-weighted commitment
-4. **Threshold**: Simple majority of participating voters (with minimum participation threshold)
-5. **Ratification**: If threshold met, constitution becomes active
+3. **Conviction voting**: Time-weighted commitment (longer commitment = more weight)
+4. **Threshold**: Simple majority of participating voters with minimum participation
+5. **Ratification**: If threshold met, constitution activates
 
 ### Standard Amendment
 
-After genesis ratification, amendments follow:
-
-1. **Proposal**: Any participant can propose amendments
-2. **Deliberation**: Minimum 7-day deliberation period
-3. **Voting**: Amendments require 2/3 supermajority
-4. **Implementation**: Approved amendments take effect after 14-day implementation period
-5. **Documentation**: All amendments, deliberation, and voting records permanently preserved
+After genesis, amendments follow:
+1. **Proposal**: Any participant can propose
+2. **Deliberation**: Minimum 7-day discussion period
+3. **Voting**: 2/3 supermajority required
+4. **Implementation**: 14-day period before taking effect
+5. **Documentation**: All records permanently preserved
 
 ### Emergency Amendment
 
-For urgent safety concerns:
-
-1. **Emergency proposal**: Flagged as emergency with detailed justification
-2. **Expedited deliberation**: 48-hour minimum deliberation
-3. **Higher threshold**: 3/4 supermajority required
-4. **Automatic sunset**: Emergency amendments expire after 90 days unless ratified through standard process
+For urgent safety:
+1. **Emergency flag**: Detailed justification required
+2. **Expedited deliberation**: 48-hour minimum
+3. **Higher threshold**: 3/4 supermajority
+4. **Automatic sunset**: Expires after 90 days unless ratified through standard process
 
 ### Unamendable Provisions
 
-Certain provisions cannot be amended without dissolving and reconstituting the entire constitution:
-
-- Principle 1 (Human Agency Preservation)
+These cannot be amended without dissolving and reconstituting the entire constitution:
+- Principle 1 (Agency Preservation)
 - Principle 2 (Collective Governance)
-- Principle 21 (Regular Amendment)
+- Principle 21 (Adaptive Cycles)
 
-These are load-bearing walls. Everything else can change; these define what "this constitution" means.
+These are load-bearing walls. They define what "this constitution" means. Everything else can evolve; these establish identity.
+
+---
+
+## Sources
+
+- [S63] vTaiwan documentation
+- [S67] Benkler, Y. *The Wealth of Networks*.
+- Ostrom, E. *Governing the Commons*. Enforcement principles.
+- Panel 2 transcript: Game theory and coalition dynamics
+- Panel 6 transcript: Full enforcement mechanism analysis
+- Panel 7 transcript: Coalition strategy and action priorities
+
+---
+
+*This appendix summarizes reasoning from Investigation 2. Full panel transcripts available in the research archive.*
