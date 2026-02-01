@@ -275,7 +275,7 @@ Academic sources grounding the constitutional principles. Organized by topic, wi
 | 13. Federated Governance | S40, S63, S66 |
 | 14. Commons-Based Ownership | S40, S42-43, S47, S67 |
 | 15. Hybrid Expertise | S63-64, S15-16 |
-| 16. Parliament of Things | S32, S43 |
+| 16. Parliament of Constituents | S32, S43 |
 | 17. Flourishing Over Optimization | S13-14, S45-46 |
 | 18. Care and Attention as Commons | S17, S25, S32 |
 | 19. Weird and Unexpected | S12, S41 |
@@ -287,4 +287,4 @@ Academic sources grounding the constitutional principles. Organized by topic, wi
 
 ---
 
-*Full research materials: [memetic-self investigation](../../../notes/memetic-self/.ai-symposium/investigations/superorganism-selves/)*
+*68 sources across game theory, AI governance, neurodiversity, commons governance, social movements, and agency/determinism.*

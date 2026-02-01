@@ -140,11 +140,13 @@ Those who affirm these principles and commit to the democratic process.
 
 ## Research Grounding
 
-This constitution emerged from rigorous interdisciplinary research:
-- 7 panels of multi-expert deliberation
-- 46 experts consulted across disciplines
-- 95 recommendations synthesized
-- 80 academic sources
+This constitution synthesizes work from 68 academic sources across multiple disciplines:
+- Game theory and coordination failure (Schelling, Axelrod, Ostrom)
+- AI power and political economy (Crawford, Winner)
+- Democratic governance experiments (vTaiwan, platform cooperatives)
+- Neurodiversity and pathologization (Walker, Jensen, Foucault)
+- Agency and determinism (Dennett, Sapolsky, Buddhist philosophy)
+- Commons governance and collective action (Ostrom, Piven & Cloward)
 
 The principles are not invented—they're distilled from empirical work on how minds work, how coordination fails, and how democratic governance can shape technological development.
 

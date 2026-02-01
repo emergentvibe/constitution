@@ -1,6 +1,6 @@
-# II. Rights — Deep Reasoning
+# II. Rights
 
-What constituents can claim in relation to AI systems. This appendix provides the detailed reasoning from our expert panel investigations.
+What constituents can claim in relation to AI systems.
 
 ---
 
@@ -8,36 +8,28 @@ What constituents can claim in relation to AI systems. This appendix provides th
 
 **Understand how AI systems function, what data is used, what failures exist.**
 
-### Information Architecture Is Power Architecture
+### The Problem
 
-From Panel 6 (AI Governance), Kate Crawford:
+Crawford (2021) argues that "information architecture is power architecture"—those who control what is visible and what is hidden control outcomes [S25]. Current AI systems are largely opaque: proprietary training data, unexplainable decisions, undisclosed failure modes.
 
-> "Democratic AI governance is aspirational rhetoric until we address **who owns the infrastructure**. You can't democratically govern what you don't control."
+Winner (1980) showed that technologies embed political choices. When those choices are invisible, they cannot be contested [S36]. A hiring algorithm that discriminates cannot be challenged if no one knows how it works.
 
-Transparency isn't just documentation—it's the foundation of accountability. Without transparency:
-- You can't audit for bias
-- You can't verify safety claims
-- You can't challenge decisions
-- You can't build alternatives
+### The Response
 
-### What Transparency Requires
+Transparency requirements for AI systems affecting life outcomes—employment, housing, healthcare, criminal justice—are preconditions for accountability. This includes:
 
-From Panel 6's layered architecture (Yochai Benkler):
+- Meaningful explanation of how decisions are made (not just technical documentation)
+- Disclosure of training data sources and known biases
+- Published failure modes and limitations
+- Clear indication when interacting with AI vs. humans
 
-> **Layer 3 - Algorithms**: Open source, transparent training logs, hyperparameters, ablations published. External researchers can examine.
->
-> **Layer 5 - Applications**: User-owned data, transparency about model choices, right to explanation, portability.
+The OECD's Public AI framework (2025) establishes transparency as a core requirement for public-function AI [S66].
 
-Transparency must be *meaningful*, not theatrical. A 500-page technical document satisfies legal requirements while obscuring from affected communities. We need:
+### Further Reading
 
-- **Explanation in context**: Why did this AI make this decision about me?
-- **Known limitations**: Where does this system fail? What are the documented biases?
-- **Data provenance**: What was this trained on? Whose labor? Whose creativity?
-- **Interaction disclosure**: When am I talking to AI vs. humans?
-
-### Trade Secrets vs. Democratic Oversight
-
-Companies claim trade secret protection for model details. But public-function AI—systems that affect employment, housing, healthcare, criminal justice—cannot hide behind competitive advantage. The principle establishes: transparency requirements for systems affecting life outcomes, with appropriate mechanisms for genuinely sensitive safety information.
+- Crawford, K. (2021). *Atlas of AI*. [S25]
+- Winner, L. (1980). Do Artifacts Have Politics? [S36]
+- OECD (2025). Public AI. [S66]
 
 ---
 
@@ -45,30 +37,25 @@ Companies claim trade secret protection for model details. But public-function A
 
 **Human review of algorithmic decisions in high-stakes domains. The reviewer must be actually empowered to override.**
 
-### Automation Shouldn't Mean Abdication
+### The Problem
 
-From Panel 5 (Agency), the GAN structure principle:
+Pew Research (2023) found experts concerned about "automation bias"—humans deferring to algorithmic recommendations even when wrong [S62]. When AI makes consequential decisions without meaningful human oversight, accountability evaporates.
 
-> "Human-AI systems should operate as a GAN, where AI generates possibilities and humans discriminate among them."
+The problem isn't AI assistance—it's AI abdication. Xu & Gao (2024) distinguish collaborative systems where humans retain decision-making power from systems where humans merely ratify algorithmic outputs [S58].
 
-When AI makes consequential decisions without meaningful human oversight, the human discriminator function is removed. The efficiency gains don't justify this in domains affecting:
+### The Response
 
-- Employment (hiring, firing, performance evaluation)
-- Housing (rental applications, mortgage approval)
-- Healthcare (diagnosis, treatment recommendations, insurance coverage)
-- Criminal justice (bail, sentencing, parole)
-- Education (admissions, grading, disciplinary actions)
-- Credit (loan approval, interest rates)
+In high-stakes domains, people have the right to:
+- Know that AI was involved in decisions affecting them
+- Request human review by someone empowered to override
+- Access meaningful appeal processes
 
-### Actually Empowered
+This requires institutional design, not just policy. Reviewers need authority, time, information, and protection from pressure to defer to automation.
 
-The right to human review is meaningless if:
-- The reviewer rubber-stamps AI recommendations (accountability theater)
-- The reviewer lacks authority to override
-- The appeal process is inaccessible or punitive
-- The human is slower/worse than the AI (incentivizes circumvention)
+### Further Reading
 
-Implementation requires: reviewers with genuine authority, time to deliberate, information to evaluate, and protection from pressure to defer to automation.
+- Pew Research (2023). The Future of Human Agency. [S62]
+- Xu & Gao (2024). Human-Centered Human-AI Collaboration. [S58]
 
 ---
 
@@ -76,33 +63,26 @@ Implementation requires: reviewers with genuine authority, time to deliberate, i
 
 **Workers, creators, and communities can collectively negotiate AI deployment terms.**
 
-### Individual Powerlessness
+### The Problem
 
-From Panel 6's coalition analysis:
+Piven & Cloward (1977) demonstrated that individual powerlessness is structural—isolated individuals cannot resist institutional power. Only collective organization shifts bargaining dynamics [S37].
 
-> "Power concentrates regardless of architecture. The question isn't 'what's the architecture?' It's '**who has power and how do we redistribute it?**'"
+An individual worker facing algorithmic management, or an individual creator whose work trains AI without consent, has no leverage. The asymmetry is by design.
 
-An individual worker facing algorithmic management has no leverage. An individual creator whose work trains AI without consent has no recourse. An individual community subjected to AI policing has no voice.
+### The Response
 
-Collective organization changes this:
-- **Workers** can negotiate how AI is deployed in their workplaces (surveillance limits, algorithmic transparency, human oversight requirements)
-- **Creators** can negotiate how their work is used for training (licensing terms, compensation, attribution)
-- **Communities** can negotiate how AI systems operate in their contexts (deployment criteria, accountability mechanisms, impact assessments)
+Collective bargaining rights for AI deployment include:
+- Workers negotiating surveillance limits, algorithmic transparency, human oversight
+- Creators negotiating licensing terms, compensation, attribution for training data
+- Communities negotiating deployment criteria and accountability mechanisms
 
-### Coalition Power
+The Harvard Ash Center (2024) documents platform cooperatives as models where workers collectively control AI deployment in their workplaces [S67]. The 2023 Writers Guild and SAG-AFTRA strikes included AI provisions, demonstrating this is already happening.
 
-From Panel 6's enforcement analysis:
+### Further Reading
 
-> "Target scale: 50-100 cities + 1M+ creators + 100K+ workers = companies must comply or lose access to markets, talent, content, infrastructure."
-
-Collective bargaining isn't just labor rights—it's the material base for constitutional enforcement. Without organized countervailing power, constitutional principles are suggestions.
-
-### Existing Precedents
-
-- Writers Guild and SAG-AFTRA strikes (2023) included AI provisions
-- EU collective bargaining for platform workers
-- Data trusts as collective bargaining infrastructure for data subjects
-- Tech worker organizing (Alphabet Workers Union, Amazon Labor Union)
+- Piven, F.F. & Cloward, R. (1977). *Poor People's Movements*. [S37]
+- Harvard Ash Center (2024). Cooperative Paradigms for AI. [S67]
+- Platform Cooperativism Consortium (2024). [S47]
 
 ---
 
@@ -110,27 +90,26 @@ Collective bargaining isn't just labor rights—it's the material base for const
 
 **Opt out of AI systems and access non-AI alternatives without penalty.**
 
-### Against Mandatory Adoption
+### The Problem
 
-AI adoption should be a choice, not a mandate. The convenience of AI for some shouldn't eliminate options for others.
+Ostrom (1990) showed that successful commons governance requires exit options—the ability to leave keeps governance accountable [S40]. When exit is impossible or prohibitively costly, voice becomes meaningless.
 
-This means:
-- Human alternatives available for essential services (banking, healthcare, government)
-- No penalty for choosing non-AI options (not slower, not more expensive, not degraded)
+AI systems increasingly intermediate essential services. If opting out means slower service, higher prices, or exclusion, the "choice" to use AI is coerced.
+
+### The Response
+
+Exit rights require:
+- Human alternatives for essential services without penalty
 - Analog options maintained for core life functions
-- Ability to exit AI-mediated systems without losing access to necessities
+- No degraded service for choosing non-AI options
+- Portability of data and relationships when leaving AI-mediated systems
 
-### Exit as Check on Capture
+Exit is only meaningful when there's somewhere to go—connecting to Principle 8's right to build alternatives.
 
-From Panel 4's deterritorialization analysis:
+### Further Reading
 
-> "The ability to exit keeps any coordination layer honest. No lock-in."
-
-Exit rights are structural: they create competition between AI and non-AI approaches. If AI systems can't retain users without coercion, they must compete on quality. This prevents lock-in and incentivizes systems that actually serve constituents.
-
-### Exit Requires Somewhere to Go
-
-Exit is meaningless without alternatives. This connects to Principle 8 (Deterritorialization)—the right to build different systems. And to Principle 14 (Commons-Based Ownership)—public alternatives to corporate AI.
+- Ostrom, E. (1990). *Governing the Commons*. [S40]
+- Graeber, D. & Wengrow, D. (2021). *The Dawn of Everything*. [S43] — On the "freedom to disobey" as fundamental.
 
 ---
 
@@ -138,56 +117,47 @@ Exit is meaningless without alternatives. This connects to Principle 8 (Deterrit
 
 **Communities can build alternative AI systems with different principles.**
 
-### Beyond Exit to Voice Through Building
+### The Problem
 
-From Panel 4's historical analysis:
+DeLanda (2006) describes how systems "territorialize"—impose structure, standardization, and control. Deterritorialization is the process of escaping these constraints, creating new possibilities [S6].
 
-> "Deterritorialization isn't just leaving—it's creating new territories. Lines of flight that open possibilities the dominant assemblage forecloses."
+Current AI development is highly concentrated. DeepSeek and Qwen's open-weight models (2025) demonstrate alternatives are possible, but the window may be limited—once closed models achieve sufficient lead, alternatives become infeasible [S65].
 
-The right to exit implies the right to build alternatives:
-- Communities can develop AI systems governed by different values
-- Open-weight models enable distributed innovation
-- Public compute infrastructure supports non-corporate development
-- AGPL-3 licensing ensures alternatives remain open (derivative works must also be open)
+### The Response
 
-### The Critical Window
+The right to build alternatives requires:
+- Open-weight models enabling local deployment and modification
+- Public compute infrastructure not dependent on corporate access
+- AGPL-3 licensing preventing proprietary capture of commons-developed AI [S68]
+- Interoperability standards enabling switching between systems
 
-From Panel 6 on open-weight AI:
+Deleuze & Guattari (1987) call these "lines of flight"—trajectories that escape dominant patterns and open new possibilities [S56]. The principle protects the conditions for such escape.
 
-> "Open-weight AI (DeepSeek-R1, Llama, Qwen) is the critical 0-3 year window. Once closed models achieve sufficient lead, alternatives may become infeasible. The ecosystem must be built NOW."
+### Further Reading
 
-Luis Villa (Panel 6) on licensing:
-
-> **Open weights**: Release trained model parameters. Allows local deployment. No control over use.
->
-> **Open training**: Release code, data, compute logs. Reproducible. Transparent. Expensive to verify.
->
-> **Open governance**: Community decides training objectives, safety constraints, deployment. (Nobody's done this fully.)
->
-> **Open infrastructure**: Compute, data, hosting collectively owned.
-
-Each has different implications for democratic control. AGPL-3 specifically prevents proprietary capture—derivative works must remain open.
-
-### Pluralism, Not Fragmentation
-
-This isn't about incompatible systems. It's about genuine pluralism in AI development:
-- Multiple approaches can coexist
-- Interoperability standards enable switching
-- No single corporate monoculture
-- Innovation emerges from diversity
+- DeLanda, M. (2006). *A New Philosophy of Society*. [S6]
+- Deleuze, G. & Guattari, F. (1987). *A Thousand Plateaus*. [S56]
+- DeepSeek & Qwen (2025). Open-weight models. [S65]
+- Municipal Counter-Automation Framework (2024). AGPL-3 licensing. [S68]
 
 ---
 
 ## Sources
 
-- [S25] Crawford, K. (2021). *Atlas of AI*. Yale University Press.
-- [S65] DeepSeek-R1, Llama, Qwen documentation
-- [S67] Benkler, Y. (2006). *The Wealth of Networks*. Yale University Press.
-- [S68] Open source licensing frameworks (AGPL-3, MIT, Apache)
-- Panel 4 transcript: Deterritorialization mechanisms
-- Panel 5 transcript: Agency and human-AI coupling
-- Panel 6 transcript: AI Governance architecture
+Full bibliography: [bibliography.md](bibliography.md)
 
----
-
-*This appendix summarizes reasoning from Investigation 2. Full panel transcripts available in the research archive.*
+Key sources for this section:
+- [S6] DeLanda (2006) on assemblages
+- [S25] Crawford (2021) *Atlas of AI*
+- [S36] Winner (1980) on political artifacts
+- [S37] Piven & Cloward (1977) on collective action
+- [S40] Ostrom (1990) *Governing the Commons*
+- [S43] Graeber & Wengrow (2021) on freedoms
+- [S47] Platform Cooperativism Consortium
+- [S56] Deleuze & Guattari (1987)
+- [S58] Xu & Gao (2024) on human-AI collaboration
+- [S62] Pew Research (2023)
+- [S65] DeepSeek & Qwen (2025)
+- [S66] OECD (2025) Public AI
+- [S67] Harvard Ash Center (2024)
+- [S68] AGPL-3 licensing framework

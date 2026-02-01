@@ -4,9 +4,33 @@ All changes to the constitution are documented here.
 
 ---
 
+## v1.1-draft (2026-02-01)
+
+**Status**: Draft - awaiting ratification
+
+### Restructure
+
+Major restructure based on community feedback (Discussion #3):
+
+- **Unified prose document**: Single CONSTITUTION.md readable start to finish
+- **Appendix reasoning**: Detailed reasoning moved to appendix/ with academic citations
+- **Honest sourcing**: All citations now reference published academic work only
+- **Constituent framing**: Expanded to include both humans and AI agents as constituents
+- **Adaptive cycles**: Principle 21 updated to tie revision cycles to constituent lifecycles
+
+### Changes from v1.0
+
+- "Parliament of Things" → "Parliament of Constituents"
+- "Regular Amendment" → "Adaptive Cycles"
+- Added explicit symmetry: agency preservation applies to AI as well as humans
+- Removed references to internal research process; all citations now to published sources
+- Bibliography corrected to 68 sources (was incorrectly stated as 80)
+
+---
+
 ## v1.0-genesis (2026-01-25)
 
-**Status**: Awaiting ratification
+**Status**: Superseded by v1.1
 
 ### Initial Principles
 
@@ -54,10 +78,6 @@ All changes to the constitution are documented here.
 - Standard amendments: 7-day deliberation + 2/3 supermajority
 - Emergency amendments: 48-hour deliberation + 3/4 supermajority + 90-day sunset
 - Unamendable provisions: Principles 1, 2, 21
-
-### Origin
-
-Derived from Investigation 2: The Superorganism and Its Selves (7 panels, 46 experts, 95 recommendations, 80 sources)
 
 ---
 

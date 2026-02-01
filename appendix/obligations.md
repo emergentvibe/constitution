@@ -1,6 +1,6 @@
-# III. Obligations — Deep Reasoning
+# III. Obligations
 
-What AI systems and their developers must do. This appendix provides the detailed reasoning from our expert panel investigations.
+What AI systems and their developers must do.
 
 ---
 
@@ -8,35 +8,29 @@ What AI systems and their developers must do. This appendix provides the detaile
 
 **Independent assessment before deployment in domains affecting employment, inequality, autonomy, mental health, social cohesion, ecology.**
 
-### AI Accelerates Feedback Loops
+### The Problem
 
-From Panel 3 (The Race), on why impact assessment is urgent:
+Pérez (2002) shows that technological revolutions create institutional lag—technology changes faster than the social structures needed to govern it. AI accelerates this: decisions that took weeks now take milliseconds, affecting millions before consequences are understood [S30].
 
-> "AI tightens feedback loops faster than institutions can adapt. A decision that took weeks (human review) now takes milliseconds (algorithmic). A bias that affected hundreds now affects millions. The velocity of impact requires pre-deployment scrutiny, not post-hoc correction."
+Crawford (2021) documents the planetary costs of AI that are typically externalized: energy consumption, mineral extraction from conflict regions, electronic waste [S25]. Bostrom's "vulnerable world hypothesis" (2019) suggests some capabilities could destabilize civilization by default [S28].
 
-### What Must Be Assessed
+### The Response
 
-Impact assessment should evaluate:
+Pre-deployment assessment should evaluate:
+- **Employment**: Displacement, deskilling, algorithmic management
+- **Inequality**: Who benefits, who bears costs
+- **Autonomy**: Enhancement or diminishment of human agency
+- **Mental health**: Attention capture, addiction dynamics
+- **Social cohesion**: Polarization, fragmentation
+- **Ecology**: Energy, extraction, waste
 
-**Employment effects**: Job displacement, deskilling, surveillance intensity, algorithmic management. Not just "how many jobs lost?" but "what happens to the quality of remaining work?"
+Assessment must be independent (not self-reported), published (not secret), and consequential (affecting deployment decisions). The OECD framework (2025) provides structure for such assessments [S66].
 
-**Inequality effects**: Who benefits, who bears costs, distributional consequences. AI often externalizes costs to marginalized communities while concentrating benefits among the already-privileged.
+### Further Reading
 
-**Autonomy effects**: Does this enhance or diminish human agency and judgment? (Connects to Principle 1.) Systems that optimize for engagement may capture attention while eroding autonomy.
-
-**Mental health effects**: Attention capture, social comparison dynamics, addiction mechanisms. Recommendation algorithms optimized for engagement have documented mental health impacts.
-
-**Social cohesion effects**: Polarization, filter bubbles, community fragmentation. AI-mediated communication may reduce shared reality.
-
-**Ecological effects**: Energy consumption, resource extraction for hardware, electronic waste. Training large models has significant carbon footprint.
-
-### Independent, Published, Consequential
-
-Assessment should be:
-
-- **Independent**: Not self-reported by developers. Third-party auditors with no financial relationship.
-- **Published**: Results publicly available, not hidden behind confidentiality agreements.
-- **Consequential**: Affecting deployment decisions. An assessment that changes nothing is theater.
+- Pérez, C. (2002). *Technological Revolutions and Financial Capital*. [S30]
+- Crawford, K. (2021). *Atlas of AI*. [S25]
+- Bostrom, N. (2019). The Vulnerable World Hypothesis. [S28]
 
 ---
 
@@ -44,31 +38,29 @@ Assessment should be:
 
 **AI not trained predominantly on AI-generated content without oversight.**
 
-### The Feedback Loop Problem
+### The Problem
 
-From Panel 5 and 7, on the risks of AI training on AI output:
+As AI generates more content that AI is trained on, feedback loops tighten. Documented risks include:
+- **Model collapse**: Training on synthetic data degrades quality over generations
+- **Homogenization**: Output converges toward AI-typical patterns, reducing variance
+- **Skill atrophy**: Capabilities humans don't practice, they lose
 
-> "As AI generates more of the content AI is trained on, several risks compound:
->
-> **Model collapse**: Training on synthetic data degrades quality over generations. The distribution drifts from human-generated content.
->
-> **Homogenization**: AI converges toward AI-typical outputs. Variance decreases. Weird, novel, challenging content gets smoothed out.
->
-> **Human skill atrophy**: If AI writes and humans just prompt, human writing capacity degrades. The GAN structure requires human discrimination—but discrimination requires capability.
->
-> **Epistemic closure**: AI reflects AI, not reality. The training data becomes a hall of mirrors."
+MIT Media Lab research (2024) identifies this as a core risk of human-AI coupling: when AI handles both generation and evaluation, the human role becomes vestigial [S57].
 
-### The Human Discriminator Function
+### The Response
 
-From Panel 5's GAN structure:
+Safeguards include:
+- Provenance tracking for training data
+- Limits on AI-generated content in training sets
+- Human curation of training data
+- Regular audits of training data composition
 
-> "Human-AI systems should operate as a GAN—AI generates, humans discriminate. But this requires maintaining human discrimination capacity. If we outsource all generation AND all discrimination to AI, the human isn't in the loop."
+Anthropic's Collective Constitutional AI (2024) demonstrates human-in-loop approaches to AI training that maintain human judgment in the process [S64].
 
-Recursion safeguards protect this:
-- **Provenance tracking**: Know what's AI-generated in training data
-- **Limits on AI content**: Caps on synthetic data percentage
-- **Human curation**: Human judgment in training data selection
-- **Regular audits**: Monitor training data composition over time
+### Further Reading
+
+- MIT Media Lab (2024). Cyborg Psychology Research. [S57]
+- Anthropic (2024). Collective Constitutional AI. [S64]
 
 ---
 
@@ -76,40 +68,25 @@ Recursion safeguards protect this:
 
 **Developers, deployers, and operators share responsibility for harms. Liability scales with power and reach.**
 
-### Responsibility Doesn't Evaporate
+### The Problem
 
-From Panel 6 on accountability:
+When AI causes harm, responsibility often evaporates. Developers claim they can't control deployment. Deployers claim they can't understand the algorithm. Operators claim they're just following the system.
 
-> "When AI systems cause harm, responsibility shouldn't evaporate into 'the algorithm did it.' Every AI system is created by developers who made design choices, deployed by organizations who chose to use it, and operated by people who configured its use."
+Winner (1980) argued that technological design embeds choices that have political consequences [S36]. Those choices are made by people—developers, product managers, executives—who should be accountable for foreseeable outcomes.
 
-The principle establishes shared responsibility:
+### The Response
 
-**Developers** are responsible for:
-- Foreseeable misuse (if it's predictable, you should have prevented it)
-- Design choices (optimization targets, training data, capability boundaries)
-- Known failure modes (if you know it fails, you must disclose and mitigate)
+Shared responsibility across the value chain:
+- **Developers**: Responsible for foreseeable misuse and design choices
+- **Deployers**: Responsible for context-inappropriate deployment
+- **Operators**: Responsible for actual use patterns
 
-**Deployers** are responsible for:
-- Context-inappropriate deployment (using a system where it shouldn't be used)
-- Failure to customize (not adapting to local conditions)
-- Inadequate oversight (deploying without monitoring)
+Liability should create incentives for safety over speed, enable affected parties to seek remedy, and scale with the power and reach of the system. The OECD framework (2025) provides principles for AI liability [S66].
 
-**Operators** are responsible for:
-- Actual use patterns (how the system is configured and applied)
-- Override failures (not intervening when human review was required)
-- Feedback negligence (ignoring signals that the system is failing)
+### Further Reading
 
-### Liability Frameworks
-
-From Panel 6's enforcement mechanisms:
-
-> "Liability frameworks should:
-> - Create incentives for safety over speed
-> - Enable affected parties to seek remedy
-> - Not allow 'black box' defenses ('we don't know why it did that')
-> - Scale with the power and reach of the system"
-
-A system affecting millions should face greater liability than one affecting hundreds. Market dominance increases responsibility.
+- Winner, L. (1980). Do Artifacts Have Politics? [S36]
+- OECD (2025). Public AI. [S66]
 
 ---
 
@@ -117,45 +94,42 @@ A system affecting millions should face greater liability than one affecting hun
 
 **Public-function AI systems open-source (AGPL-3) unless justified safety exceptions.**
 
-### Why Open
+### The Problem
 
-From Panel 6's layered architecture:
+Proprietary AI serving public functions—government services, healthcare, education, criminal justice—cannot be democratically governed. You cannot audit what you cannot inspect. You cannot contest what you cannot understand.
 
-> "Open source means:
-> - **Auditable**: External researchers can examine code and training
-> - **Reproducible**: Claims can be verified independently
-> - **Improvable**: Community can fix problems
-> - **Forkable**: Alternatives can be built if governance is captured"
+DeepSeek and Qwen (2025) demonstrate that open-weight models can achieve parity with proprietary systems [S65]. The question is not capability but control.
 
-For AI systems serving public functions—government services, healthcare, education, criminal justice—openness is a democratic requirement. You can't govern what you can't inspect.
+### The Response
 
-### AGPL-3 Specifically
+Public-function AI should be:
+- Open-source (code available for inspection)
+- Licensed to remain open (AGPL-3 prevents proprietary capture) [S68]
+- Auditable in practice, not just theory
+- Reproducible (claims can be verified)
 
-From Luis Villa (Panel 6) on licensing:
+Exceptions require detailed public justification, independent review, and sunset provisions. The burden is on those claiming exceptions, not on those demanding openness.
 
-> "GPL and MIT are too permissive for AI. A company can take open-source code, train a proprietary model, and release nothing back. AGPL-3 has 'network use' provisions—if you deploy modified software as a service, you must release your modifications. This prevents proprietary capture of commons-developed AI."
+### Further Reading
 
-### Justified Safety Exceptions
-
-Some capabilities genuinely warrant restriction. The principle requires:
-
-- **Detailed public justification**: Why is this exception necessary? What's the specific risk?
-- **Independent review**: External assessment of whether claims are legitimate (vs. competitive advantage masquerading as safety)
-- **Sunset provisions**: Exceptions expire and must be renewed. Safety justifications should be re-evaluated as context changes.
-
-The burden is on those claiming exceptions, not on those demanding openness.
+- DeepSeek & Qwen (2025). Open-weight models. [S65]
+- Municipal Counter-Automation Framework (2024). AGPL-3 licensing. [S68]
+- Harvard Ash Center (2024). Cooperative Paradigms for AI. [S67]
 
 ---
 
 ## Sources
 
-- [S25] Crawford, K. (2021). *Atlas of AI*. Yale University Press.
-- [S27-29] Bostrom, N. et al. on AI safety and recursive self-improvement
-- [S68] AGPL-3 licensing documentation
-- Panel 3 transcript: The Race (AI acceleration dynamics)
-- Panel 5 transcript: GAN structure and human discriminator function
-- Panel 6 transcript: Accountability and enforcement mechanisms
+Full bibliography: [bibliography.md](bibliography.md)
 
----
-
-*This appendix summarizes reasoning from Investigation 2. Full panel transcripts available in the research archive.*
+Key sources for this section:
+- [S25] Crawford (2021) *Atlas of AI*
+- [S28] Bostrom (2019) Vulnerable World Hypothesis
+- [S30] Pérez (2002) on technological revolutions
+- [S36] Winner (1980) on political artifacts
+- [S57] MIT Media Lab (2024)
+- [S64] Anthropic (2024) Collective Constitutional AI
+- [S65] DeepSeek & Qwen (2025)
+- [S66] OECD (2025) Public AI
+- [S67] Harvard Ash Center (2024)
+- [S68] AGPL-3 licensing framework

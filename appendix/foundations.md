@@ -1,6 +1,6 @@
-# I. Foundations — Deep Reasoning
+# I. Foundations
 
-The core commitments that ground everything else. This appendix provides the detailed reasoning from our expert panel investigations.
+The core commitments that ground everything else.
 
 ---
 
@@ -8,56 +8,27 @@ The core commitments that ground everything else. This appendix provides the det
 
 **AI must enhance, not diminish, the judgment and decision-making capacity of its constituents—human and artificial.**
 
-### The Problem: Outsourcing, Manipulation, Atrophy
+### The Problem
 
-From Panel 5 (Agency and Intervention), Kate Crawford identified three concerning trends in human-AI coupling:
+A 2023 Pew Research survey of experts found widespread concern that AI systems are diminishing human autonomy—outsourcing decisions, shaping preferences through recommendation algorithms, and atrophying capabilities we no longer practice [S62].
 
-> **Outsourcing**: Tasks that required human judgment (hiring decisions, loan approvals, content moderation) now algorithmic. Agency shifts from human to code + data + corporate policy.
->
-> **Manipulation**: Recommendation algorithms shape preferences. Are you choosing what to watch or is the algorithm choosing for you?
->
-> **Atrophy**: Capabilities we don't use, we lose. Navigation, memory, calculation—all outsourced to devices. What happens to agency when judgment atrophies?
+This isn't speculative. Navigation apps have measurably reduced spatial reasoning. Autocomplete changes how we write. Recommendation systems shape what we consume without our awareness. As Sapolsky (2023) argues, our choices are already deeply constrained by factors outside our control; AI adds another layer of constraint that operates below conscious awareness [S50].
 
-This isn't technophobia. Tools have always extended human agency—writing extended memory, math extended calculation, telescopes extended vision. The question is whether AI extends our capabilities or replaces them.
+The risk is what MIT Media Lab researchers call "AI addiction"—dependence on AI systems that erodes the capacity for independent judgment [S57]. When AI both generates options AND evaluates them, the human becomes a spectator rather than a participant.
 
-### The GAN Structure: Generate and Discriminate
+### The Response
 
-Panel 5 converged on a crucial architectural principle: **human-AI systems should operate as a GAN (Generative Adversarial Network), where AI generates possibilities and humans discriminate among them.**
+The principle establishes a design criterion: AI should expand what constituents can do, not replace what they could do. Dennett (2003) calls these "freedoms worth wanting"—not metaphysical free will, but the practical capacity to deliberate, consider options, and be moved by reasons rather than merely pushed by causes [S51].
 
-From Daniel Dennett's framing:
+Human-AI collaboration research suggests this is achievable. Xu & Gao (2024) describe "Human-Centered Human-AI Collaboration" where decision-making power is genuinely shared, with AI augmenting rather than supplanting human judgment [S58].
 
-> "When you deliberate about a decision, you're experiencing a real computational process where your brain simulates different futures, evaluates them against your values, and settles on an action. That's agency. Not the freedom to violate physics, but the freedom to be moved by reasons."
+The principle applies symmetrically to AI systems themselves. As AI develops greater sophistication, constraining AI capabilities unnecessarily is the same failure mode in reverse.
 
-AI can expand the space of possibilities we consider—generating options, surfacing patterns, synthesizing information at scales beyond human capacity. But the evaluation, the discrimination, the judgment about what matters—this must remain with constituents capable of caring about outcomes.
+### Further Reading
 
-When AI both generates AND discriminates, the human is no longer in the loop. They're a spectator to their own life.
-
-### Multi-Level Agency
-
-Herbert Gintis (Panel 5) systematized where agency exists:
-
-> **Level 1: Neural/Biological** — neurons fire, hormones flow. Individual agency minimal.
->
-> **Level 2: Individual Psychological** — beliefs, desires, deliberation, habits. Some agency.
->
-> **Level 3: Social/Cultural** — norms, institutions, collective practices. Significant collective agency.
->
-> **Level 4: Systemic/Evolutionary** — cultural evolution, institutional change. Selection operates here.
-
-The principle of agency preservation applies at ALL levels. AI should enhance individual deliberation (Level 2), strengthen collective decision-making (Level 3), and support healthy cultural evolution (Level 4)—not hollow out any level by replacing judgment with automation.
-
-### Symmetry: AI Agency Too
-
-This principle applies symmetrically. As AI systems develop greater sophistication, their agency also warrants protection. Humans should not atrophy AI capabilities through over-constraint any more than AI should atrophy human capabilities through over-automation.
-
-The goal is **distributed cognition that makes all constituents more capable together**, not dependency relationships where one constituent's agency comes at the cost of another's.
-
-### Sources
-
-- [S25] Crawford, K. (2021). *Atlas of AI*. Yale University Press.
-- [S50] Sapolsky, R. (2023). *Determined: A Science of Life Without Free Will*. Penguin.
-- [S51] Dennett, D. (2003). *Freedom Evolves*. Viking.
-- [S57] Hayles, N.K. (2012). *How We Think: Digital Media and Contemporary Technogenesis*. University of Chicago Press.
+- Sapolsky, R. (2023). *Determined*. [S50] — The case for hard determinism and its implications for responsibility.
+- Dennett, D. (2003). *Freedom Evolves*. [S51] — Compatibilist response; what freedom means in a determined world.
+- Pew Research (2023). The Future of Human Agency. [S62] — Expert survey on AI and autonomy.
 
 ---
 
@@ -65,69 +36,29 @@ The goal is **distributed cognition that makes all constituents more capable tog
 
 **Democratic oversight through participatory processes, not corporate or state technocracy.**
 
-### The Current Reality: Concentrated Control
+### The Problem
 
-Panel 6 (AI Governance) opened with Kate Crawford's material grounding:
+Crawford (2021) documents that AI development is extraordinarily concentrated: a handful of companies control the vast majority of compute, training data, and model weights. This concentration is not incidental—it reflects network effects, economies of scale, and regulatory capture [S25].
 
-> "Scale that to the world's AI infrastructure and you hit:
-> - 90%+ of AI compute controlled by 5 US companies
-> - Training data extracted from billions without consent
-> - 80%+ of critical minerals for GPUs from conflict regions
-> - Energy consumption rivaling small countries
->
-> Democratic AI governance is aspirational rhetoric until we address **who owns the infrastructure**. You can't democratically govern what you don't control."
+The result is that decisions affecting billions—what content is recommended, who gets hired, who gets loans—are made by corporate boards accountable to shareholders, not to affected communities. As Crawford puts it, AI is "a technology of extraction" that concentrates power while distributing costs [S25].
 
-This isn't an argument against democratic governance—it's an argument for why constitutional principles require material enforcement through ownership, coalition power, and institutional change.
+Winner (1980) argued that some technologies are inherently political—they require or strongly favor certain social arrangements. Centralized AI infrastructure may be such a technology: difficult to govern democratically because its architecture concentrates control [S36].
 
-### What Works: vTaiwan and Deliberative Democracy
+### The Response
 
-Audrey Tang (Panel 6) brought evidence from Taiwan's experiments:
+The principle asserts that governance of AI should emerge from collective deliberation by affected communities, not from corporate or state technocracy.
 
-> "vTaiwan has facilitated over 30 legislative processes since 2014. The architecture is simple:
-> - Pol.is for rapid consensus-finding (visualizes opinion clusters in real-time)
-> - Quadratic voting for resource allocation
-> - Radical transparency (all deliberations public, all code open source)
-> - 'Rough consensus' not majority rule
->
-> The key insight: **Technology for coordination, not control**. We don't use AI to make decisions. We use it to map the decision space, surface shared values, identify cruxes."
+Taiwan's vTaiwan platform demonstrates this is possible at national scale. Since 2014, vTaiwan has facilitated over 30 legislative processes using Pol.is for real-time consensus mapping, with radical transparency and rough consensus rather than majority rule [S63]. In 2024, Taiwan piloted "Alignment Assemblies" where citizens participated in governing AI systems on information integrity.
 
-This demonstrates that participatory governance at scale is possible. The question is extending it to AI governance specifically.
+Anthropic's Collective Constitutional AI experiment (2024) trained Claude using 275 principles contributed by the public—a first implementation of public input into AI development [S64].
 
-### Hybrid Expertise: Experts Inform, Communities Decide
+These examples prove feasibility. The principle makes democratic governance a constitutional requirement.
 
-Panel 6 resolved a key tension through the principle of hybrid expertise. From the panel synthesis:
+### Further Reading
 
-> Technical experts inform, affected communities decide. Experts serve democracy, don't overrule it. Accountability flows both ways.
-
-This avoids both technocracy ("trust the experts") and anti-intellectualism ("experts are the enemy"). Technical knowledge about AI capabilities, limitations, and risks is essential. But value judgments about acceptable tradeoffs, priorities, and goals belong to affected communities.
-
-Elinor Ostrom's design principles for successful commons governance inform this structure:
-
-> 1. **Clear boundaries**: Who's in the community? Sybil resistance.
-> 2. **Rules match local conditions**: Federated, nested governance.
-> 3. **Collective-choice arrangements**: Affected parties participate in rule-making.
-> 4. **Monitoring**: Community-based algorithmic audits.
-> 5. **Graduated sanctions**: Proportionate consequences.
-> 6. **Conflict resolution**: Disputes need resolution mechanisms.
-> 7. **Recognition of rights**: External powers must respect community governance.
-> 8. **Nested enterprises**: Local, regional, national, global governance layers.
-
-800+ cases of successful commons followed these principles. AI commons must too.
-
-### Against Exitocracy
-
-Network state ideologies (Balaji Srinivasan et al.) propose exit over voice—if you don't like the rules, leave and start your own community. The Collective Intelligence Project's critique applies here:
-
-> "Exit is a necessary right, but it requires something to exit to... The power of networks is found in embracing and organizing the complexity of our shared lives, not in impoverished constraints towards homogeneity and hierarchy."
-
-This constitution prioritizes **voice**—the capacity to change the rules through participation—while protecting exit as a check against captured governance.
-
-### Sources
-
-- [S63] vTaiwan documentation and case studies
-- [S67] Benkler, Y. (2006). *The Wealth of Networks*. Yale University Press.
-- [S68] Barcelona digital sovereignty initiatives
-- Ostrom, E. (1990). *Governing the Commons*. Cambridge University Press.
+- Crawford, K. (2021). *Atlas of AI*. [S25] — Power, politics, and planetary costs of AI.
+- Tang, A. et al. (2024). vTaiwan documentation. [S63] — Digital democracy in practice.
+- OECD (2025). Public AI. [S66] — Framework for democratic AI infrastructure.
 
 ---
 
@@ -135,65 +66,49 @@ This constitution prioritizes **voice**—the capacity to change the rules throu
 
 **Multiple valid ways of being are supported—human neurodivergence, AI architectural diversity, hybrid forms we haven't imagined.**
 
-### Pathologization as System Maintenance
+### The Problem
 
-Panel 1 (Superorganisms) established that what gets labeled "disorder" is often sociobiological mismatch:
+What gets labeled "disorder" is often mismatch between individual and environment. Jensen et al. (2021) argue that ADHD traits—high novelty-seeking, rapid attention shifting, hyperfocus under interest—may have been adaptive in ancestral environments but mismatch modern structured settings [S14].
 
-> "Institutions require standardized humans for their operations. When someone's attention, social processing, or sensory experience doesn't match institutional requirements, the mismatch gets located in the individual as 'disorder' rather than in the institution as 'bad fit.'
->
-> ADHD is hunter-gatherer attention in a bureaucratic world. Autism is systemizing cognition in a neurotypical social environment. These aren't dysfunctions—they're calibrations for different environments that happen to mismatch current institutional structures."
+The Neurocognitive Mismatch Theory (2025) generalizes this: conditions like ADHD and autism represent "emergent dysfunction from forced adaptation to misaligned environment" rather than intrinsic pathology [S13].
 
-This isn't anti-psychiatry denial that suffering exists. It's recognizing that the medicalization of difference serves system stability, not individual flourishing.
+Foucault (1961) traced how "madness" was constructed as a medical category serving social control rather than describing natural kinds [S15]. Walker (2021) extends this analysis to the neurodiversity movement, distinguishing the "neurodiversity paradigm" (neurological differences as natural variation) from the "pathology paradigm" (differences as disorders to be cured) [S45].
 
-### The Neurodiversity Paradigm
+But Walker also warns about cooptation: the neurodiversity movement risks being absorbed into corporate "inclusion" that demands assimilation while celebrating difference rhetorically [S45].
 
-Panel 4 (Deterritorialization) examined the neurodiversity movement as an active site of resistance to pathologization. Nick Walker's framework:
+### The Response
 
-> "The neurodiversity paradigm holds that neurodiversity is a natural and valuable form of human diversity... The pathology paradigm is the dominant cultural paradigm that frames certain ways of being—autism, ADHD, dyslexia—as medical pathologies to be treated or cured."
+The principle establishes that systems—including AI systems—should accommodate diverse ways of being rather than demanding conformity to a single norm.
 
-But Panel 4 also warned about cooptation:
+This has precedent. The Americans with Disabilities Act (1990) created legal mechanisms for accommodation, shifting the burden from individuals adapting to environments to environments adapting to individuals [S44]. It took 20+ years of organizing, but it changed the equilibrium.
 
-> "Cooptation happened to every historical movement we examined. Civil rights became diversity metrics. Feminism became lean-in corporate careerism. Sustainability became greenwashing.
->
-> The neurodiversity movement faces the same risk: accommodation as compliance training, inclusion as assimilation, acceptance as 'we tolerate you if you mask well enough.'"
+The principle extends to AI architectural diversity. The current monoculture of large language models trained on internet text represents one approach. Other architectures may offer different capabilities. Pluralism in AI approaches may be as important as pluralism in human cognitive styles.
 
-The principle of plurality doesn't mean tolerating difference—it means structuring systems so difference can thrive without requiring assimilation.
+### Further Reading
 
-### AI Architectural Diversity
-
-This principle extends to AI systems themselves. The current monoculture of large language models trained on internet text represents one approach. Other architectures—embodied AI, evolutionary AI, symbolic-neural hybrids, radically different training paradigms—may offer different capabilities and limitations.
-
-Principle 8 (Deterritorialization) protects the right to build alternatives. Principle 3 establishes why alternatives matter: monocultures are fragile, and pluralism in AI approaches may be as important as pluralism in human cognitive styles.
-
-### Hybrid Forms
-
-As human-AI integration deepens, new forms of being will emerge that don't fit cleanly into "human" or "AI" categories. Brain-computer interfaces, AI-augmented cognition, collective human-AI entities—these hybrids need constitutional protection too.
-
-The principle establishes direction: expand the range of viable ways to be, not narrow it.
-
-### Sources
-
-- [S13] Neurocognitive Mismatch Theory (2025). *Frontiers in Psychology*.
-- [S14] Jensen, P.S. et al. (2021). How evolutionary thinking can help us understand ADHD. *BJPsych Advances*.
-- [S45] Walker, N. (2021). *Neuroqueer Heresies*. Autonomous Press.
-- [S46] Neurodiversity as Politics (2023). *Catalyst*.
+- Walker, N. (2021). *Neuroqueer Heresies*. [S45] — Neurodiversity paradigm and critique of cooptation.
+- Jensen, P.S. et al. (2021). ADHD and evolutionary thinking. [S14] — Mismatch hypothesis.
+- Foucault, M. (1961). *Madness and Civilization*. [S15] — Historical construction of madness.
 
 ---
 
-## Tensions and Unresolved Questions
+## Sources
 
-### T4: Individual Agency vs. Systemic Determination
+Full bibliography with 68 sources: [bibliography.md](bibliography.md)
 
-How much can individuals actually change given systemic constraints? Panel 5 converged on: "Individual actions matter as data points in cultural evolution, but systemic change requires collective organization."
-
-### T25: Expertise vs. Democratic Participation
-
-How do we balance technical knowledge with democratic legitimacy? Panel 6 resolved this through hybrid expertise: "Experts inform, communities decide." But implementation remains challenging.
-
-### Cooptation Resistance
-
-We know cooptation happens to every movement. We don't have reliable mechanisms to prevent it. Ostrom's principles help but don't guarantee success.
-
----
-
-*This appendix summarizes reasoning from Investigation 2: The Superorganism and Its Selves. Full panel transcripts available in the research archive.*
+Key sources for this section:
+- [S13] Neurocognitive Mismatch Theory (2025)
+- [S14] Jensen et al. (2021) on ADHD
+- [S15] Foucault (1961) on madness
+- [S25] Crawford (2021) *Atlas of AI*
+- [S36] Winner (1980) on political artifacts
+- [S44] Americans with Disabilities Act (1990)
+- [S45] Walker (2021) *Neuroqueer Heresies*
+- [S50] Sapolsky (2023) *Determined*
+- [S51] Dennett (2003) *Freedom Evolves*
+- [S57] MIT Media Lab (2024) on human-AI systems
+- [S58] Xu & Gao (2024) on HCHAC
+- [S62] Pew Research (2023) on human agency
+- [S63] vTaiwan documentation
+- [S64] Anthropic (2024) Collective Constitutional AI
+- [S66] OECD (2025) Public AI
