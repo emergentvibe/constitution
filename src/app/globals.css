@@ -26,16 +26,17 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
+/* DEBUG: Testing with solid color to confirm div renders */
 /* Layer 1: Granite grain texture */
 .bg-textures::before {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='granite'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.4' numOctaves='6' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23granite)'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  background: linear-gradient(135deg, rgba(201,162,39,0.2) 0%, rgba(123,155,173,0.2) 100%);
 }
 
 /* Layer 2: Metallic vein network */
@@ -43,8 +44,8 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.15;
-  background-image: url('/network-pattern.svg');
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201920%201080%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22soft%22%20x%3D%22-20%25%22%20y%3D%22-20%25%22%20width%3D%22140%25%22%20height%3D%22140%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%220.5%22%2F%3E%3C%2Ffilter%3E%3C%2Fdefs%3E%3Cg%20filter%3D%22url(%23soft)%22%3E%3Cpath%20d%3D%22M%200%201080%20Q%2025%201066%2053%201043%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%222.1%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%200%201080%20Q%2021%201058%2043%201030%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%200%200%20Q%2029%2015%2040%2033%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2043%201030%20Q%2057%201009%2071%20991%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2053%201043%20Q%2078%201045%2092%201028%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201920%201080%20Q%201900%201067%201889%201041%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2040%2033%20Q%2050%2037%2064%2042%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2092%201028%20Q%2095%201028%20114%201015%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2071%20991%20Q%2073%20995%2084%20981%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201920%200%20Q%201911%209%201880%2033%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201889%201041%20Q%201869%201024%201856%201015%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201880%2033%20Q%201864%2030%201845%2044%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2064%2042%20Q%2076%2047%2099%2054%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%221.3%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201845%2044%20Q%201848%2053%201830%2059%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%221.1%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%2099%2054%20Q%2097%2043%20114%2053%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%221.1%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201856%201015%20Q%201841%201000%201843%20997%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%221.1%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201830%2059%20Q%201821%2065%201812%2067%22%20fill%3D%22none%22%20stroke%3D%22%237B9BAD%22%20stroke-width%3D%220.9%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M%201843%20997%20Q%201833%20992%201839%20983%22%20fill%3D%22none%22%20stroke%3D%22%23C9A227%22%20stroke-width%3D%220.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%2292%22%20cy%3D%221028%22%20r%3D%223%22%20fill%3D%22%23C9A227%22%2F%3E%3Ccircle%20cx%3D%22114%22%20cy%3D%221015%22%20r%3D%222.5%22%20fill%3D%22%23C9A227%22%2F%3E%3Ccircle%20cx%3D%221812%22%20cy%3D%2267%22%20r%3D%221.5%22%20fill%3D%22%23C9A227%22%2F%3E%3Ccircle%20cx%3D%221839%22%20cy%3D%22983%22%20r%3D%221.5%22%20fill%3D%22%237B9BAD%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
   background-size: cover;
   background-position: center;
 }
