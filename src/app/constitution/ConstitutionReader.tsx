@@ -166,6 +166,31 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                       .replace(/\s+/g, "-");
                     return <h2 id={id} {...props}>{children}</h2>;
                   },
+                  // Transform relative links to GitHub
+                  a: ({ href, children, ...props }) => {
+                    let finalHref = href || "";
+                    
+                    // Transform relative links to GitHub
+                    if (href && !href.startsWith("http") && !href.startsWith("#")) {
+                      // Remove leading ./ if present
+                      const cleanPath = href.replace(/^\.\//, "");
+                      finalHref = `${GITHUB_REPO}/blob/main/${cleanPath}`;
+                    }
+                    
+                    // External links open in new tab
+                    const isExternal = finalHref.startsWith("http");
+                    
+                    return (
+                      <a
+                        href={finalHref}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
+                        {...props}
+                      >
+                        {children}
+                      </a>
+                    );
+                  },
                 }}
               >
                 {content}
