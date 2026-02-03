@@ -90,3 +90,4 @@ appendix/
 *Git as primitive. Democracy on top.*
 
 *"Collective intelligence, building collective intelligence."*
+
