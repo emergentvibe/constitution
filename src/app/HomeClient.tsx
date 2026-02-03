@@ -1,6 +1,6 @@
 "use client";
 
-import NetworkHero from "@/components/NetworkHero";
+import { Separator } from "@/components/Separator";
 
 // GitHub repo URL
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
@@ -24,11 +24,8 @@ export default function HomeClient({
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative px-6 py-24 md:py-32 overflow-hidden">
-        {/* Animated network background */}
-        <NetworkHero />
-        
-        <div className="relative z-10 max-w-4xl mx-auto">
+      <section className="relative px-6 py-24 md:py-32">
+        <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 animate-fade-in">
             A coordination mechanism for{" "}
             <span className="text-accent">human-AI futures</span>
@@ -66,6 +63,11 @@ export default function HomeClient({
           </div>
         </div>
       </section>
+
+      {/* Separator */}
+      <div className="max-w-4xl mx-auto px-6">
+        <Separator variant="gradient" />
+      </div>
 
       {/* What This Is */}
       <section className="px-6 py-16 bg-muted/30">
@@ -117,8 +119,19 @@ export default function HomeClient({
                 description:
                   "Signatories shape amendments. The constitution evolves democratically.",
               },
-            ].map((item) => (
-              <div key={item.step} className="p-4 rounded-lg border border-border bg-background">
+            ].map((item, i) => (
+              <div 
+                key={item.step} 
+                className="relative p-4 rounded-lg border border-border bg-background overflow-hidden"
+              >
+                {/* Gold/silver accent line */}
+                <div 
+                  className="absolute left-0 top-0 bottom-0 w-0.5"
+                  style={{
+                    background: i % 2 === 0 ? '#C9A227' : '#7B9BAD',
+                    opacity: 0.4,
+                  }}
+                />
                 <div className="text-accent font-mono text-sm mb-2">
                   {item.step}
                 </div>
