@@ -1,210 +1,115 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-// Types
-interface Point {
-  x: number;
-  y: number;
-}
-
-interface Attractor extends Point {
-  active: boolean;
-}
-
-interface Node extends Point {
-  parent: number | null;
-  color: 'gold' | 'silver';
-}
+import { useEffect, useState, useMemo } from "react";
 
 interface Branch {
-  from: Point;
-  to: Point;
-  color: 'gold' | 'silver';
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
   thickness: number;
-  age: number;
+  depth: number;
+  delay: number;
+  color: 'gold' | 'silver';
 }
 
-// Space colonization algorithm
-class SpaceColonization {
-  width: number;
-  height: number;
-  attractors: Attractor[] = [];
-  nodes: Node[] = [];
-  branches: Branch[] = [];
+// Generate a fractal tree recursively
+function generateTree(
+  x: number,
+  y: number,
+  angle: number,
+  length: number,
+  thickness: number,
+  depth: number,
+  maxDepth: number,
+  delay: number,
+  color: 'gold' | 'silver',
+  branches: Branch[]
+): void {
+  if (depth > maxDepth || thickness < 0.3) return;
   
-  attractionDistance = 150; // how far attractors can influence
-  killDistance = 15; // when attractor is consumed
-  stepSize = 8; // how far branches grow each step
+  // End point
+  const x2 = x + Math.cos(angle) * length;
+  const y2 = y + Math.sin(angle) * length;
   
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
-    this.init();
+  branches.push({
+    x1: x,
+    y1: y,
+    x2,
+    y2,
+    thickness,
+    depth,
+    delay,
+    color,
+  });
+  
+  // Branching parameters with some randomness
+  const branchCount = depth < 2 ? 3 : 2;
+  const angleSpread = 0.4 + Math.random() * 0.3;
+  const lengthRatio = 0.65 + Math.random() * 0.15;
+  const thicknessRatio = 0.7;
+  
+  for (let i = 0; i < branchCount; i++) {
+    const angleOffset = (i - (branchCount - 1) / 2) * angleSpread;
+    const newAngle = angle + angleOffset + (Math.random() - 0.5) * 0.2;
+    const newLength = length * lengthRatio;
+    const newThickness = thickness * thicknessRatio;
+    const newDelay = delay + 0.15 + Math.random() * 0.1;
+    
+    generateTree(
+      x2, y2,
+      newAngle,
+      newLength,
+      newThickness,
+      depth + 1,
+      maxDepth,
+      newDelay,
+      color,
+      branches
+    );
   }
+}
+
+// Generate all trees from edges
+function generateAllTrees(width: number, height: number): Branch[] {
+  const branches: Branch[] = [];
+  const maxDepth = 7;
   
-  init() {
-    // Scatter attractors across the viewport (avoiding center for content)
-    const margin = 100;
-    const centerAvoidX = this.width * 0.35;
-    const centerAvoidY = this.height * 0.25;
-    
-    for (let i = 0; i < 80; i++) {
-      const x = margin + Math.random() * (this.width - margin * 2);
-      const y = margin + Math.random() * (this.height - margin * 2);
-      
-      // Avoid center where content lives
-      const distFromCenter = Math.sqrt(
-        Math.pow(x - this.width / 2, 2) + 
-        Math.pow(y - this.height / 2, 2)
-      );
-      
-      if (distFromCenter > Math.min(centerAvoidX, centerAvoidY)) {
-        this.attractors.push({ x, y, active: true });
-      }
-    }
-    
-    // Seed nodes at corners
-    this.nodes.push({ x: 0, y: 0, parent: null, color: 'gold' });
-    this.nodes.push({ x: this.width, y: 0, parent: null, color: 'silver' });
-    this.nodes.push({ x: 0, y: this.height, parent: null, color: 'silver' });
-    this.nodes.push({ x: this.width, y: this.height, parent: null, color: 'gold' });
-    
-    // Additional seeds along edges
-    this.nodes.push({ x: this.width * 0.3, y: 0, parent: null, color: 'gold' });
-    this.nodes.push({ x: this.width * 0.7, y: 0, parent: null, color: 'silver' });
-    this.nodes.push({ x: 0, y: this.height * 0.4, parent: null, color: 'gold' });
-    this.nodes.push({ x: this.width, y: this.height * 0.6, parent: null, color: 'silver' });
-  }
+  // Top-left corner - gold, pointing inward
+  generateTree(0, 0, Math.PI * 0.3, 80, 3.5, 0, maxDepth, 0, 'gold', branches);
   
-  step(): boolean {
-    // For each node, find influencing attractors
-    const influences: Map<number, Point[]> = new Map();
-    
-    for (const attractor of this.attractors) {
-      if (!attractor.active) continue;
-      
-      let closestNode: number | null = null;
-      let closestDist = Infinity;
-      
-      for (let i = 0; i < this.nodes.length; i++) {
-        const node = this.nodes[i];
-        const dist = this.distance(attractor, node);
-        
-        if (dist < this.killDistance) {
-          // Attractor reached - consume it
-          attractor.active = false;
-          closestNode = null;
-          break;
-        }
-        
-        if (dist < this.attractionDistance && dist < closestDist) {
-          closestDist = dist;
-          closestNode = i;
-        }
-      }
-      
-      if (closestNode !== null) {
-        if (!influences.has(closestNode)) {
-          influences.set(closestNode, []);
-        }
-        influences.get(closestNode)!.push(attractor);
-      }
-    }
-    
-    // Grow nodes toward their influencing attractors
-    let grew = false;
-    const newNodes: Node[] = [];
-    
-    influences.forEach((attrs, nodeIdx) => {
-      const node = this.nodes[nodeIdx];
-      
-      // Average direction to all influencing attractors
-      let dirX = 0;
-      let dirY = 0;
-      
-      for (const attr of attrs) {
-        const dx = attr.x - node.x;
-        const dy = attr.y - node.y;
-        const len = Math.sqrt(dx * dx + dy * dy);
-        dirX += dx / len;
-        dirY += dy / len;
-      }
-      
-      // Normalize and step
-      const len = Math.sqrt(dirX * dirX + dirY * dirY);
-      if (len > 0) {
-        dirX /= len;
-        dirY /= len;
-        
-        // Add some randomness for organic feel
-        dirX += (Math.random() - 0.5) * 0.3;
-        dirY += (Math.random() - 0.5) * 0.3;
-        
-        const newX = node.x + dirX * this.stepSize;
-        const newY = node.y + dirY * this.stepSize;
-        
-        // Create new node
-        const newNode: Node = {
-          x: newX,
-          y: newY,
-          parent: nodeIdx,
-          color: node.color,
-        };
-        newNodes.push(newNode);
-        
-        // Create branch
-        const depth = this.getDepth(nodeIdx);
-        this.branches.push({
-          from: { x: node.x, y: node.y },
-          to: { x: newX, y: newY },
-          color: node.color,
-          thickness: Math.max(0.5, 3 - depth * 0.3),
-          age: 0,
-        });
-        
-        grew = true;
-      }
-    });
-    
-    this.nodes.push(...newNodes);
-    
-    // Age branches
-    for (const branch of this.branches) {
-      branch.age++;
-    }
-    
-    return grew;
-  }
+  // Top-right corner - silver
+  generateTree(width, 0, Math.PI * 0.7, 80, 3.5, 0, maxDepth, 0.2, 'silver', branches);
   
-  getDepth(nodeIdx: number): number {
-    let depth = 0;
-    let current = nodeIdx;
-    while (this.nodes[current]?.parent !== null) {
-      current = this.nodes[current].parent!;
-      depth++;
-    }
-    return depth;
-  }
+  // Bottom-left corner - silver
+  generateTree(0, height, -Math.PI * 0.3, 80, 3.5, 0, maxDepth, 0.1, 'silver', branches);
   
-  distance(a: Point, b: Point): number {
-    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-  }
+  // Bottom-right corner - gold
+  generateTree(width, height, -Math.PI * 0.7, 80, 3.5, 0, maxDepth, 0.3, 'gold', branches);
+  
+  // Mid-edges for more coverage
+  generateTree(width * 0.35, 0, Math.PI * 0.5, 60, 2.5, 0, maxDepth - 1, 0.5, 'gold', branches);
+  generateTree(width * 0.65, 0, Math.PI * 0.5, 60, 2.5, 0, maxDepth - 1, 0.6, 'silver', branches);
+  
+  generateTree(0, height * 0.4, 0, 60, 2.5, 0, maxDepth - 1, 0.4, 'gold', branches);
+  generateTree(width, height * 0.6, Math.PI, 60, 2.5, 0, maxDepth - 1, 0.7, 'silver', branches);
+  
+  generateTree(width * 0.4, height, -Math.PI * 0.5, 60, 2.5, 0, maxDepth - 1, 0.8, 'silver', branches);
+  generateTree(width * 0.6, height, -Math.PI * 0.5, 60, 2.5, 0, maxDepth - 1, 0.9, 'gold', branches);
+  
+  return branches;
 }
 
 export default function BackgroundTextures() {
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [nodes, setNodes] = useState<Point[]>([]);
-  const simulationRef = useRef<SpaceColonization | null>(null);
-  const frameRef = useRef<number>(0);
+  const [mounted, setMounted] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 });
   
   useEffect(() => {
-    // Get actual viewport dimensions
     setDimensions({
       width: window.innerWidth,
       height: window.innerHeight,
     });
+    setMounted(true);
     
     const handleResize = () => {
       setDimensions({
@@ -217,48 +122,18 @@ export default function BackgroundTextures() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  useEffect(() => {
-    // Initialize simulation
-    simulationRef.current = new SpaceColonization(dimensions.width, dimensions.height);
-    
-    let iteration = 0;
-    const maxIterations = 150;
-    
-    const animate = () => {
-      if (!simulationRef.current) return;
-      
-      const grew = simulationRef.current.step();
-      
-      // Update state for rendering
-      setBranches([...simulationRef.current.branches]);
-      
-      // Collect significant nodes for rendering
-      const significantNodes = simulationRef.current.nodes.filter((_, i) => {
-        const depth = simulationRef.current!.getDepth(i);
-        return depth > 0 && depth % 3 === 0; // every 3rd depth level
-      });
-      setNodes(significantNodes.map(n => ({ x: n.x, y: n.y })));
-      
-      iteration++;
-      
-      if (grew && iteration < maxIterations) {
-        frameRef.current = requestAnimationFrame(animate);
-      }
-    };
-    
-    // Start animation after a brief delay
-    const timer = setTimeout(() => {
-      frameRef.current = requestAnimationFrame(animate);
-    }, 500);
-    
-    return () => {
-      clearTimeout(timer);
-      cancelAnimationFrame(frameRef.current);
-    };
-  }, [dimensions]);
+  // Generate trees once based on dimensions
+  const branches = useMemo(() => {
+    return generateAllTrees(dimensions.width, dimensions.height);
+  }, [dimensions.width, dimensions.height]);
   
   const gold = "#C9A227";
   const silver = "#7B9BAD";
+  
+  // Calculate path length for each branch (for animation)
+  const getPathLength = (b: Branch) => {
+    return Math.sqrt(Math.pow(b.x2 - b.x1, 2) + Math.pow(b.y2 - b.y1, 2));
+  };
   
   return (
     <div 
@@ -267,53 +142,64 @@ export default function BackgroundTextures() {
     >
       {/* Subtle gradient wash */}
       <div 
-        className="absolute inset-0 opacity-40"
+        className="absolute inset-0 opacity-50"
         style={{
-          background: 'radial-gradient(ellipse at top left, rgba(201,162,39,0.06) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(123,155,173,0.06) 0%, transparent 50%)',
+          background: 'radial-gradient(ellipse at top left, rgba(201,162,39,0.05) 0%, transparent 40%), radial-gradient(ellipse at bottom right, rgba(123,155,173,0.05) 0%, transparent 40%)',
         }}
       />
       
-      {/* Space colonization network */}
+      {/* Fractal tree network */}
       <svg 
         className="absolute inset-0 w-full h-full"
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Branches */}
-        {branches.map((branch, i) => (
-          <line
-            key={i}
-            x1={branch.from.x}
-            y1={branch.from.y}
-            x2={branch.to.x}
-            y2={branch.to.y}
-            stroke={branch.color === 'gold' ? gold : silver}
-            strokeWidth={branch.thickness}
-            strokeLinecap="round"
-            opacity={Math.min(0.6, 0.1 + branch.age * 0.02)}
-            style={{
-              transition: 'opacity 0.5s ease-out',
-            }}
-          />
-        ))}
-        
-        {/* Nodes at branch points */}
-        {nodes.map((node, i) => (
-          <g key={`node-${i}`}>
-            <circle
-              cx={node.x}
-              cy={node.y}
-              r={4}
-              fill={i % 2 === 0 ? gold : silver}
-              opacity={0.3}
+        {branches.map((branch, i) => {
+          const pathLength = getPathLength(branch);
+          const opacity = Math.max(0.15, 0.5 - branch.depth * 0.05);
+          
+          return (
+            <line
+              key={i}
+              x1={branch.x1}
+              y1={branch.y1}
+              x2={branch.x2}
+              y2={branch.y2}
+              stroke={branch.color === 'gold' ? gold : silver}
+              strokeWidth={branch.thickness}
+              strokeLinecap="round"
+              opacity={opacity}
+              strokeDasharray={pathLength}
+              strokeDashoffset={mounted ? 0 : pathLength}
               style={{
-                animation: 'nodePulse 4s ease-in-out infinite',
-                animationDelay: `${i * 0.2}s`,
+                transition: `stroke-dashoffset 0.8s ease-out ${branch.delay}s`,
               }}
             />
-          </g>
-        ))}
+          );
+        })}
+        
+        {/* Nodes at major branch points (depth 0, 2, 4) */}
+        {branches
+          .filter(b => b.depth % 2 === 0 && b.depth < 5)
+          .map((branch, i) => {
+            const nodeOpacity = 0.4 - branch.depth * 0.08;
+            const nodeSize = Math.max(2, 4 - branch.depth * 0.5);
+            
+            return (
+              <circle
+                key={`node-${i}`}
+                cx={branch.x2}
+                cy={branch.y2}
+                r={nodeSize}
+                fill={branch.color === 'gold' ? gold : silver}
+                opacity={mounted ? nodeOpacity : 0}
+                style={{
+                  transition: `opacity 0.5s ease-out ${branch.delay + 0.3}s`,
+                }}
+              />
+            );
+          })}
       </svg>
     </div>
   );
