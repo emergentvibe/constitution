@@ -93,15 +93,15 @@ export default function NetworkHero() {
       ctx.fillRect(0, 0, width, height);
 
       const particles = particlesRef.current;
-      const connectionDist = 120; // longer connections
+      const connectionDist = 180; // even longer connections
       const gold = { r: 201, g: 162, b: 39 };
       const silver = { r: 123, g: 155, b: 173 };
 
       // Update particles with separation + attraction balance
       const separationDist = 35;
-      const separationStrength = 0.001; // very gentle
-      const attractionDist = 120;
-      const attractionStrength = 0.0003; // very gentle
+      const separationStrength = 0.001;
+      const attractionDist = 200; // longer range attraction
+      const attractionStrength = 0.001; // stronger pull
       
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
