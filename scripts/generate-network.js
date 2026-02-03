@@ -122,13 +122,13 @@ function render() {
   
   paths.forEach(({ d, thickness, color }) => {
     const strokeColor = color === 'gold' ? goldColor : silverColor;
-    svg += `    <path d="${d}" fill="none" stroke="${strokeColor}" stroke-width="${thickness.toFixed(2)}" stroke-linecap="round" opacity="0.6"/>\n`;
+    svg += `    <path d="${d}" fill="none" stroke="${strokeColor}" stroke-width="${thickness.toFixed(2)}" stroke-linecap="round" opacity="0.8"/>\n`;
   });
   
   // Render nodes
   nodes.forEach(({ x, y, r, color }) => {
     const fillColor = color === 'gold' ? goldColor : silverColor;
-    svg += `    <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${fillColor}" opacity="0.5"/>\n`;
+    svg += `    <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${fillColor}" opacity="0.7"/>\n`;
   });
   
   svg += `  </g>\n</svg>`;

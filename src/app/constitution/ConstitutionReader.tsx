@@ -154,7 +154,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
 
           {/* Main Content */}
           <main className="min-w-0">
-            <article className="prose prose-invert prose-emerald max-w-none prose-headings:scroll-mt-24">
+            <article className="prose prose-stone max-w-none prose-headings:scroll-mt-24 prose-headings:text-foreground prose-p:text-foreground prose-a:text-accent prose-strong:text-foreground prose-li:text-foreground">
               <ReactMarkdown
                 components={{
                   // Add IDs to headings for scroll navigation
