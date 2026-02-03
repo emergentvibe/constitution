@@ -14,6 +14,8 @@ interface Spotlight {
   baseX: number;
   baseY: number;
   radius: number;
+  baseRadius: number;
+  intensity: number; // inverse of size - small = bright, big = dim
   phase: number;
   speed: number;
   breatheAmplitudeX: number;
@@ -78,45 +80,87 @@ export default function NetworkHero() {
     };
 
     // Generate spotlights with breathing patterns
+    // Mix of sizes: large (dim), medium, small (bright)
+    // Size ratio ~10:1 from biggest to smallest
     const generateSpotlights = (width: number, height: number) => {
-      spotlightsRef.current = [
-        {
-          x: width * 0.2,
-          y: height * 0.3,
-          baseX: width * 0.2,
-          baseY: height * 0.3,
-          radius: 180,
-          phase: 0,
-          speed: 0.3,
-          breatheAmplitudeX: width * 0.15,
-          breatheAmplitudeY: height * 0.1,
-        },
-        {
-          x: width * 0.8,
-          y: height * 0.6,
-          baseX: width * 0.8,
-          baseY: height * 0.6,
-          radius: 150,
-          phase: Math.PI * 0.7,
-          speed: 0.25,
-          breatheAmplitudeX: width * 0.12,
-          breatheAmplitudeY: height * 0.15,
-        },
-        {
-          x: width * 0.5,
-          y: height * 0.5,
-          baseX: width * 0.5,
-          baseY: height * 0.5,
-          radius: 200,
-          phase: Math.PI * 1.3,
-          speed: 0.2,
-          breatheAmplitudeX: width * 0.2,
-          breatheAmplitudeY: height * 0.12,
-        },
+      const spotlights: Spotlight[] = [];
+      
+      // Large spotlights (radius 300-400, intensity 0.3-0.4) - 3 of them
+      const largeConfigs = [
+        { bx: 0.15, by: 0.3 },
+        { bx: 0.85, by: 0.7 },
+        { bx: 0.5, by: 0.2 },
       ];
+      largeConfigs.forEach((cfg, i) => {
+        spotlights.push({
+          x: width * cfg.bx,
+          y: height * cfg.by,
+          baseX: width * cfg.bx,
+          baseY: height * cfg.by,
+          radius: 350 + Math.random() * 50,
+          baseRadius: 350 + Math.random() * 50,
+          intensity: 0.3 + Math.random() * 0.1,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.1 + Math.random() * 0.1,
+          breatheAmplitudeX: width * (0.15 + Math.random() * 0.1),
+          breatheAmplitudeY: height * (0.1 + Math.random() * 0.1),
+        });
+      });
+      
+      // Medium spotlights (radius 120-200, intensity 0.5-0.7) - 5 of them
+      const mediumConfigs = [
+        { bx: 0.3, by: 0.6 },
+        { bx: 0.7, by: 0.4 },
+        { bx: 0.2, by: 0.8 },
+        { bx: 0.8, by: 0.2 },
+        { bx: 0.5, by: 0.7 },
+      ];
+      mediumConfigs.forEach((cfg, i) => {
+        spotlights.push({
+          x: width * cfg.bx,
+          y: height * cfg.by,
+          baseX: width * cfg.bx,
+          baseY: height * cfg.by,
+          radius: 120 + Math.random() * 80,
+          baseRadius: 120 + Math.random() * 80,
+          intensity: 0.5 + Math.random() * 0.2,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.2 + Math.random() * 0.15,
+          breatheAmplitudeX: width * (0.08 + Math.random() * 0.08),
+          breatheAmplitudeY: height * (0.06 + Math.random() * 0.08),
+        });
+      });
+      
+      // Small spotlights (radius 40-80, intensity 0.8-1.0) - 7 of them
+      const smallConfigs = [
+        { bx: 0.1, by: 0.5 },
+        { bx: 0.9, by: 0.5 },
+        { bx: 0.4, by: 0.3 },
+        { bx: 0.6, by: 0.8 },
+        { bx: 0.25, by: 0.15 },
+        { bx: 0.75, by: 0.85 },
+        { bx: 0.5, by: 0.45 },
+      ];
+      smallConfigs.forEach((cfg, i) => {
+        spotlights.push({
+          x: width * cfg.bx,
+          y: height * cfg.by,
+          baseX: width * cfg.bx,
+          baseY: height * cfg.by,
+          radius: 40 + Math.random() * 40,
+          baseRadius: 40 + Math.random() * 40,
+          intensity: 0.8 + Math.random() * 0.2,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.3 + Math.random() * 0.2,
+          breatheAmplitudeX: width * (0.04 + Math.random() * 0.06),
+          breatheAmplitudeY: height * (0.03 + Math.random() * 0.06),
+        });
+      });
+      
+      spotlightsRef.current = spotlights;
     };
 
-    // Calculate brightness based on spotlight distance
+    // Calculate brightness based on spotlight distance and intensity
     const getBrightness = (x: number, y: number): number => {
       let brightness = 0;
       
@@ -127,9 +171,9 @@ export default function NetworkHero() {
         );
         
         if (dist < spotlight.radius) {
-          // Smooth falloff
+          // Smooth falloff, weighted by intensity
           const falloff = 1 - (dist / spotlight.radius);
-          brightness += falloff * falloff; // quadratic for smoother edges
+          brightness += falloff * falloff * spotlight.intensity;
         }
       }
       
@@ -155,8 +199,9 @@ export default function NetworkHero() {
         spotlight.y = spotlight.baseY + 
           Math.cos(t * spotlight.speed * 0.7 + spotlight.phase) * spotlight.breatheAmplitudeY;
         
-        // Also breathe the radius
-        spotlight.radius = 150 + Math.sin(t * 0.5 + spotlight.phase) * 50;
+        // Also breathe the radius (proportional to base size)
+        const breatheAmount = spotlight.baseRadius * 0.2;
+        spotlight.radius = spotlight.baseRadius + Math.sin(t * 0.4 + spotlight.phase) * breatheAmount;
       }
 
       const nodes = nodesRef.current;
