@@ -8,26 +8,31 @@ interface Particle {
   vx: number;
   vy: number;
   life: number;
+  seed: number; // individual variation
 }
 
-// Simple noise function (simplified perlin-like)
-function noise(x: number, y: number, t: number): number {
-  // Multiple octaves of sine waves for organic feel
+// Turbulent noise function with more variation
+function noise(x: number, y: number, t: number, seed: number = 0): number {
+  // Multiple octaves with different frequencies for more chaos
   return (
-    Math.sin(x * 0.01 + t * 0.2) * 0.5 +
-    Math.sin(y * 0.012 - t * 0.15) * 0.5 +
-    Math.sin((x + y) * 0.008 + t * 0.1) * 0.3 +
-    Math.sin(x * 0.02 - y * 0.015 + t * 0.25) * 0.2
+    Math.sin(x * 0.008 + t * 0.15 + seed) * 0.4 +
+    Math.sin(y * 0.009 - t * 0.12 + seed * 1.3) * 0.4 +
+    Math.sin((x - y) * 0.012 + t * 0.18 + seed * 0.7) * 0.35 +
+    Math.sin((x + y) * 0.006 - t * 0.08) * 0.25 +
+    Math.sin(x * 0.025 + y * 0.02 + t * 0.3 + seed * 2) * 0.3 +
+    Math.sin(x * 0.015 - y * 0.018 - t * 0.22) * 0.2
   );
 }
 
-// Get flow vector at position
-function getFlow(x: number, y: number, t: number): { vx: number; vy: number } {
-  const angle = noise(x, y, t) * Math.PI * 2;
-  const magnitude = 0.3 + noise(x * 1.5, y * 1.5, t + 100) * 0.2;
+// Get flow vector at position with more turbulence
+function getFlow(x: number, y: number, t: number, seed: number = 0): { vx: number; vy: number } {
+  const angle = noise(x, y, t, seed) * Math.PI * 2.5; // more rotation
+  const angle2 = noise(x * 1.3, y * 1.3, t + 50, seed + 10) * Math.PI;
+  const combinedAngle = angle + angle2 * 0.3;
+  const magnitude = 0.25 + Math.abs(noise(x * 0.8, y * 0.8, t + 100, seed)) * 0.3;
   return {
-    vx: Math.cos(angle) * magnitude,
-    vy: Math.sin(angle) * magnitude,
+    vx: Math.cos(combinedAngle) * magnitude,
+    vy: Math.sin(combinedAngle) * magnitude,
   };
 }
 
@@ -56,15 +61,16 @@ export default function NetworkHero() {
 
     const initParticles = (width: number, height: number) => {
       const particles: Particle[] = [];
-      const count = 100;
+      const count = 120;
 
       for (let i = 0; i < count; i++) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: 0,
-          vy: 0,
+          vx: (Math.random() - 0.5) * 0.5, // start with some velocity
+          vy: (Math.random() - 0.5) * 0.5,
           life: Math.random(),
+          seed: Math.random() * 100, // unique flow variation per particle
         });
       }
 
@@ -93,22 +99,22 @@ export default function NetworkHero() {
 
       // Update particles
       for (const p of particles) {
-        // Get flow at current position
-        const flow = getFlow(p.x, p.y, t);
+        // Get flow at current position (each particle has unique seed)
+        const flow = getFlow(p.x, p.y, t, p.seed);
 
-        // Apply flow with some inertia
-        p.vx = p.vx * 0.95 + flow.vx * 0.5;
-        p.vy = p.vy * 0.95 + flow.vy * 0.5;
+        // Apply flow with inertia + small random nudge for dispersion
+        p.vx = p.vx * 0.92 + flow.vx * 0.4 + (Math.random() - 0.5) * 0.05;
+        p.vy = p.vy * 0.92 + flow.vy * 0.4 + (Math.random() - 0.5) * 0.05;
 
         // Move
         p.x += p.vx;
         p.y += p.vy;
 
-        // Wrap around edges
-        if (p.x < -20) p.x = width + 20;
-        if (p.x > width + 20) p.x = -20;
-        if (p.y < -20) p.y = height + 20;
-        if (p.y > height + 20) p.y = -20;
+        // Wrap around edges with randomized re-entry
+        if (p.x < -20) { p.x = width + 20; p.y = Math.random() * height; }
+        if (p.x > width + 20) { p.x = -20; p.y = Math.random() * height; }
+        if (p.y < -20) { p.y = height + 20; p.x = Math.random() * width; }
+        if (p.y > height + 20) { p.y = -20; p.x = Math.random() * width; }
 
         // Slowly cycle life for subtle variation
         p.life = (p.life + dt * 0.1) % 1;
