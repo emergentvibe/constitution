@@ -4,13 +4,12 @@ import { useState } from "react";
 
 // GitHub repo URL
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
-const CONSTITUTION_URL = `${GITHUB_REPO}/tree/main/constitution`;
 const SIGN_URL = `${GITHUB_REPO}/issues/new?template=sign-constitution.md`;
 const AMEND_URL = `${GITHUB_REPO}/issues/new?template=propose-amendment.md`;
 
 interface HomeClientProps {
-  foundationsContent: string;
-  signatories: Array<{ handle: string; date: string; statement: string }>;
+  constitutionContent: string;
+  signatories: Array<{ handle: string; type: string; date: string; statement: string }>;
   stats: {
     sections: number;
     principles: number;
@@ -20,7 +19,7 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({
-  foundationsContent,
+  constitutionContent,
   signatories,
   stats,
 }: HomeClientProps) {
@@ -103,13 +102,12 @@ export default function HomeClient({
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
               <span className="text-sm text-muted-foreground font-mono">
-                GENESIS CONSTITUTION v1.0
+                CONSTITUTION v1.2-draft
               </span>
             </div>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <span>{stats.principles} principles</span>
               <span>{stats.sections} sections</span>
-              <span>{stats.experts} experts</span>
               <span>{stats.sources} sources</span>
             </div>
           </div>
@@ -123,23 +121,23 @@ export default function HomeClient({
                   <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
                   <span className="ml-2 text-sm text-muted-foreground font-mono">
-                    constitution/principles/01-foundations.md
+                    CONSTITUTION.md
                   </span>
                 </div>
               </div>
-              <pre className="p-6 text-sm overflow-auto max-h-[500px] font-mono whitespace-pre-wrap text-muted-foreground">
-                {foundationsContent}
+              <pre className="p-6 text-sm overflow-auto max-h-[600px] font-mono whitespace-pre-wrap text-muted-foreground">
+                {constitutionContent}
               </pre>
 
               {/* View Full Constitution CTA */}
               <div className="px-4 py-3 border-t border-border bg-muted/30">
                 <a
-                  href={CONSTITUTION_URL}
+                  href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-2 text-sm text-accent hover:text-emerge-400 transition-colors"
                 >
-                  <span>Read full constitution on GitHub</span>
+                  <span>View on GitHub</span>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
@@ -154,16 +152,16 @@ export default function HomeClient({
               </div>
               <div className="divide-y divide-border">
                 {[
-                  { num: "I", title: "Foundations", principles: "1-3", file: "01-foundations.md" },
-                  { num: "II", title: "Rights", principles: "4-8", file: "02-rights.md" },
-                  { num: "III", title: "Obligations", principles: "9-12", file: "03-obligations.md" },
-                  { num: "IV", title: "Structures", principles: "13-16", file: "04-structures.md" },
-                  { num: "V", title: "Capabilities", principles: "17-20", file: "05-capabilities.md" },
-                  { num: "VI", title: "Revision", principles: "21-24", file: "06-revision.md" },
+                  { num: "I", title: "Foundations", principles: "1-3", anchor: "i-foundations" },
+                  { num: "II", title: "Rights", principles: "4-8", anchor: "ii-rights" },
+                  { num: "III", title: "Obligations", principles: "9-12", anchor: "iii-obligations" },
+                  { num: "IV", title: "Structures", principles: "13-16", anchor: "iv-structures" },
+                  { num: "V", title: "Capabilities", principles: "17-20", anchor: "v-capabilities" },
+                  { num: "VI", title: "Revision", principles: "21-24", anchor: "vi-revision" },
                 ].map((section) => (
                   <a
                     key={section.num}
-                    href={`${CONSTITUTION_URL}/principles/${section.file}`}
+                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${section.anchor}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block px-4 py-3 hover:bg-muted/50 transition-colors"
@@ -179,6 +177,22 @@ export default function HomeClient({
                     </div>
                   </a>
                 ))}
+                <a
+                  href={`${GITHUB_REPO}/tree/main/appendix`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-3 hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-accent font-mono text-sm">+</span>{" "}
+                      <span className="text-foreground">Appendix</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      reasoning
+                    </span>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -251,6 +265,9 @@ export default function HomeClient({
                 <div key={i} className="px-6 py-4 flex items-center justify-between">
                   <div>
                     <span className="text-accent font-mono">{sig.handle}</span>
+                    <span className="ml-2 text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                      {sig.type}
+                    </span>
                     {sig.statement && (
                       <p className="text-sm text-muted-foreground mt-1 italic">
                         &ldquo;{sig.statement}&rdquo;
@@ -272,7 +289,7 @@ export default function HomeClient({
                 </p>
                 <div className="flex gap-3">
                   <a
-                    href={CONSTITUTION_URL}
+                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"

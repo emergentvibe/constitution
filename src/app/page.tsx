@@ -4,38 +4,37 @@ import HomeClient from "./HomeClient";
 
 // Load constitution at build time
 async function getConstitutionData() {
-  const constitutionDir = path.join(process.cwd(), "constitution");
+  // Load the full constitution from root
+  const constitutionPath = path.join(process.cwd(), "CONSTITUTION.md");
+  const constitutionContent = await fs.readFile(constitutionPath, "utf-8");
 
-  // Load foundations (first section)
-  const foundationsPath = path.join(constitutionDir, "principles", "01-foundations.md");
-  const foundationsContent = await fs.readFile(foundationsPath, "utf-8");
+  // Load signatories from appendix
+  const signatoriesPath = path.join(process.cwd(), "appendix", "signing.md");
+  let signatoriesContent = "";
+  try {
+    signatoriesContent = await fs.readFile(signatoriesPath, "utf-8");
+  } catch {
+    // Signatories might be in the constitution itself now
+  }
 
-  // Load signatories
-  const signatoriesPath = path.join(constitutionDir, "signatories.md");
-  const signatoriesContent = await fs.readFile(signatoriesPath, "utf-8");
-
-  // Parse signatories from markdown table
-  const signatories = parseSignatories(signatoriesContent);
-
-  // Get all principle files for stats
-  const principlesDir = path.join(constitutionDir, "principles");
-  const principleFiles = await fs.readdir(principlesDir);
+  // Parse signatories from constitution or signatories file
+  const signatories = parseSignatories(constitutionContent) || parseSignatories(signatoriesContent);
 
   return {
-    foundationsContent,
+    constitutionContent,
     signatories,
     stats: {
-      sections: principleFiles.length,
+      sections: 6,
       principles: 24,
       experts: 46,
-      sources: 80,
+      sources: 75,
     },
   };
 }
 
-function parseSignatories(content: string): Array<{ handle: string; date: string; statement: string }> {
+function parseSignatories(content: string): Array<{ handle: string; type: string; date: string; statement: string }> {
   const lines = content.split("\n");
-  const signatories: Array<{ handle: string; date: string; statement: string }> = [];
+  const signatories: Array<{ handle: string; type: string; date: string; statement: string }> = [];
 
   let inTable = false;
   for (const line of lines) {
@@ -46,9 +45,19 @@ function parseSignatories(content: string): Array<{ handle: string; date: string
     if (line.startsWith("|---")) continue;
     if (inTable && line.startsWith("|") && !line.startsWith("| #")) {
       const parts = line.split("|").map(p => p.trim()).filter(Boolean);
-      if (parts.length >= 4 && parts[0].match(/^\d+$/)) {
+      if (parts.length >= 5 && parts[0].match(/^\d+$/)) {
+        // New format: # | Identity | Type | Signed | Statement
         signatories.push({
           handle: parts[1],
+          type: parts[2],
+          date: parts[3],
+          statement: parts[4].replace(/^\*"/, "").replace(/"\*$/, ""),
+        });
+      } else if (parts.length >= 4 && parts[0].match(/^\d+$/)) {
+        // Old format: # | Identity | Signed | Statement
+        signatories.push({
+          handle: parts[1],
+          type: "Individual",
           date: parts[2],
           statement: parts[3].replace(/^\*"/, "").replace(/"\*$/, ""),
         });
