@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import BackgroundTextures from "@/components/BackgroundTextures";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,7 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         {/* Background texture layers */}
-        <div className="bg-textures" aria-hidden="true" />
+        <BackgroundTextures />
         {/* Main content */}
         <div className="relative z-10">
           {children}

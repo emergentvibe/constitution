@@ -81,21 +81,30 @@ function branch(x, y, angle, depth, thickness, color) {
  * Generate from multiple starting points
  */
 function generate() {
-  // Sparse origins - just corners, fewer branches
+  // Spread origins across viewport, not just corners
   const origins = [
-    // Corners only - veins emerge from edges
+    // Corners
     { x: 0, y: 0, angle: Math.PI * 0.25, color: 'gold' },
     { x: WIDTH, y: 0, angle: Math.PI * 0.75, color: 'silver' },
     { x: 0, y: HEIGHT, angle: -Math.PI * 0.25, color: 'silver' },
     { x: WIDTH, y: HEIGHT, angle: -Math.PI * 0.75, color: 'gold' },
+    // Mid-edges for better coverage
+    { x: WIDTH * 0.3, y: 0, angle: Math.PI * 0.5, color: 'gold' },
+    { x: WIDTH * 0.7, y: 0, angle: Math.PI * 0.5, color: 'silver' },
+    { x: WIDTH * 0.3, y: HEIGHT, angle: -Math.PI * 0.5, color: 'silver' },
+    { x: WIDTH * 0.7, y: HEIGHT, angle: -Math.PI * 0.5, color: 'gold' },
+    // Side edges
+    { x: 0, y: HEIGHT * 0.3, angle: 0, color: 'gold' },
+    { x: 0, y: HEIGHT * 0.7, angle: 0, color: 'silver' },
+    { x: WIDTH, y: HEIGHT * 0.3, angle: Math.PI, color: 'silver' },
+    { x: WIDTH, y: HEIGHT * 0.7, angle: Math.PI, color: 'gold' },
   ];
   
   origins.forEach(({ x, y, angle, color }) => {
-    // Fewer branches, more sparse
-    const branchCount = Math.floor(randomRange(1, 3));
+    const branchCount = Math.floor(randomRange(2, 4));
     for (let i = 0; i < branchCount; i++) {
-      const angleVariation = randomRange(-0.2, 0.2);
-      branch(x, y, angle + angleVariation, 5, randomRange(1.5, 2.5), color);
+      const angleVariation = randomRange(-0.3, 0.3);
+      branch(x, y, angle + angleVariation, 6, randomRange(2, 3.5), color);
     }
   });
 }
@@ -107,14 +116,9 @@ function render() {
   const goldColor = '#C9A227';
   const silverColor = '#7B9BAD';
   
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" preserveAspectRatio="xMidYMid slice">
-  <defs>
-    <!-- Slight blur for organic softness -->
-    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="0.5" />
-    </filter>
-  </defs>
-  <g filter="url(#soft)">
+  // Use "none" to stretch and fill viewport
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" preserveAspectRatio="none">
+  <g>
 `;
   
   // Render paths (thicker ones first for layering)
