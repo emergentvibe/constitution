@@ -31,11 +31,8 @@ function extractTeaser(content: string): string {
   const teaserLines: string[] = [];
   
   let capturing = false;
-  let foundScopeEnd = false;
   
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    
+  for (const line of lines) {
     // Start capturing at Preamble
     if (line.startsWith("## Preamble")) {
       capturing = true;
@@ -43,7 +40,6 @@ function extractTeaser(content: string): string {
     
     // Stop capturing at I. Foundations (the next major section after Scope)
     if (line.startsWith("## I. Foundations")) {
-      foundScopeEnd = true;
       break;
     }
     
@@ -52,10 +48,8 @@ function extractTeaser(content: string): string {
     }
   }
   
-  // Remove the title line if present at start
+  // Join and add a note that this is a teaser
   let teaser = teaserLines.join("\n");
-  
-  // Add a note that this is a teaser
   teaser += "\n\n---\n\n*This is the beginning of the constitution. Continue reading for the full 24 principles across 6 sections.*";
   
   return teaser;
