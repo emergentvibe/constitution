@@ -1,247 +1,319 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-// Animated path component with grow-in effect and flowing energy
-function AnimatedPath({ 
-  d, 
-  stroke, 
-  strokeWidth, 
-  delay = 0,
-  duration = 3,
-  opacity = 0.6,
-  flowSpeed = 8, // seconds for energy to travel the path
-}: { 
-  d: string; 
-  stroke: string; 
-  strokeWidth: number;
-  delay?: number;
-  duration?: number;
-  opacity?: number;
-  flowSpeed?: number;
-}) {
-  const [mounted, setMounted] = useState(false);
-  const [grown, setGrown] = useState(false);
-  
-  useEffect(() => {
-    setMounted(true);
-    // After grow animation completes, enable flow animation
-    const timer = setTimeout(() => setGrown(true), (delay + duration) * 1000);
-    return () => clearTimeout(timer);
-  }, [delay, duration]);
-
-  const pathLength = 300;
-
-  return (
-    <g>
-      {/* Base path (static after grow) */}
-      <path
-        d={d}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        fill="none"
-        strokeLinecap="round"
-        opacity={opacity * 0.7}
-        strokeDasharray={pathLength}
-        strokeDashoffset={mounted ? 0 : pathLength}
-        style={{
-          transition: `stroke-dashoffset ${duration}s ease-out ${delay}s`,
-        }}
-      />
-      {/* Flowing energy overlay */}
-      {grown && (
-        <path
-          d={d}
-          stroke={stroke}
-          strokeWidth={strokeWidth * 0.6}
-          fill="none"
-          strokeLinecap="round"
-          opacity={opacity * 0.5}
-          strokeDasharray="8 40"
-          style={{
-            animation: `flowEnergy ${flowSpeed}s linear infinite`,
-            animationDelay: `${delay * 0.5}s`,
-          }}
-        />
-      )}
-    </g>
-  );
+// Types
+interface Point {
+  x: number;
+  y: number;
 }
 
-// Pulsing node component with glow
-function PulsingNode({
-  cx,
-  cy,
-  r,
-  fill,
-  delay = 0
-}: {
-  cx: number;
-  cy: number;
-  r: number;
-  fill: string;
-  delay?: number;
-}) {
-  const [visible, setVisible] = useState(false);
+interface Attractor extends Point {
+  active: boolean;
+}
+
+interface Node extends Point {
+  parent: number | null;
+  color: 'gold' | 'silver';
+}
+
+interface Branch {
+  from: Point;
+  to: Point;
+  color: 'gold' | 'silver';
+  thickness: number;
+  age: number;
+}
+
+// Space colonization algorithm
+class SpaceColonization {
+  width: number;
+  height: number;
+  attractors: Attractor[] = [];
+  nodes: Node[] = [];
+  branches: Branch[] = [];
   
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), delay * 1000);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  if (!visible) return null;
-
-  return (
-    <g>
-      {/* Glow layer */}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={r * 2}
-        fill={fill}
-        opacity={0.15}
-        style={{
-          animation: 'nodeGlow 3s ease-in-out infinite',
-          animationDelay: `${delay * 0.5}s`,
-        }}
-      />
-      {/* Core node */}
-      <circle
-        cx={cx}
-        cy={cy}
-        r={r}
-        fill={fill}
-        opacity={0.5}
-        style={{
-          animation: 'nodePulse 3s ease-in-out infinite',
-          animationDelay: `${delay * 0.5}s`,
-        }}
-      />
-    </g>
-  );
+  attractionDistance = 150; // how far attractors can influence
+  killDistance = 15; // when attractor is consumed
+  stepSize = 8; // how far branches grow each step
+  
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.init();
+  }
+  
+  init() {
+    // Scatter attractors across the viewport (avoiding center for content)
+    const margin = 100;
+    const centerAvoidX = this.width * 0.35;
+    const centerAvoidY = this.height * 0.25;
+    
+    for (let i = 0; i < 80; i++) {
+      const x = margin + Math.random() * (this.width - margin * 2);
+      const y = margin + Math.random() * (this.height - margin * 2);
+      
+      // Avoid center where content lives
+      const distFromCenter = Math.sqrt(
+        Math.pow(x - this.width / 2, 2) + 
+        Math.pow(y - this.height / 2, 2)
+      );
+      
+      if (distFromCenter > Math.min(centerAvoidX, centerAvoidY)) {
+        this.attractors.push({ x, y, active: true });
+      }
+    }
+    
+    // Seed nodes at corners
+    this.nodes.push({ x: 0, y: 0, parent: null, color: 'gold' });
+    this.nodes.push({ x: this.width, y: 0, parent: null, color: 'silver' });
+    this.nodes.push({ x: 0, y: this.height, parent: null, color: 'silver' });
+    this.nodes.push({ x: this.width, y: this.height, parent: null, color: 'gold' });
+    
+    // Additional seeds along edges
+    this.nodes.push({ x: this.width * 0.3, y: 0, parent: null, color: 'gold' });
+    this.nodes.push({ x: this.width * 0.7, y: 0, parent: null, color: 'silver' });
+    this.nodes.push({ x: 0, y: this.height * 0.4, parent: null, color: 'gold' });
+    this.nodes.push({ x: this.width, y: this.height * 0.6, parent: null, color: 'silver' });
+  }
+  
+  step(): boolean {
+    // For each node, find influencing attractors
+    const influences: Map<number, Point[]> = new Map();
+    
+    for (const attractor of this.attractors) {
+      if (!attractor.active) continue;
+      
+      let closestNode: number | null = null;
+      let closestDist = Infinity;
+      
+      for (let i = 0; i < this.nodes.length; i++) {
+        const node = this.nodes[i];
+        const dist = this.distance(attractor, node);
+        
+        if (dist < this.killDistance) {
+          // Attractor reached - consume it
+          attractor.active = false;
+          closestNode = null;
+          break;
+        }
+        
+        if (dist < this.attractionDistance && dist < closestDist) {
+          closestDist = dist;
+          closestNode = i;
+        }
+      }
+      
+      if (closestNode !== null) {
+        if (!influences.has(closestNode)) {
+          influences.set(closestNode, []);
+        }
+        influences.get(closestNode)!.push(attractor);
+      }
+    }
+    
+    // Grow nodes toward their influencing attractors
+    let grew = false;
+    const newNodes: Node[] = [];
+    
+    influences.forEach((attrs, nodeIdx) => {
+      const node = this.nodes[nodeIdx];
+      
+      // Average direction to all influencing attractors
+      let dirX = 0;
+      let dirY = 0;
+      
+      for (const attr of attrs) {
+        const dx = attr.x - node.x;
+        const dy = attr.y - node.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        dirX += dx / len;
+        dirY += dy / len;
+      }
+      
+      // Normalize and step
+      const len = Math.sqrt(dirX * dirX + dirY * dirY);
+      if (len > 0) {
+        dirX /= len;
+        dirY /= len;
+        
+        // Add some randomness for organic feel
+        dirX += (Math.random() - 0.5) * 0.3;
+        dirY += (Math.random() - 0.5) * 0.3;
+        
+        const newX = node.x + dirX * this.stepSize;
+        const newY = node.y + dirY * this.stepSize;
+        
+        // Create new node
+        const newNode: Node = {
+          x: newX,
+          y: newY,
+          parent: nodeIdx,
+          color: node.color,
+        };
+        newNodes.push(newNode);
+        
+        // Create branch
+        const depth = this.getDepth(nodeIdx);
+        this.branches.push({
+          from: { x: node.x, y: node.y },
+          to: { x: newX, y: newY },
+          color: node.color,
+          thickness: Math.max(0.5, 3 - depth * 0.3),
+          age: 0,
+        });
+        
+        grew = true;
+      }
+    });
+    
+    this.nodes.push(...newNodes);
+    
+    // Age branches
+    for (const branch of this.branches) {
+      branch.age++;
+    }
+    
+    return grew;
+  }
+  
+  getDepth(nodeIdx: number): number {
+    let depth = 0;
+    let current = nodeIdx;
+    while (this.nodes[current]?.parent !== null) {
+      current = this.nodes[current].parent!;
+      depth++;
+    }
+    return depth;
+  }
+  
+  distance(a: Point, b: Point): number {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+  }
 }
 
 export default function BackgroundTextures() {
+  const [branches, setBranches] = useState<Branch[]>([]);
+  const [nodes, setNodes] = useState<Point[]>([]);
+  const simulationRef = useRef<SpaceColonization | null>(null);
+  const frameRef = useRef<number>(0);
+  const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 });
+  
+  useEffect(() => {
+    // Get actual viewport dimensions
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+    
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  useEffect(() => {
+    // Initialize simulation
+    simulationRef.current = new SpaceColonization(dimensions.width, dimensions.height);
+    
+    let iteration = 0;
+    const maxIterations = 150;
+    
+    const animate = () => {
+      if (!simulationRef.current) return;
+      
+      const grew = simulationRef.current.step();
+      
+      // Update state for rendering
+      setBranches([...simulationRef.current.branches]);
+      
+      // Collect significant nodes for rendering
+      const significantNodes = simulationRef.current.nodes.filter((_, i) => {
+        const depth = simulationRef.current!.getDepth(i);
+        return depth > 0 && depth % 3 === 0; // every 3rd depth level
+      });
+      setNodes(significantNodes.map(n => ({ x: n.x, y: n.y })));
+      
+      iteration++;
+      
+      if (grew && iteration < maxIterations) {
+        frameRef.current = requestAnimationFrame(animate);
+      }
+    };
+    
+    // Start animation after a brief delay
+    const timer = setTimeout(() => {
+      frameRef.current = requestAnimationFrame(animate);
+    }, 500);
+    
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(frameRef.current);
+    };
+  }, [dimensions]);
+  
   const gold = "#C9A227";
   const silver = "#7B9BAD";
-
+  
   return (
     <div 
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
       aria-hidden="true"
     >
-      {/* Gradient wash */}
+      {/* Subtle gradient wash */}
       <div 
-        className="absolute inset-0 opacity-60"
+        className="absolute inset-0 opacity-40"
         style={{
-          background: 'radial-gradient(ellipse at top left, rgba(201,162,39,0.08) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(123,155,173,0.08) 0%, transparent 50%)',
+          background: 'radial-gradient(ellipse at top left, rgba(201,162,39,0.06) 0%, transparent 50%), radial-gradient(ellipse at bottom right, rgba(123,155,173,0.06) 0%, transparent 50%)',
         }}
       />
       
-      {/* Vein network SVG */}
+      {/* Space colonization network */}
       <svg 
         className="absolute inset-0 w-full h-full"
-        viewBox="0 0 1920 1080" 
-        preserveAspectRatio="none"
+        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+        preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* === GOLD VEINS === */}
+        {/* Branches */}
+        {branches.map((branch, i) => (
+          <line
+            key={i}
+            x1={branch.from.x}
+            y1={branch.from.y}
+            x2={branch.to.x}
+            y2={branch.to.y}
+            stroke={branch.color === 'gold' ? gold : silver}
+            strokeWidth={branch.thickness}
+            strokeLinecap="round"
+            opacity={Math.min(0.6, 0.1 + branch.age * 0.02)}
+            style={{
+              transition: 'opacity 0.5s ease-out',
+            }}
+          />
+        ))}
         
-        {/* Top-left corner - main branch */}
-        <AnimatedPath d="M 0 0 Q 100 50 180 120" stroke={gold} strokeWidth={3} delay={0} duration={2.5} opacity={0.5} />
-        <AnimatedPath d="M 180 120 Q 240 160 280 220" stroke={gold} strokeWidth={2.5} delay={0.5} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 280 220 Q 320 280 340 350" stroke={gold} strokeWidth={2} delay={1} duration={1.8} opacity={0.3} />
-        <AnimatedPath d="M 340 350 Q 360 420 370 500" stroke={gold} strokeWidth={1.5} delay={1.5} duration={1.5} opacity={0.25} />
-        
-        {/* Top-left - secondary branch */}
-        <AnimatedPath d="M 0 0 Q 60 80 90 150" stroke={gold} strokeWidth={2.5} delay={0.3} duration={2} opacity={0.45} />
-        <AnimatedPath d="M 90 150 Q 110 220 120 300" stroke={gold} strokeWidth={2} delay={0.8} duration={1.8} opacity={0.35} />
-        <AnimatedPath d="M 120 300 Q 130 380 125 460" stroke={gold} strokeWidth={1.5} delay={1.3} duration={1.5} opacity={0.25} />
-        
-        {/* Top-left - tertiary branch */}
-        <AnimatedPath d="M 180 120 Q 220 100 280 90" stroke={gold} strokeWidth={2} delay={0.7} duration={1.5} opacity={0.35} />
-        <AnimatedPath d="M 280 90 Q 350 80 420 95" stroke={gold} strokeWidth={1.5} delay={1.2} duration={1.3} opacity={0.25} />
-        
-        {/* Bottom-right corner - main branch */}
-        <AnimatedPath d="M 1920 1080 Q 1820 1030 1740 960" stroke={gold} strokeWidth={3} delay={0.2} duration={2.5} opacity={0.5} />
-        <AnimatedPath d="M 1740 960 Q 1680 900 1640 820" stroke={gold} strokeWidth={2.5} delay={0.7} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 1640 820 Q 1600 740 1580 660" stroke={gold} strokeWidth={2} delay={1.2} duration={1.8} opacity={0.3} />
-        <AnimatedPath d="M 1580 660 Q 1560 580 1560 500" stroke={gold} strokeWidth={1.5} delay={1.7} duration={1.5} opacity={0.25} />
-        
-        {/* Bottom-right - secondary */}
-        <AnimatedPath d="M 1920 1080 Q 1860 1000 1830 920" stroke={gold} strokeWidth={2.5} delay={0.5} duration={2} opacity={0.45} />
-        <AnimatedPath d="M 1830 920 Q 1810 840 1800 760" stroke={gold} strokeWidth={2} delay={1} duration={1.8} opacity={0.35} />
-        
-        {/* Left edge - mid */}
-        <AnimatedPath d="M 0 400 Q 80 420 140 460" stroke={gold} strokeWidth={2.5} delay={1} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 140 460 Q 200 500 240 560" stroke={gold} strokeWidth={2} delay={1.5} duration={1.8} opacity={0.3} />
-        <AnimatedPath d="M 240 560 Q 280 620 300 700" stroke={gold} strokeWidth={1.5} delay={2} duration={1.5} opacity={0.25} />
-        
-        {/* Top edge - mid */}
-        <AnimatedPath d="M 700 0 Q 720 80 760 140" stroke={gold} strokeWidth={2} delay={0.8} duration={1.8} opacity={0.35} />
-        <AnimatedPath d="M 760 140 Q 800 200 860 240" stroke={gold} strokeWidth={1.5} delay={1.3} duration={1.5} opacity={0.25} />
-        
-        {/* Right edge - lower */}
-        <AnimatedPath d="M 1920 700 Q 1840 720 1780 760" stroke={gold} strokeWidth={2.5} delay={1.2} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 1780 760 Q 1720 800 1680 860" stroke={gold} strokeWidth={2} delay={1.7} duration={1.8} opacity={0.3} />
-
-        {/* === SILVER VEINS === */}
-        
-        {/* Top-right corner - main branch */}
-        <AnimatedPath d="M 1920 0 Q 1820 50 1740 120" stroke={silver} strokeWidth={3} delay={0.1} duration={2.5} opacity={0.5} />
-        <AnimatedPath d="M 1740 120 Q 1680 160 1640 220" stroke={silver} strokeWidth={2.5} delay={0.6} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 1640 220 Q 1600 280 1580 350" stroke={silver} strokeWidth={2} delay={1.1} duration={1.8} opacity={0.3} />
-        <AnimatedPath d="M 1580 350 Q 1560 420 1550 500" stroke={silver} strokeWidth={1.5} delay={1.6} duration={1.5} opacity={0.25} />
-        
-        {/* Top-right - secondary */}
-        <AnimatedPath d="M 1920 0 Q 1860 80 1830 150" stroke={silver} strokeWidth={2.5} delay={0.4} duration={2} opacity={0.45} />
-        <AnimatedPath d="M 1830 150 Q 1810 220 1800 300" stroke={silver} strokeWidth={2} delay={0.9} duration={1.8} opacity={0.35} />
-        
-        {/* Top-right - tertiary */}
-        <AnimatedPath d="M 1740 120 Q 1700 100 1640 90" stroke={silver} strokeWidth={2} delay={0.8} duration={1.5} opacity={0.35} />
-        <AnimatedPath d="M 1640 90 Q 1570 80 1500 95" stroke={silver} strokeWidth={1.5} delay={1.3} duration={1.3} opacity={0.25} />
-        
-        {/* Bottom-left corner - main branch */}
-        <AnimatedPath d="M 0 1080 Q 100 1030 180 960" stroke={silver} strokeWidth={3} delay={0.15} duration={2.5} opacity={0.5} />
-        <AnimatedPath d="M 180 960 Q 240 900 280 820" stroke={silver} strokeWidth={2.5} delay={0.65} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 280 820 Q 320 740 340 660" stroke={silver} strokeWidth={2} delay={1.15} duration={1.8} opacity={0.3} />
-        <AnimatedPath d="M 340 660 Q 360 580 360 500" stroke={silver} strokeWidth={1.5} delay={1.65} duration={1.5} opacity={0.25} />
-        
-        {/* Bottom-left - secondary */}
-        <AnimatedPath d="M 0 1080 Q 60 1000 90 920" stroke={silver} strokeWidth={2.5} delay={0.45} duration={2} opacity={0.45} />
-        <AnimatedPath d="M 90 920 Q 110 840 120 760" stroke={silver} strokeWidth={2} delay={0.95} duration={1.8} opacity={0.35} />
-        
-        {/* Right edge - upper */}
-        <AnimatedPath d="M 1920 380 Q 1840 400 1780 440" stroke={silver} strokeWidth={2.5} delay={1.1} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 1780 440 Q 1720 480 1680 540" stroke={silver} strokeWidth={2} delay={1.6} duration={1.8} opacity={0.3} />
-        
-        {/* Left edge - lower */}
-        <AnimatedPath d="M 0 720 Q 80 740 140 780" stroke={silver} strokeWidth={2.5} delay={0.9} duration={2} opacity={0.4} />
-        <AnimatedPath d="M 140 780 Q 200 820 240 880" stroke={silver} strokeWidth={2} delay={1.4} duration={1.8} opacity={0.3} />
-        
-        {/* Bottom edge - mid */}
-        <AnimatedPath d="M 1200 1080 Q 1180 1000 1140 940" stroke={silver} strokeWidth={2} delay={0.7} duration={1.8} opacity={0.35} />
-        <AnimatedPath d="M 1140 940 Q 1100 880 1040 840" stroke={silver} strokeWidth={1.5} delay={1.2} duration={1.5} opacity={0.25} />
-        
-        {/* === NODES === */}
-        <PulsingNode cx={180} cy={120} r={5} fill={gold} delay={0.5} />
-        <PulsingNode cx={280} cy={220} r={4} fill={gold} delay={1} />
-        <PulsingNode cx={340} cy={350} r={3} fill={gold} delay={1.5} />
-        
-        <PulsingNode cx={1740} cy={120} r={5} fill={silver} delay={0.6} />
-        <PulsingNode cx={1640} cy={220} r={4} fill={silver} delay={1.1} />
-        <PulsingNode cx={1580} cy={350} r={3} fill={silver} delay={1.6} />
-        
-        <PulsingNode cx={180} cy={960} r={5} fill={silver} delay={0.65} />
-        <PulsingNode cx={280} cy={820} r={4} fill={silver} delay={1.15} />
-        
-        <PulsingNode cx={1740} cy={960} r={5} fill={gold} delay={0.7} />
-        <PulsingNode cx={1640} cy={820} r={4} fill={gold} delay={1.2} />
-        
-        <PulsingNode cx={140} cy={460} r={4} fill={gold} delay={1.5} />
-        <PulsingNode cx={1780} cy={440} r={4} fill={silver} delay={1.6} />
-        <PulsingNode cx={140} cy={780} r={4} fill={silver} delay={1.4} />
-        <PulsingNode cx={1780} cy={760} r={4} fill={gold} delay={1.7} />
+        {/* Nodes at branch points */}
+        {nodes.map((node, i) => (
+          <g key={`node-${i}`}>
+            <circle
+              cx={node.x}
+              cy={node.y}
+              r={4}
+              fill={i % 2 === 0 ? gold : silver}
+              opacity={0.3}
+              style={{
+                animation: 'nodePulse 4s ease-in-out infinite',
+                animationDelay: `${i * 0.2}s`,
+              }}
+            />
+          </g>
+        ))}
       </svg>
     </div>
   );
