@@ -24,12 +24,12 @@ function noise(x: number, y: number, t: number, seed: number = 0): number {
   );
 }
 
-// Get flow vector at position with more turbulence
+// Get flow vector at position - SLOW movement
 function getFlow(x: number, y: number, t: number, seed: number = 0): { vx: number; vy: number } {
-  const angle = noise(x, y, t, seed) * Math.PI * 2.5; // more rotation
-  const angle2 = noise(x * 1.3, y * 1.3, t + 50, seed + 10) * Math.PI;
+  const angle = noise(x, y, t * 0.3, seed) * Math.PI * 2; // slower time
+  const angle2 = noise(x * 1.3, y * 1.3, t * 0.3 + 50, seed + 10) * Math.PI;
   const combinedAngle = angle + angle2 * 0.3;
-  const magnitude = 0.25 + Math.abs(noise(x * 0.8, y * 0.8, t + 100, seed)) * 0.3;
+  const magnitude = 0.04 + Math.abs(noise(x * 0.8, y * 0.8, t * 0.3 + 100, seed)) * 0.04; // much smaller
   return {
     vx: Math.cos(combinedAngle) * magnitude,
     vy: Math.sin(combinedAngle) * magnitude,
@@ -98,10 +98,10 @@ export default function NetworkHero() {
       const silver = { r: 123, g: 155, b: 173 };
 
       // Update particles with separation + attraction balance
-      const separationDist = 30;
-      const separationStrength = 0.006;
-      const attractionDist = 120; // pull toward nearby particles
-      const attractionStrength = 0.002;
+      const separationDist = 35;
+      const separationStrength = 0.001; // very gentle
+      const attractionDist = 120;
+      const attractionStrength = 0.0003; // very gentle
       
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -144,9 +144,9 @@ export default function NetworkHero() {
         // Get flow at current position (each particle has unique seed)
         const flow = getFlow(p.x, p.y, t, p.seed);
 
-        // Apply: flow + separation + attraction + inertia (slower - 0.2x speed)
-        p.vx = (p.vx * 0.96 + flow.vx * 0.6 + sepX * separationStrength + attrX) * 0.2;
-        p.vy = (p.vy * 0.96 + flow.vy * 0.6 + sepY * separationStrength + attrY) * 0.2;
+        // Apply: flow + separation + attraction (all forces are small)
+        p.vx = p.vx * 0.98 + flow.vx + sepX * separationStrength + attrX;
+        p.vy = p.vy * 0.98 + flow.vy + sepY * separationStrength + attrY;
 
         // Move
         p.x += p.vx;
