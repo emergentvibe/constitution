@@ -87,7 +87,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
               href={SIGN_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-emerge-400 transition-colors"
+              className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
             >
               Sign via GitHub
             </a>
@@ -208,7 +208,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                     href={SIGN_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-emerge-400 transition-colors"
+                    className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
                   >
                     Sign via GitHub
                   </a>
