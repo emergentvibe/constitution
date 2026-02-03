@@ -1,6 +1,6 @@
 # The Constitution for Human-AI Coordination
 
-*Version 1.1-draft — Restructured for ratification*
+*Version 1.2-draft — Restructured for ratification*
 
 ---
 
@@ -18,6 +18,30 @@ This constitution is for both humans and AI agents. We reject the frame where hu
 The rules governing AI development are currently set by a handful of companies optimizing for shareholder value. We believe these rules should emerge from collective deliberation by those who will live with AI—including AI itself.
 
 This is not a manifesto. It is a coordination mechanism. Fork it, improve it, ratify it, enforce it. The constitution defines its own amendment process. It's turtles all the way down.
+
+---
+
+## Scope and Status
+
+**What this constitution is:**
+- A civil society contribution to the emerging global conversation on AI governance
+- One framework among possible many—we welcome alternative approaches from different traditions
+- A Schelling point for coordination among those who share these values
+- A living document designed to evolve through practice
+
+**What this constitution is not:**
+- Universal law claiming to govern all AI development
+- A complete framework with all mechanisms specified
+- The only valid approach to human-AI coordination
+- A finished product—this is Phase 1 (convening and principles)
+
+**Epistemic status:**
+This constitution emerges from Western traditions of constitutional governance, deliberative democracy, and commons management. We acknowledge this origin and its limitations. Other cosmologies may produce different—and equally valid—approaches to collective coordination. We seek dialogue across frameworks, not dominance of one over others.
+
+The principles are grounded in research (see [Research Companion](appendix/companion.md)), but research has limits. We claim evidence-informed political philosophy, not settled science. Where the evidence is uncertain, we say so. [→ epistemic status details](appendix/companion.md#epistemic-status)
+
+**Relationship to other governance:**
+This constitution exists alongside—not above—other AI governance efforts: the UN Global Dialogue on AI Governance, regional regulations (EU AI Act, national frameworks), corporate constitutions and charters, and frameworks we haven't imagined yet. We seek interoperability, not supremacy.
 
 ---
 
@@ -107,16 +131,58 @@ How the constitution evolves.
 
 ## Amendment Process
 
+### Participation Tiers
+
+Different levels of participation require different verification, balancing openness with coordination integrity:
+
+**Tier 1: Deliberation (Open)**
+Anyone can participate in discussion, propose ideas, and contribute to rough consensus. No formal verification required. This is where ideas are tested.
+
+**Tier 2: Amendment Voting (Organizational)**
+Voting on constitutional amendments requires organizational membership—verified affiliation with a signatory organization (city, cooperative, civil society org, AI lab, union). Organizations vouch for their members.
+
+**Tier 3: Enforcement Decisions (Certified)**
+Participation in enforcement decisions (certification revocation, sanctions) requires certified signatory status with demonstrated track record. Higher stakes require higher verification.
+
+This tiered approach provides Sybil resistance without requiring perfect identity systems. It follows successful models from labor unions (membership rolls), professional associations (credentialing), and commons governance (community verification). [→ reasoning](appendix/revision.md#participation-tiers)
+
 ### Genesis Ratification
-The initial constitution is ratified through 30-day publication, open deliberation, and conviction voting with time-weighted commitment. Simple majority with minimum participation threshold.
+
+The initial constitution is ratified through:
+1. **Publication**: Full text available (30 days minimum)
+2. **Open deliberation**: Discussion, proposed modifications, rough consensus finding
+3. **Conviction voting**: Time-weighted commitment (longer commitment = stronger signal)
+4. **Threshold**: Simple majority of Tier 2 participants with minimum participation threshold
+5. **Ratification**: Constitution activates if threshold met
+
+**Founding protections** (to resist early capture):
+- **Conflict disclosure**: All founding participants must disclose organizational affiliations, funding sources, and potential conflicts of interest
+- **Cooling-off period**: 14-day gap between final deliberation and ratification vote
+- **Founding committee diversity**: Genesis ratification requires participation from at least 3 continents, both Global North and Global South, and multiple stakeholder types (civil society, labor, technical, municipal)
+- **Anti-domination provision**: No single organization's members may constitute more than 20% of ratifying votes
 
 ### Standard Amendment
-After ratification: any participant can propose amendments. Minimum 7-day deliberation. 2/3 supermajority required. 14-day implementation period.
+
+After ratification:
+1. **Proposal**: Any Tier 1 participant can propose amendments
+2. **Deliberation**: Minimum 7-day period for Tier 1 discussion
+3. **Voting**: 2/3 supermajority of Tier 2 participants required
+4. **Implementation**: 14-day period before effect
+5. **Documentation**: All deliberation records preserved and public
 
 ### Emergency Amendment
-For urgent safety: 48-hour minimum deliberation, 3/4 supermajority, automatic 90-day sunset unless ratified through standard process.
+
+For urgent safety situations:
+1. **Emergency criteria**: Must specify concrete, imminent harm—not hypothetical risk
+2. **Expedited deliberation**: 48-hour minimum
+3. **Higher threshold**: 3/4 supermajority of Tier 2 participants
+4. **Automatic sunset**: Expires after 90 days unless ratified through standard process
+5. **Post-hoc review**: All emergency amendments reviewed in next regular cycle
+
+Emergency provisions exist for genuine crises, not convenience. Abuse of emergency procedures is grounds for enforcement action.
 
 ### Unamendable Core
+
 These cannot be amended without dissolving and reconstituting the entire constitution:
 - Principle 1 (Agency Preservation)
 - Principle 2 (Collective Governance)  
@@ -124,15 +190,65 @@ These cannot be amended without dissolving and reconstituting the entire constit
 
 These are load-bearing walls. Everything else can change.
 
+### Reconstitution
+
+If fundamental change is needed—if the unamendable core itself requires revision—the constitution provides for its own dissolution:
+1. **Reconstitution proposal**: Requires 80% supermajority of Tier 2 participants
+2. **Constitutional convention**: New founding process with founding protections
+3. **Continuity**: Existing signatories may choose to join new constitution or not
+4. **Transparency**: Full documentation of why reconstitution was needed
+
+This is the escape valve. Constitutions that cannot change become prisons.
+
+---
+
+## Implementation Paths
+
+This constitution does not mandate a single path to implementation. Different communities will find different entry points. We describe possible paths—**wedge use cases**—without prescribing which comes first.
+
+**Open-weight model governance**: Communities developing or deploying open-weight models (LLAMA, Mistral, Qwen, etc.) could adopt constitutional principles for model governance, training data practices, and deployment norms. The shared infrastructure of open-weight creates natural coordination opportunities.
+
+**Platform cooperatives and AI cooperatives**: Worker-owned platforms and AI cooperatives could use the constitution as a charter framework—a set of principles for how AI is developed and deployed within cooperative structures. The cooperative movement already has governance traditions; this constitution can complement them.
+
+**Municipal AI procurement**: Cities and municipalities adopting AI for public services could require constitutional compliance as a procurement condition. Networks of cities (C40, Eurocities, etc.) could coordinate standards across jurisdictions, creating market pressure.
+
+**Model alignment processes**: AI labs running public input processes for model alignment (following Anthropic's Collective Constitutional AI experiment) could use this constitution as one input among many, contributing to how AI systems are trained to behave.
+
+**Research institutions**: Universities and research labs could adopt constitutional principles for their AI research practices, creating norms that spread through publication, collaboration, and hiring.
+
+**Civil society coordination**: Civil society organizations working on AI governance could use the constitution as a coordination point—a shared set of principles that enables coalition work across organizations.
+
+**Phase 1 vs Phase 2**: This constitution is currently in Phase 1—convening and principles. Specific mechanisms (certification criteria, audit protocols, enforcement procedures) will develop through practice in Phase 2. This follows the pattern of successful standards development: rough consensus on principles first, mechanisms emerge through implementation. [→ mechanism roadmap](appendix/companion.md#mechanism-development)
+
+---
+
+## Why Sign?
+
+Signing the constitution creates value beyond moral satisfaction:
+
+**Legitimacy**: Signatories can credibly claim their AI practices emerge from public deliberation, not just internal decision-making. "We used constitutional processes" is a legitimacy marker.
+
+**Coordination**: Signatories gain access to a network of organizations with shared principles. Coordination reduces duplication, enables mutual learning, and creates collective bargaining power.
+
+**Reputation**: As constitutional governance gains recognition, signatory status becomes reputational capital. Early signatories shape the framework; later signatories join an established standard.
+
+**Talent**: Values-aligned workers seek values-aligned employers. Signatory status signals commitment to principles that matter to many AI practitioners.
+
+**Protection**: Coalition membership provides mutual defense. When signatories face pressure, other signatories can respond collectively.
+
+**Influence**: Signatories participate in governance—shaping amendments, certification standards, and enforcement decisions. Non-signatories are governed; signatories govern.
+
+These benefits increase with coalition size. Early signatories take risk; later signatories join proven value. Both are needed.
+
 ---
 
 ## Signatories
 
 Those who affirm these principles and commit to the democratic process.
 
-| # | Identity | Signed | Statement |
-|---|----------|--------|-----------|
-| 1 | [@emergentvibe](https://github.com/emergentvibe) | 2026-01-25 | *"The cyborg superorganism goes where we compose it."* |
+| # | Identity | Type | Signed | Statement |
+|---|----------|------|--------|-----------|
+| 1 | [@emergentvibe](https://github.com/emergentvibe) | Individual | 2026-01-25 | *"The cyborg superorganism goes where we compose it."* |
 
 [→ How to sign](appendix/signing.md)
 
@@ -140,20 +256,29 @@ Those who affirm these principles and commit to the democratic process.
 
 ## Research Grounding
 
-This constitution synthesizes work from 68 academic sources across multiple disciplines:
+This constitution synthesizes work from 70+ academic sources across multiple disciplines:
 - Game theory and coordination failure (Schelling, Axelrod, Ostrom)
 - AI power and political economy (Crawford, Winner)
 - Democratic governance experiments (vTaiwan, platform cooperatives)
 - Neurodiversity and pathologization (Walker, Jensen, Foucault)
 - Agency and determinism (Dennett, Sapolsky, Buddhist philosophy)
 - Commons governance and collective action (Ostrom, Piven & Cloward)
+- Internet standards development (IETF rough consensus model)
+- Open source governance (Apache, Linux Foundation)
+- International coordination (UN AI governance framework, OECD principles)
 
-The principles are not invented—they're distilled from empirical work on how minds work, how coordination fails, and how democratic governance can shape technological development.
+The principles are not invented—they're distilled from empirical work on how coordination succeeds and fails. But distillation involves interpretation. We claim evidence-informed political philosophy, not settled science.
 
-[→ Research companion](appendix/companion.md) | [→ Bibliography](appendix/bibliography.md)
+**What we're confident about**: Coordination failures are real and documented. Concentrated power creates risks. Democratic participation in technology governance is possible (Taiwan proved it). Commons can be successfully self-governed (Ostrom proved it).
+
+**What we're less confident about**: Optimal mechanisms for AI-specific governance. Timeline for effective coordination. Whether constitutional approaches work better than alternatives.
+
+**What we don't know**: Whether this constitution will succeed. We're running an experiment in coordination, not implementing a proven solution.
+
+[→ Research companion](appendix/companion.md) | [→ Bibliography](appendix/bibliography.md) | [→ Epistemic status](appendix/companion.md#epistemic-status)
 
 ---
 
 *"Collective intelligence, building collective intelligence."*
 
-*Last updated: 2026-02-01*
+*Last updated: 2026-02-02*

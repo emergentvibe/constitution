@@ -14,7 +14,55 @@ But "collective deliberation" isn't enough. We needed to understand:
 - What historical evidence shows about change
 - What concrete governance mechanisms might work
 
-This companion explains how we got from questions to principles, grounded in 68 academic sources across multiple disciplines.
+This companion explains how we got from questions to principles, grounded in 70+ academic sources across multiple disciplines.
+
+---
+
+## Epistemic Status
+
+**What this constitution is**: Evidence-informed political philosophy. A proposal for coordination grounded in research on how coordination works.
+
+**What this constitution is not**: Settled science. Proven solution. Universal truth.
+
+### Confidence Levels
+
+**High confidence** (strong empirical support):
+- Coordination failures exist and can be modeled (Schelling, Axelrod, game theory literature)
+- Commons can be successfully self-governed (Ostrom's 800+ case studies)
+- Democratic technology governance is feasible at national scale (vTaiwan since 2014)
+- Power concentration in AI development is real and documented (Crawford, OECD data)
+- Distributed coordination without central authority works in some domains (IETF, open source)
+
+**Medium confidence** (theoretical support, limited AI-specific evidence):
+- Constitutional mechanisms can shift AI development incentives
+- Coalition power can create market pressure for compliance
+- Tiered participation provides adequate Sybil resistance
+- 2-year revision cycles are appropriate for current AI pace
+
+**Low confidence** (informed speculation):
+- Specific coalition size thresholds (50-100 cities, 1M creators, 100K workers)
+- Timeline estimates for effective coordination
+- Whether constitutional approach is better than alternatives
+- How AI systems themselves should participate in governance
+
+### Acknowledged Limitations
+
+**Western origin**: This constitution uses concepts from Western political philosophy (constitutionalism, rights, democratic procedures). Other traditions may approach collective coordination differently. We claim this as one contribution to a pluriversal conversation, not the definitive approach.
+
+**Theoretical vs. practical**: Many principles are theoretically grounded but not yet tested in AI governance specifically. We're extrapolating from adjacent domains (commons governance, internet standards, labor organizing).
+
+**Selection effects**: The research we drew on reflects our starting questions and assumptions. Different questions would surface different literatures.
+
+**Dynamic field**: AI capabilities and governance landscape are changing rapidly. This constitution reflects understanding as of early 2026. Regular revision is not a bug but a feature.
+
+### What Would Change Our Minds
+
+- Evidence that constitutional coordination slows beneficial AI development without affecting harmful development
+- Demonstration that other governance approaches (pure regulation, corporate self-governance, technical solutions) work better
+- Findings that decentralized coordination cannot achieve scale needed for AI governance
+- Evidence that the principles conflict with flourishing rather than supporting it
+
+We invite critique. The constitution includes amendment processes precisely because we expect to be wrong about some things.
 
 ---
 
@@ -141,6 +189,49 @@ These principles enable evolution: adaptive cycles [S30, S40, S63], certificatio
 
 ---
 
+## Mechanism Development
+
+The constitution is currently in **Phase 1: Convening and Principles**. Specific mechanisms will develop through practice in Phase 2.
+
+### Why Mechanisms Come Second
+
+This follows successful models of standards development:
+
+**IETF (Internet Engineering Task Force)**: Internet standards emerge through "rough consensus and running code." Principles are established through discussion; mechanisms are tested through implementation; standards emerge from what works. The IETF has governed internet protocols for 40+ years without central authority [S69].
+
+**Open source governance**: Linux, Apache, and other successful open source projects developed governance mechanisms through practice. The Linux Foundation's current structure emerged over decades of experimentation, not from initial design [S70].
+
+**Ostrom's commons**: Successful commons governance exhibits Ostrom's eight principles, but the specific mechanisms vary enormously across contexts. The principles describe what works; communities implement them differently [S40].
+
+**vTaiwan**: Taiwan's digital democracy evolved through iteration. Pol.is was adopted because it worked, not because it was mandated. Rough consensus processes developed through use [S63].
+
+### Phase 1 → Phase 2 Transition
+
+**Phase 1 (current)**: Establish principles. Build initial coalition. Create deliberation infrastructure. Learn from early implementations.
+
+**Transition indicators**: Phase 2 begins when:
+- 10+ organizational signatories from diverse contexts
+- At least one successful wedge implementation
+- Enough experience to inform mechanism design
+- Community capacity to support more complex processes
+
+**Phase 2**: Develop specific mechanisms through participatory process:
+- Certification criteria and audit protocols
+- Enforcement procedures and sanction gradations
+- Inter-organizational coordination protocols
+- Relationship frameworks with other governance bodies
+
+### What We Won't Specify Prematurely
+
+- Exact certification requirements (depend on context)
+- Specific audit methodologies (depend on AI system type)
+- Detailed enforcement procedures (depend on coalition capacity)
+- Precise participation thresholds (require empirical calibration)
+
+Specifying these now would be premature optimization. We'd lock in untested mechanisms. Better to establish principles, learn from implementation, and codify what works.
+
+---
+
 ## Further Research
 
 This constitution is a starting point. Open questions include:
@@ -153,10 +244,14 @@ This constitution is a starting point. Open questions include:
 
 - **Scale validation**: Coalition targets (50-100 cities, 1M creators, 100K workers) are estimates. Empirical work is needed.
 
+- **Interoperability**: How does this constitution relate to other AI governance frameworks? What protocols enable coordination across frameworks?
+
+- **Non-Western approaches**: What would AI governance look like from Indigenous, African, Asian, or Latin American philosophical traditions? How do different cosmologies produce different coordination mechanisms?
+
 ---
 
 ## Sources
 
-Full bibliography with 68 sources: [bibliography.md](bibliography.md)
+Full bibliography with 70+ sources: [bibliography.md](bibliography.md)
 
 The bibliography maps sources to principles and provides full citations for all referenced works.

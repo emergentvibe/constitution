@@ -261,30 +261,76 @@ Academic sources grounding the constitutional principles. Organized by topic, wi
 | Principle | Primary Sources |
 |-----------|-----------------|
 | 1. Human Agency Preservation | S50-52, S57-58, S62 |
-| 2. Collective Governance | S63-64, S66-68 |
+| 2. Collective Governance | S63-64, S66-68, S72-75 |
 | 3. Plurality and Accommodation | S13-16, S45-46 |
 | 4. Right to Transparency | S25-26, S36 |
 | 5. Right to Human Review | S57-58, S62 |
 | 6. Right to Collective Bargaining | S37, S40, S47 |
 | 7. Right to Exit and Alternatives | S40, S43, S47 |
 | 8. Right to Deterritorialization | S6-7, S56, S65 |
-| 9. Impact Assessment | S25, S27-28, S30-31 |
+| 9. Impact Assessment | S25, S27-28, S30-31, S74 |
 | 10. Recursion Safeguards | S57, S64 |
-| 11. Accountability and Liability | S36, S66 |
-| 12. Open by Default | S65, S68 |
-| 13. Federated Governance | S40, S63, S66 |
-| 14. Commons-Based Ownership | S40, S42-43, S47, S67 |
-| 15. Hybrid Expertise | S63-64, S15-16 |
+| 11. Accountability and Liability | S36, S66, S74 |
+| 12. Open by Default | S65, S68, S76 |
+| 13. Federated Governance | S40, S63, S66, S72 |
+| 14. Commons-Based Ownership | S40, S42-43, S47, S67, S76 |
+| 15. Hybrid Expertise | S63-64, S15-16, S78 |
 | 16. Parliament of Constituents | S32, S43 |
 | 17. Flourishing Over Optimization | S13-14, S45-46 |
 | 18. Care and Attention as Commons | S17, S25, S32 |
 | 19. Weird and Unexpected | S12, S41 |
 | 20. Contemplative Capacity | S50-55, S57-58 |
-| 21. Regular Amendment | S40, S63 |
-| 22. Certification and Compliance | S66, S68 |
+| 21. Regular Amendment | S40, S63, S69 |
+| 22. Certification and Compliance | S66, S68, S73-74 |
 | 23. Enforcement Mechanisms | S17-24, S37 |
 | 24. Coalition Power | S37, S41, S47 |
+| Participation Tiers | S40, S69, S71, S77 |
+| Founding Protections | S40, S78 |
+| Mechanism Development | S40, S63, S69-70, S76-77 |
+| Epistemic Status | S12, S40, S69 |
 
 ---
 
-*68 sources across game theory, AI governance, neurodiversity, commons governance, social movements, and agency/determinism.*
+## Internet Standards and Distributed Governance
+
+**[S69]** Resnick, P. (2014). On Consensus and Humming in the IETF. *RFC 7282*. Internet Engineering Task Force.
+> The IETF's "rough consensus" model: decisions through demonstrated agreement rather than voting; "humming" as lightweight preference expression; working code validates proposals.
+
+**[S70]** Riehle, D. (2007). The Economic Motivation of Open Source Software: Stakeholder Perspectives. *Computer*, 40(4), 25-32.
+> Analysis of open source governance models; how Linux, Apache, and other projects develop governance through practice rather than initial design.
+
+**[S71]** Douceur, J. (2002). The Sybil Attack. *Proceedings of the 1st International Workshop on Peer-to-Peer Systems (IPTPS)*. Springer.
+> Original formalization of Sybil attacks: in systems without trusted identity, malicious actors can present multiple identities to subvert reputation or voting systems.
+
+---
+
+## International AI Governance (2025-2026)
+
+**[S72]** United Nations (2025). Global Dialogue on AI Governance: Framework Document. UN General Assembly.
+> Establishes UN Global Dialogue on AI Governance and Independent International Scientific Panel on AI; first global forum for AI governance coordination.
+
+**[S73]** OECD (2024). OECD AI Principles (updated). Organisation for Economic Co-operation and Development.
+> AI principles adopted by 40+ countries; framework for trustworthy AI including transparency, accountability, and human oversight.
+
+**[S74]** European Union (2024). EU AI Act. Official Journal of the European Union.
+> First comprehensive AI regulation; risk-based approach; establishes categories of prohibited, high-risk, and general-purpose AI with corresponding requirements.
+
+**[S75]** China Ministry of Foreign Affairs (2025). Global AI Governance Action Plan.
+> China's proposal for multilateral AI cooperation; calls for international coordination and warns against fragmented national strategies.
+
+---
+
+## Additional Sources on Coordination Success
+
+**[S76]** Benkler, Y. (2006). *The Wealth of Networks: How Social Production Transforms Markets and Freedom*. Yale University Press.
+> Commons-based peer production; how networked information economy enables new forms of coordination without central authority.
+
+**[S77]** O'Neil, M. (2009). *Cyberchiefs: Autonomy and Authority in Online Tribes*. Pluto Press.
+> Governance structures in open source communities; how authority emerges in decentralized projects.
+
+**[S78]** Fung, A. & Wright, E.O. (2003). *Deepening Democracy: Institutional Innovations in Empowered Participatory Governance*. Verso.
+> Case studies of participatory governance innovations; conditions for successful democratic experimentation.
+
+---
+
+*75+ sources across game theory, AI governance, neurodiversity, commons governance, social movements, agency/determinism, internet standards, and international coordination.*
