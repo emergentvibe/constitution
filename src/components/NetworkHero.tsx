@@ -2,279 +2,172 @@
 
 import { useEffect, useRef } from "react";
 
-interface Node {
+interface Particle {
   x: number;
   y: number;
-  neighbors: number[];
+  vx: number;
+  vy: number;
+  life: number;
 }
 
-interface Edge {
-  from: number;
-  to: number;
-  length: number;
+// Simple noise function (simplified perlin-like)
+function noise(x: number, y: number, t: number): number {
+  // Multiple octaves of sine waves for organic feel
+  return (
+    Math.sin(x * 0.01 + t * 0.2) * 0.5 +
+    Math.sin(y * 0.012 - t * 0.15) * 0.5 +
+    Math.sin((x + y) * 0.008 + t * 0.1) * 0.3 +
+    Math.sin(x * 0.02 - y * 0.015 + t * 0.25) * 0.2
+  );
 }
 
-interface Spotlight {
-  currentNode: number;
-  targetNode: number;
-  progress: number; // 0 to 1 along current edge
-  speed: number;
-  radius: number;
-  intensity: number;
+// Get flow vector at position
+function getFlow(x: number, y: number, t: number): { vx: number; vy: number } {
+  const angle = noise(x, y, t) * Math.PI * 2;
+  const magnitude = 0.3 + noise(x * 1.5, y * 1.5, t + 100) * 0.2;
+  return {
+    vx: Math.cos(angle) * magnitude,
+    vy: Math.sin(angle) * magnitude,
+  };
 }
 
 export default function NetworkHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
-  const nodesRef = useRef<Node[]>([]);
-  const edgesRef = useRef<Edge[]>([]);
-  const spotlightsRef = useRef<Spotlight[]>([]);
+  const particlesRef = useRef<Particle[]>([]);
   const timeRef = useRef(0);
+  const dimensionsRef = useRef({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
+      dimensionsRef.current = { width: rect.width, height: rect.height };
       canvas.width = rect.width * window.devicePixelRatio;
       canvas.height = rect.height * window.devicePixelRatio;
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-      generateNetwork(rect.width, rect.height);
-      generateSpotlights();
+      initParticles(rect.width, rect.height);
     };
 
-    // Generate a connected network using proximity + ensuring connectivity
-    const generateNetwork = (width: number, height: number) => {
-      const nodes: Node[] = [];
-      const nodeCount = 80;
-      
-      // Create nodes in relaxed grid with jitter
-      const cols = 10;
-      const rows = 8;
-      const cellW = width / cols;
-      const cellH = height / rows;
-      
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          if (nodes.length >= nodeCount) break;
-          nodes.push({
-            x: cellW * (col + 0.2 + Math.random() * 0.6),
-            y: cellH * (row + 0.2 + Math.random() * 0.6),
-            neighbors: [],
-          });
-        }
-      }
-      
-      // Build edges using Delaunay-like approach: connect to nearby nodes
-      const edges: Edge[] = [];
-      const maxDist = Math.max(cellW, cellH) * 1.8;
-      
-      for (let i = 0; i < nodes.length; i++) {
-        // Find nearby nodes and connect
-        const nearby: { idx: number; dist: number }[] = [];
-        
-        for (let j = 0; j < nodes.length; j++) {
-          if (i === j) continue;
-          const dist = Math.sqrt(
-            Math.pow(nodes[i].x - nodes[j].x, 2) +
-            Math.pow(nodes[i].y - nodes[j].y, 2)
-          );
-          if (dist < maxDist) {
-            nearby.push({ idx: j, dist });
-          }
-        }
-        
-        // Sort by distance, connect to closest 3-4
-        nearby.sort((a, b) => a.dist - b.dist);
-        const connectCount = 2 + Math.floor(Math.random() * 2);
-        
-        for (let k = 0; k < Math.min(connectCount, nearby.length); k++) {
-          const j = nearby[k].idx;
-          
-          // Avoid duplicate edges
-          if (!nodes[i].neighbors.includes(j)) {
-            nodes[i].neighbors.push(j);
-            nodes[j].neighbors.push(i);
-            edges.push({ from: i, to: j, length: nearby[k].dist });
-          }
-        }
-      }
-      
-      nodesRef.current = nodes;
-      edgesRef.current = edges;
-    };
+    const initParticles = (width: number, height: number) => {
+      const particles: Particle[] = [];
+      const count = 100;
 
-    // Generate spotlights that travel along edges
-    const generateSpotlights = () => {
-      const nodes = nodesRef.current;
-      if (nodes.length === 0) return;
-      
-      const spotlights: Spotlight[] = [];
-      
-      // Large slow spotlights (wide, dim)
-      for (let i = 0; i < 3; i++) {
-        const startNode = Math.floor(Math.random() * nodes.length);
-        spotlights.push({
-          currentNode: startNode,
-          targetNode: nodes[startNode].neighbors[0] || startNode,
-          progress: Math.random(),
-          speed: 0.15 + Math.random() * 0.1,
-          radius: 200 + Math.random() * 100,
-          intensity: 0.4 + Math.random() * 0.2,
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: 0,
+          vy: 0,
+          life: Math.random(),
         });
       }
-      
-      // Medium spotlights
-      for (let i = 0; i < 5; i++) {
-        const startNode = Math.floor(Math.random() * nodes.length);
-        spotlights.push({
-          currentNode: startNode,
-          targetNode: nodes[startNode].neighbors[0] || startNode,
-          progress: Math.random(),
-          speed: 0.3 + Math.random() * 0.2,
-          radius: 80 + Math.random() * 60,
-          intensity: 0.6 + Math.random() * 0.3,
-        });
-      }
-      
-      // Small fast spotlights (narrow, bright)
-      for (let i = 0; i < 7; i++) {
-        const startNode = Math.floor(Math.random() * nodes.length);
-        spotlights.push({
-          currentNode: startNode,
-          targetNode: nodes[startNode].neighbors[0] || startNode,
-          progress: Math.random(),
-          speed: 0.5 + Math.random() * 0.3,
-          radius: 30 + Math.random() * 30,
-          intensity: 0.8 + Math.random() * 0.4,
-        });
-      }
-      
-      spotlightsRef.current = spotlights;
-    };
 
-    // Get spotlight position (interpolated along edge)
-    const getSpotlightPos = (spotlight: Spotlight): { x: number; y: number } => {
-      const nodes = nodesRef.current;
-      const from = nodes[spotlight.currentNode];
-      const to = nodes[spotlight.targetNode];
-      
-      if (!from || !to) return { x: 0, y: 0 };
-      
-      return {
-        x: from.x + (to.x - from.x) * spotlight.progress,
-        y: from.y + (to.y - from.y) * spotlight.progress,
-      };
-    };
-
-    // Calculate brightness boost from spotlights
-    const getBrightnessBoost = (x: number, y: number): number => {
-      let boost = 0;
-      
-      for (const spotlight of spotlightsRef.current) {
-        const pos = getSpotlightPos(spotlight);
-        const dist = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
-        
-        if (dist < spotlight.radius) {
-          const falloff = 1 - (dist / spotlight.radius);
-          boost += falloff * falloff * spotlight.intensity;
-        }
-      }
-      
-      return Math.min(1, boost);
+      particlesRef.current = particles;
     };
 
     const animate = () => {
-      const rect = canvas.getBoundingClientRect();
-      const width = rect.width;
-      const height = rect.height;
-      
+      const { width, height } = dimensionsRef.current;
+      if (width === 0) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       const dt = 0.016;
       timeRef.current += dt;
+      const t = timeRef.current;
 
-      ctx.clearRect(0, 0, width, height);
+      // Clear with slight fade for trails
+      ctx.fillStyle = "rgba(250, 247, 242, 0.15)";
+      ctx.fillRect(0, 0, width, height);
 
-      const nodes = nodesRef.current;
-      const edges = edgesRef.current;
-      
-      // Update spotlight positions (move along edges)
-      for (const spotlight of spotlightsRef.current) {
-        spotlight.progress += spotlight.speed * dt;
-        
-        // Reached target node - pick new target
-        if (spotlight.progress >= 1) {
-          spotlight.progress = 0;
-          spotlight.currentNode = spotlight.targetNode;
-          
-          // Pick random neighbor as next target
-          const neighbors = nodes[spotlight.currentNode]?.neighbors || [];
-          if (neighbors.length > 0) {
-            spotlight.targetNode = neighbors[Math.floor(Math.random() * neighbors.length)];
+      const particles = particlesRef.current;
+      const connectionDist = 80;
+      const gold = { r: 201, g: 162, b: 39 };
+      const silver = { r: 123, g: 155, b: 173 };
+
+      // Update particles
+      for (const p of particles) {
+        // Get flow at current position
+        const flow = getFlow(p.x, p.y, t);
+
+        // Apply flow with some inertia
+        p.vx = p.vx * 0.95 + flow.vx * 0.5;
+        p.vy = p.vy * 0.95 + flow.vy * 0.5;
+
+        // Move
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around edges
+        if (p.x < -20) p.x = width + 20;
+        if (p.x > width + 20) p.x = -20;
+        if (p.y < -20) p.y = height + 20;
+        if (p.y > height + 20) p.y = -20;
+
+        // Slowly cycle life for subtle variation
+        p.life = (p.life + dt * 0.1) % 1;
+      }
+
+      // Draw connections
+      ctx.lineCap = "round";
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < connectionDist) {
+            const strength = 1 - dist / connectionDist;
+            const opacity = strength * strength * 0.25;
+
+            // Color based on position
+            const midX = (p1.x + p2.x) / 2;
+            const colorMix = midX / width;
+            const color = {
+              r: Math.round(gold.r * (1 - colorMix) + silver.r * colorMix),
+              g: Math.round(gold.g * (1 - colorMix) + silver.g * colorMix),
+              b: Math.round(gold.b * (1 - colorMix) + silver.b * colorMix),
+            };
+
+            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
+            ctx.lineWidth = strength * 1.5;
+
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
           }
         }
       }
 
-      const gold = { r: 201, g: 162, b: 39 };
-      const silver = { r: 123, g: 155, b: 173 };
-      
-      // Base opacity for always-visible network
-      const baseOpacity = 0.12;
-
-      // Draw edges
-      ctx.lineCap = "round";
-      for (const edge of edges) {
-        const from = nodes[edge.from];
-        const to = nodes[edge.to];
-        
-        const midX = (from.x + to.x) / 2;
-        const midY = (from.y + to.y) / 2;
-        const boost = getBrightnessBoost(midX, midY);
-        
-        const colorMix = midX / width;
+      // Draw particles
+      for (const p of particles) {
+        const colorMix = p.x / width;
         const color = {
           r: Math.round(gold.r * (1 - colorMix) + silver.r * colorMix),
           g: Math.round(gold.g * (1 - colorMix) + silver.g * colorMix),
           b: Math.round(gold.b * (1 - colorMix) + silver.b * colorMix),
         };
-        
-        const opacity = baseOpacity + boost * 0.35;
-        ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
-        ctx.lineWidth = 1 + boost * 1.5;
-        
-        ctx.beginPath();
-        ctx.moveTo(from.x, from.y);
-        ctx.lineTo(to.x, to.y);
-        ctx.stroke();
-      }
 
-      // Draw nodes
-      for (const node of nodes) {
-        const boost = getBrightnessBoost(node.x, node.y);
-        
-        const colorMix = node.x / width;
-        const color = {
-          r: Math.round(gold.r * (1 - colorMix) + silver.r * colorMix),
-          g: Math.round(gold.g * (1 - colorMix) + silver.g * colorMix),
-          b: Math.round(gold.b * (1 - colorMix) + silver.b * colorMix),
-        };
-        
-        // Glow (only when boosted)
-        if (boost > 0.1) {
-          ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${boost * 0.2})`;
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, 6 + boost * 8, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        
-        // Core (always visible)
-        const coreOpacity = baseOpacity + boost * 0.5;
-        ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${coreOpacity})`;
+        // Subtle glow
+        ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.1)`;
         ctx.beginPath();
-        ctx.arc(node.x, node.y, 2 + boost * 2, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core
+        ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, 0.35)`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
         ctx.fill();
       }
 
