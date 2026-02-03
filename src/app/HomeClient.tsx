@@ -1,6 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/Separator";
+import NetworkHero from "@/components/NetworkHero";
 
 // GitHub repo URL
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
@@ -24,8 +25,11 @@ export default function HomeClient({
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative px-6 py-24 md:py-32">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative px-6 py-24 md:py-32 overflow-hidden">
+        {/* Divergence field network */}
+        <NetworkHero />
+        
+        <div className="relative z-10 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 animate-fade-in">
             A coordination mechanism for{" "}
             <span className="text-accent">human-AI futures</span>
