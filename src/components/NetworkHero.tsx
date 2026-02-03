@@ -93,20 +93,25 @@ export default function NetworkHero() {
       ctx.fillRect(0, 0, width, height);
 
       const particles = particlesRef.current;
-      const connectionDist = 80;
+      const connectionDist = 120; // longer connections
       const gold = { r: 201, g: 162, b: 39 };
       const silver = { r: 123, g: 155, b: 173 };
 
-      // Update particles with gentle separation
-      const separationDist = 35; // smaller range
-      const separationStrength = 0.008; // gentler push
+      // Update particles with separation + attraction balance
+      const separationDist = 30;
+      const separationStrength = 0.006;
+      const attractionDist = 120; // pull toward nearby particles
+      const attractionStrength = 0.002;
       
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         
-        // Calculate separation force (repel from nearby particles)
+        // Calculate separation (repel) + attraction forces
         let sepX = 0;
         let sepY = 0;
+        let attrX = 0;
+        let attrY = 0;
+        let neighborCount = 0;
         
         for (let j = 0; j < particles.length; j++) {
           if (i === j) continue;
@@ -115,20 +120,33 @@ export default function NetworkHero() {
           const dy = p.y - other.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           
+          // Separation (close range)
           if (dist < separationDist && dist > 0) {
-            // Stronger repulsion when closer
             const force = (separationDist - dist) / separationDist;
             sepX += (dx / dist) * force;
             sepY += (dy / dist) * force;
           }
+          
+          // Attraction (medium range - outside separation)
+          if (dist > separationDist && dist < attractionDist) {
+            attrX += other.x;
+            attrY += other.y;
+            neighborCount++;
+          }
+        }
+        
+        // Average attraction toward neighbors
+        if (neighborCount > 0) {
+          attrX = (attrX / neighborCount - p.x) * attractionStrength;
+          attrY = (attrY / neighborCount - p.y) * attractionStrength;
         }
         
         // Get flow at current position (each particle has unique seed)
         const flow = getFlow(p.x, p.y, t, p.seed);
 
-        // Apply: flow (dominant) + separation (gentle) + inertia
-        p.vx = p.vx * 0.94 + flow.vx * 0.5 + sepX * separationStrength;
-        p.vy = p.vy * 0.94 + flow.vy * 0.5 + sepY * separationStrength;
+        // Apply: flow + separation + attraction + inertia (slower - 0.2x speed)
+        p.vx = (p.vx * 0.96 + flow.vx * 0.6 + sepX * separationStrength + attrX) * 0.2;
+        p.vy = (p.vy * 0.96 + flow.vy * 0.6 + sepY * separationStrength + attrY) * 0.2;
 
         // Move
         p.x += p.vx;
@@ -157,7 +175,7 @@ export default function NetworkHero() {
 
           if (dist < connectionDist) {
             const strength = 1 - dist / connectionDist;
-            const opacity = strength * strength * 0.25;
+            const opacity = strength * strength * 0.4; // more visible
 
             // Color based on position
             const midX = (p1.x + p2.x) / 2;
@@ -169,7 +187,7 @@ export default function NetworkHero() {
             };
 
             ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
-            ctx.lineWidth = strength * 1.5;
+            ctx.lineWidth = strength * 2;
 
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
