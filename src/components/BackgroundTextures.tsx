@@ -2,14 +2,15 @@
 
 import { useEffect, useState } from "react";
 
-// Animated path component with grow-in effect
+// Animated path component with grow-in effect and flowing energy
 function AnimatedPath({ 
   d, 
   stroke, 
   strokeWidth, 
   delay = 0,
   duration = 3,
-  opacity = 0.6 
+  opacity = 0.6,
+  flowSpeed = 8, // seconds for energy to travel the path
 }: { 
   d: string; 
   stroke: string; 
@@ -17,34 +18,57 @@ function AnimatedPath({
   delay?: number;
   duration?: number;
   opacity?: number;
+  flowSpeed?: number;
 }) {
   const [mounted, setMounted] = useState(false);
+  const [grown, setGrown] = useState(false);
   
   useEffect(() => {
     setMounted(true);
-  }, []);
+    // After grow animation completes, enable flow animation
+    const timer = setTimeout(() => setGrown(true), (delay + duration) * 1000);
+    return () => clearTimeout(timer);
+  }, [delay, duration]);
 
-  // Estimate path length (rough, works for our purposes)
   const pathLength = 300;
 
   return (
-    <path
-      d={d}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      fill="none"
-      strokeLinecap="round"
-      opacity={opacity}
-      strokeDasharray={pathLength}
-      strokeDashoffset={mounted ? 0 : pathLength}
-      style={{
-        transition: `stroke-dashoffset ${duration}s ease-out ${delay}s, opacity 2s ease-out ${delay}s`,
-      }}
-    />
+    <g>
+      {/* Base path (static after grow) */}
+      <path
+        d={d}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        fill="none"
+        strokeLinecap="round"
+        opacity={opacity * 0.7}
+        strokeDasharray={pathLength}
+        strokeDashoffset={mounted ? 0 : pathLength}
+        style={{
+          transition: `stroke-dashoffset ${duration}s ease-out ${delay}s`,
+        }}
+      />
+      {/* Flowing energy overlay */}
+      {grown && (
+        <path
+          d={d}
+          stroke={stroke}
+          strokeWidth={strokeWidth * 0.6}
+          fill="none"
+          strokeLinecap="round"
+          opacity={opacity * 0.5}
+          strokeDasharray="8 40"
+          style={{
+            animation: `flowEnergy ${flowSpeed}s linear infinite`,
+            animationDelay: `${delay * 0.5}s`,
+          }}
+        />
+      )}
+    </g>
   );
 }
 
-// Pulsing node component
+// Pulsing node component with glow
 function PulsingNode({
   cx,
   cy,
@@ -58,18 +82,42 @@ function PulsingNode({
   fill: string;
   delay?: number;
 }) {
+  const [visible, setVisible] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), delay * 1000);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  if (!visible) return null;
+
   return (
-    <circle
-      cx={cx}
-      cy={cy}
-      r={r}
-      fill={fill}
-      className="animate-pulse"
-      style={{
-        animationDelay: `${delay}s`,
-        animationDuration: '4s',
-      }}
-    />
+    <g>
+      {/* Glow layer */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r * 2}
+        fill={fill}
+        opacity={0.15}
+        style={{
+          animation: 'nodeGlow 3s ease-in-out infinite',
+          animationDelay: `${delay * 0.5}s`,
+        }}
+      />
+      {/* Core node */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r}
+        fill={fill}
+        opacity={0.5}
+        style={{
+          animation: 'nodePulse 3s ease-in-out infinite',
+          animationDelay: `${delay * 0.5}s`,
+        }}
+      />
+    </g>
   );
 }
 
