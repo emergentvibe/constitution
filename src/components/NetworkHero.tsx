@@ -85,7 +85,7 @@ export default function NetworkHero() {
     const generateSpotlights = (width: number, height: number) => {
       const spotlights: Spotlight[] = [];
       
-      // Large spotlights (radius 300-400, intensity 0.3-0.4) - 3 of them
+      // Large spotlights (radius 300-400, intensity 0.6-0.8) - 3 of them
       const largeConfigs = [
         { bx: 0.15, by: 0.3 },
         { bx: 0.85, by: 0.7 },
@@ -99,7 +99,7 @@ export default function NetworkHero() {
           baseY: height * cfg.by,
           radius: 350 + Math.random() * 50,
           baseRadius: 350 + Math.random() * 50,
-          intensity: 0.3 + Math.random() * 0.1,
+          intensity: 0.6 + Math.random() * 0.2,
           phase: Math.random() * Math.PI * 2,
           speed: 0.1 + Math.random() * 0.1,
           breatheAmplitudeX: width * (0.15 + Math.random() * 0.1),
@@ -107,7 +107,7 @@ export default function NetworkHero() {
         });
       });
       
-      // Medium spotlights (radius 120-200, intensity 0.5-0.7) - 5 of them
+      // Medium spotlights (radius 120-200, intensity 1.0-1.4) - 5 of them
       const mediumConfigs = [
         { bx: 0.3, by: 0.6 },
         { bx: 0.7, by: 0.4 },
@@ -123,7 +123,7 @@ export default function NetworkHero() {
           baseY: height * cfg.by,
           radius: 120 + Math.random() * 80,
           baseRadius: 120 + Math.random() * 80,
-          intensity: 0.5 + Math.random() * 0.2,
+          intensity: 1.0 + Math.random() * 0.4,
           phase: Math.random() * Math.PI * 2,
           speed: 0.2 + Math.random() * 0.15,
           breatheAmplitudeX: width * (0.08 + Math.random() * 0.08),
@@ -131,7 +131,7 @@ export default function NetworkHero() {
         });
       });
       
-      // Small spotlights (radius 40-80, intensity 0.8-1.0) - 7 of them
+      // Small spotlights (radius 40-80, intensity 1.5-2.0) - 7 of them
       const smallConfigs = [
         { bx: 0.1, by: 0.5 },
         { bx: 0.9, by: 0.5 },
@@ -149,7 +149,7 @@ export default function NetworkHero() {
           baseY: height * cfg.by,
           radius: 40 + Math.random() * 40,
           baseRadius: 40 + Math.random() * 40,
-          intensity: 0.8 + Math.random() * 0.2,
+          intensity: 1.5 + Math.random() * 0.5,
           phase: Math.random() * Math.PI * 2,
           speed: 0.3 + Math.random() * 0.2,
           breatheAmplitudeX: width * (0.04 + Math.random() * 0.06),
@@ -229,8 +229,8 @@ export default function NetworkHero() {
               b: Math.round(gold.b * (1 - colorMix) + silver.b * colorMix),
             };
             
-            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness * 0.4})`;
-            ctx.lineWidth = 1 + brightness;
+            ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${Math.min(0.8, brightness * 0.6)})`;
+            ctx.lineWidth = 1 + brightness * 1.5;
             
             ctx.beginPath();
             ctx.moveTo(node.x, node.y);
@@ -253,15 +253,15 @@ export default function NetworkHero() {
           };
           
           // Glow
-          ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness * 0.2})`;
+          ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${Math.min(0.5, brightness * 0.35)})`;
           ctx.beginPath();
-          ctx.arc(node.x, node.y, 6 + brightness * 4, 0, Math.PI * 2);
+          ctx.arc(node.x, node.y, 8 + brightness * 6, 0, Math.PI * 2);
           ctx.fill();
           
           // Core
-          ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness * 0.6})`;
+          ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${Math.min(0.9, brightness * 0.8)})`;
           ctx.beginPath();
-          ctx.arc(node.x, node.y, 2 + brightness * 2, 0, Math.PI * 2);
+          ctx.arc(node.x, node.y, 2.5 + brightness * 3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
