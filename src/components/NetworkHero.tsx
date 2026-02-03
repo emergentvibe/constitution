@@ -97,14 +97,38 @@ export default function NetworkHero() {
       const gold = { r: 201, g: 162, b: 39 };
       const silver = { r: 123, g: 155, b: 173 };
 
-      // Update particles
-      for (const p of particles) {
+      // Update particles with separation force
+      const separationDist = 50;
+      const separationStrength = 0.015;
+      
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        
+        // Calculate separation force (repel from nearby particles)
+        let sepX = 0;
+        let sepY = 0;
+        
+        for (let j = 0; j < particles.length; j++) {
+          if (i === j) continue;
+          const other = particles[j];
+          const dx = p.x - other.x;
+          const dy = p.y - other.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < separationDist && dist > 0) {
+            // Stronger repulsion when closer
+            const force = (separationDist - dist) / separationDist;
+            sepX += (dx / dist) * force;
+            sepY += (dy / dist) * force;
+          }
+        }
+        
         // Get flow at current position (each particle has unique seed)
         const flow = getFlow(p.x, p.y, t, p.seed);
 
-        // Apply flow with inertia + small random nudge for dispersion
-        p.vx = p.vx * 0.92 + flow.vx * 0.4 + (Math.random() - 0.5) * 0.05;
-        p.vy = p.vy * 0.92 + flow.vy * 0.4 + (Math.random() - 0.5) * 0.05;
+        // Apply: flow + separation + inertia + random nudge
+        p.vx = p.vx * 0.9 + flow.vx * 0.3 + sepX * separationStrength + (Math.random() - 0.5) * 0.03;
+        p.vy = p.vy * 0.9 + flow.vy * 0.3 + sepY * separationStrength + (Math.random() - 0.5) * 0.03;
 
         // Move
         p.x += p.vx;
