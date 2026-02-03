@@ -97,9 +97,9 @@ export default function NetworkHero() {
       const gold = { r: 201, g: 162, b: 39 };
       const silver = { r: 123, g: 155, b: 173 };
 
-      // Update particles with separation force
-      const separationDist = 50;
-      const separationStrength = 0.015;
+      // Update particles with gentle separation
+      const separationDist = 35; // smaller range
+      const separationStrength = 0.008; // gentler push
       
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -126,9 +126,9 @@ export default function NetworkHero() {
         // Get flow at current position (each particle has unique seed)
         const flow = getFlow(p.x, p.y, t, p.seed);
 
-        // Apply: flow + separation + inertia + random nudge
-        p.vx = p.vx * 0.9 + flow.vx * 0.3 + sepX * separationStrength + (Math.random() - 0.5) * 0.03;
-        p.vy = p.vy * 0.9 + flow.vy * 0.3 + sepY * separationStrength + (Math.random() - 0.5) * 0.03;
+        // Apply: flow (dominant) + separation (gentle) + inertia
+        p.vx = p.vx * 0.94 + flow.vx * 0.5 + sepX * separationStrength;
+        p.vy = p.vy * 0.94 + flow.vy * 0.5 + sepY * separationStrength;
 
         // Move
         p.x += p.vx;
