@@ -24,9 +24,16 @@ body {
 /* Background texture wrapper - needs to be added to layout */
 .bg-textures {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 1;
+  /* DEBUG: solid red - if you can't see this, the div isn't rendering */
+  background: rgba(255, 0, 0, 0.3);
 }
 
 /* DEBUG: Testing with solid color to confirm div renders */
