@@ -8,14 +8,10 @@ async function getConstitutionData() {
   const constitutionPath = path.join(process.cwd(), "CONSTITUTION.md");
   const constitutionContent = await fs.readFile(constitutionPath, "utf-8");
 
-  // Extract teaser: Preamble + Scope and Status sections
-  const teaserContent = extractTeaser(constitutionContent);
-
   // Parse signatories from constitution
   const signatories = parseSignatories(constitutionContent);
 
   return {
-    teaserContent,
     signatories,
     stats: {
       sections: 6,
@@ -23,36 +19,6 @@ async function getConstitutionData() {
       sources: 75,
     },
   };
-}
-
-function extractTeaser(content: string): string {
-  // Find the start of Preamble and end of Scope and Status
-  const lines = content.split("\n");
-  const teaserLines: string[] = [];
-  
-  let capturing = false;
-  
-  for (const line of lines) {
-    // Start capturing at Preamble
-    if (line.startsWith("## Preamble")) {
-      capturing = true;
-    }
-    
-    // Stop capturing at I. Foundations (the next major section after Scope)
-    if (line.startsWith("## I. Foundations")) {
-      break;
-    }
-    
-    if (capturing) {
-      teaserLines.push(line);
-    }
-  }
-  
-  // Join and add a note that this is a teaser
-  let teaser = teaserLines.join("\n");
-  teaser += "\n\n---\n\n*This is the beginning of the constitution. Continue reading for the full 24 principles across 6 sections.*";
-  
-  return teaser;
 }
 
 function parseSignatories(content: string): Array<{ handle: string; type: string; date: string; statement: string }> {
@@ -94,6 +60,5 @@ function parseSignatories(content: string): Array<{ handle: string; type: string
 
 export default async function Home() {
   const data = await getConstitutionData();
-
   return <HomeClient {...data} />;
 }
