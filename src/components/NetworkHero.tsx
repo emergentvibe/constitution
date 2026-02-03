@@ -91,7 +91,7 @@ export default function NetworkHero() {
         { bx: 0.85, by: 0.7 },
         { bx: 0.5, by: 0.2 },
       ];
-      largeConfigs.forEach((cfg, i) => {
+      largeConfigs.forEach((cfg) => {
         spotlights.push({
           x: width * cfg.bx,
           y: height * cfg.by,
@@ -115,7 +115,7 @@ export default function NetworkHero() {
         { bx: 0.8, by: 0.2 },
         { bx: 0.5, by: 0.7 },
       ];
-      mediumConfigs.forEach((cfg, i) => {
+      mediumConfigs.forEach((cfg) => {
         spotlights.push({
           x: width * cfg.bx,
           y: height * cfg.by,
@@ -141,7 +141,7 @@ export default function NetworkHero() {
         { bx: 0.75, by: 0.85 },
         { bx: 0.5, by: 0.45 },
       ];
-      smallConfigs.forEach((cfg, i) => {
+      smallConfigs.forEach((cfg) => {
         spotlights.push({
           x: width * cfg.bx,
           y: height * cfg.by,
