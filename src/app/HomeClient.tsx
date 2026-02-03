@@ -55,12 +55,11 @@ export default function HomeClient({
         <div className="max-w-6xl mx-auto">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 animate-fade-in">
-              Build the AI we want,{" "}
-              <span className="text-accent">together</span>
+              A coordination mechanism for{" "}
+              <span className="text-accent">human-AI futures</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up">
-              A democratic platform for collectively writing the constitution
-              that shapes how AI systems behave. Propose. Deliberate. Vote. Shape the future.
+              24 principles for democratic AI governance. A civil society contribution to the global conversation—not universal law, but a Schelling point for those who share these values.
             </p>
 
             {/* CTA */}
@@ -145,12 +144,35 @@ export default function HomeClient({
               </div>
             </div>
 
-            {/* Quick Navigation */}
+            {/* Document Map */}
             <div className="bg-background border border-border rounded-lg overflow-hidden">
               <div className="px-4 py-3 border-b border-border">
-                <span className="text-sm font-medium">Constitution Sections</span>
+                <span className="text-sm font-medium">Document Map</span>
               </div>
-              <div className="divide-y divide-border">
+              <div className="divide-y divide-border text-sm">
+                {/* Overview */}
+                <div className="px-4 py-2 bg-muted/30">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Overview</span>
+                </div>
+                {[
+                  { title: "Preamble", anchor: "preamble" },
+                  { title: "Scope and Status", anchor: "scope-and-status" },
+                ].map((item) => (
+                  <a
+                    key={item.anchor}
+                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${item.anchor}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-2 hover:bg-muted/50 transition-colors"
+                  >
+                    <span className="text-foreground">{item.title}</span>
+                  </a>
+                ))}
+
+                {/* Principles */}
+                <div className="px-4 py-2 bg-muted/30">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Principles</span>
+                </div>
                 {[
                   { num: "I", title: "Foundations", principles: "1-3", anchor: "i-foundations" },
                   { num: "II", title: "Rights", principles: "4-8", anchor: "ii-rights" },
@@ -164,11 +186,11 @@ export default function HomeClient({
                     href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${section.anchor}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block px-4 py-3 hover:bg-muted/50 transition-colors"
+                    className="block px-4 py-2 hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-accent font-mono text-sm">{section.num}.</span>{" "}
+                        <span className="text-accent font-mono text-xs">{section.num}.</span>{" "}
                         <span className="text-foreground">{section.title}</span>
                       </div>
                       <span className="text-xs text-muted-foreground">
@@ -177,20 +199,49 @@ export default function HomeClient({
                     </div>
                   </a>
                 ))}
+
+                {/* Governance */}
+                <div className="px-4 py-2 bg-muted/30">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Governance</span>
+                </div>
+                {[
+                  { title: "Amendment Process", anchor: "amendment-process" },
+                  { title: "Implementation Paths", anchor: "implementation-paths" },
+                  { title: "Why Sign?", anchor: "why-sign" },
+                  { title: "Signatories", anchor: "signatories" },
+                ].map((item) => (
+                  <a
+                    key={item.anchor}
+                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${item.anchor}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-2 hover:bg-muted/50 transition-colors"
+                  >
+                    <span className="text-foreground">{item.title}</span>
+                  </a>
+                ))}
+
+                {/* Reference */}
+                <div className="px-4 py-2 bg-muted/30">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Reference</span>
+                </div>
+                <a
+                  href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#research-grounding`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2 hover:bg-muted/50 transition-colors"
+                >
+                  <span className="text-foreground">Research Grounding</span>
+                </a>
                 <a
                   href={`${GITHUB_REPO}/tree/main/appendix`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block px-4 py-3 hover:bg-muted/50 transition-colors"
+                  className="block px-4 py-2 hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-accent font-mono text-sm">+</span>{" "}
-                      <span className="text-foreground">Appendix</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      reasoning
-                    </span>
+                    <span className="text-foreground">Appendix</span>
+                    <span className="text-xs text-muted-foreground">→</span>
                   </div>
                 </a>
               </div>
@@ -210,25 +261,25 @@ export default function HomeClient({
                 step: "01",
                 title: "Read",
                 description:
-                  "Review the genesis constitution. 24 principles across 6 sections, grounded in rigorous research.",
+                  "Review the constitution. 24 principles across 6 sections, grounded in 75+ academic sources.",
               },
               {
                 step: "02",
-                title: "Sign",
+                title: "Deliberate",
                 description:
-                  "Add your signature to support ratification. Signatures convert to votes when voting opens.",
+                  "Anyone can participate in discussion and propose ideas. This is Tier 1—open to all.",
               },
               {
                 step: "03",
-                title: "Deliberate",
+                title: "Sign",
                 description:
-                  "Join the discussion. Propose amendments. AI helps find synthesis across perspectives.",
+                  "Individuals or organizations can sign. Organizational signatories gain voting rights (Tier 2).",
               },
               {
                 step: "04",
-                title: "Vote",
+                title: "Govern",
                 description:
-                  "Conviction voting: time-weighted commitment. The longer you stake, the more weight you carry.",
+                  "Signatories shape amendments and enforcement. The constitution evolves through democratic process.",
               },
             ].map((item) => (
               <div key={item.step}>
@@ -322,16 +373,21 @@ export default function HomeClient({
       {/* The Vision */}
       <section className="px-6 py-24">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">The vision</h2>
+          <h2 className="text-3xl font-bold mb-6">What this is</h2>
           <p className="text-xl text-muted-foreground mb-8">
-            Right now, a handful of companies decide what AI &quot;knows&quot; and
-            &quot;values.&quot; We believe this power should be distributed. The people
-            who will live with AI should have a voice in shaping it.
+            Right now, a handful of companies decide how AI develops.
+            We believe civil society should have a voice—not the only voice,
+            but a voice alongside governments, corporations, and international bodies.
           </p>
           <p className="text-xl text-muted-foreground mb-8">
-            This isn&apos;t a petition. It&apos;s infrastructure. A living constitution,
-            written by thousands, that becomes the foundation for open-source AI
-            training.
+            This constitution is one framework among possible many. We acknowledge
+            our Western origins and welcome alternatives from different traditions.
+            We seek interoperability with other governance efforts, not supremacy.
+          </p>
+          <p className="text-xl text-muted-foreground mb-8">
+            We&apos;re running an experiment in coordination, not implementing a
+            proven solution. The constitution is designed to evolve—if we&apos;re
+            wrong about something, we can amend it.
           </p>
           <p className="text-lg text-accent font-medium">
             Collective intelligence, building collective intelligence.
