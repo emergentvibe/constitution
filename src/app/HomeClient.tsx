@@ -1,53 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 // GitHub repo URL
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
 const SIGN_URL = `${GITHUB_REPO}/issues/new?template=sign-constitution.md`;
 const AMEND_URL = `${GITHUB_REPO}/issues/new?template=propose-amendment.md`;
+const DISCUSSIONS_URL = `${GITHUB_REPO}/discussions`;
 
 interface HomeClientProps {
-  constitutionContent: string;
+  teaserContent: string;
   signatories: Array<{ handle: string; type: string; date: string; statement: string }>;
   stats: {
     sections: number;
     principles: number;
-    experts: number;
     sources: number;
   };
 }
 
 export default function HomeClient({
-  constitutionContent,
+  teaserContent,
   signatories,
   stats,
 }: HomeClientProps) {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("loading");
-
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (res.ok) {
-        setStatus("success");
-        setEmail("");
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
-    }
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -59,44 +34,60 @@ export default function HomeClient({
               <span className="text-accent">human-AI futures</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up">
-              24 principles for democratic AI governance. A civil society contribution to the global conversation—not universal law, but a Schelling point for those who share these values.
+              {stats.principles} principles for democratic AI governance. A civil society contribution to the global conversation—one framework among possible many.
             </p>
 
-            {/* CTA */}
-            {status === "success" ? (
-              <div className="text-accent animate-fade-in">
-                You&apos;re in. We&apos;ll notify you when the convention opens.
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md animate-slide-up">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-1 px-4 py-3 bg-muted border border-border rounded-lg focus:outline-none focus:border-accent transition-colors"
-                  required
-                  disabled={status === "loading"}
-                />
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-emerge-400 transition-colors disabled:opacity-50"
-                >
-                  {status === "loading" ? "..." : "Join the Convention"}
-                </button>
-              </form>
-            )}
-            {status === "error" && (
-              <p className="text-red-400 text-sm mt-2">Something went wrong. Try again.</p>
-            )}
+            {/* Primary CTA */}
+            <div className="flex flex-col sm:flex-row gap-4 animate-slide-up">
+              <a
+                href="/constitution"
+                className="px-8 py-4 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-emerge-400 transition-colors text-center"
+              >
+                Read the Constitution
+              </a>
+              <a
+                href={GITHUB_REPO}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 border border-border font-medium rounded-lg hover:bg-muted transition-colors text-center flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                </svg>
+                View on GitHub
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Constitution Preview */}
+      {/* What This Is */}
+      <section className="px-6 py-16">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6">What this is</h2>
+          <div className="space-y-4 text-lg text-muted-foreground">
+            <p>
+              Right now, a handful of companies decide how AI develops.
+              We believe civil society should have a voice—not the only voice,
+              but a voice alongside governments, corporations, and international bodies.
+            </p>
+            <p>
+              This constitution is one framework among possible many. We acknowledge
+              our Western origins and welcome alternatives from different traditions.
+              We seek interoperability with other governance efforts, not supremacy.
+            </p>
+            <p>
+              We&apos;re running an experiment in coordination, not implementing a
+              proven solution. The constitution is designed to evolve—if we&apos;re
+              wrong about something, we can amend it.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Constitution Teaser */}
       <section className="px-6 py-16 bg-muted/50">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
@@ -111,140 +102,23 @@ export default function HomeClient({
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Constitution Document */}
-            <div className="md:col-span-2 bg-background border border-border rounded-lg overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                  <span className="ml-2 text-sm text-muted-foreground font-mono">
-                    CONSTITUTION.md
-                  </span>
-                </div>
-              </div>
-              <pre className="p-6 text-sm overflow-auto max-h-[600px] font-mono whitespace-pre-wrap text-muted-foreground">
-                {constitutionContent}
-              </pre>
-
-              {/* View Full Constitution CTA */}
-              <div className="px-4 py-3 border-t border-border bg-muted/30">
-                <a
-                  href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full py-2 text-sm text-accent hover:text-emerge-400 transition-colors"
-                >
-                  <span>View on GitHub</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </div>
+          {/* Rendered Teaser */}
+          <div className="bg-background border border-border rounded-lg overflow-hidden">
+            <div className="p-8 prose prose-invert prose-emerald max-w-none">
+              <ReactMarkdown>{teaserContent}</ReactMarkdown>
             </div>
 
-            {/* Document Map */}
-            <div className="bg-background border border-border rounded-lg overflow-hidden">
-              <div className="px-4 py-3 border-b border-border">
-                <span className="text-sm font-medium">Document Map</span>
-              </div>
-              <div className="divide-y divide-border text-sm">
-                {/* Overview */}
-                <div className="px-4 py-2 bg-muted/30">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Overview</span>
-                </div>
-                {[
-                  { title: "Preamble", anchor: "preamble" },
-                  { title: "Scope and Status", anchor: "scope-and-status" },
-                ].map((item) => (
-                  <a
-                    key={item.anchor}
-                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${item.anchor}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block px-4 py-2 hover:bg-muted/50 transition-colors"
-                  >
-                    <span className="text-foreground">{item.title}</span>
-                  </a>
-                ))}
-
-                {/* Principles */}
-                <div className="px-4 py-2 bg-muted/30">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Principles</span>
-                </div>
-                {[
-                  { num: "I", title: "Foundations", principles: "1-3", anchor: "i-foundations" },
-                  { num: "II", title: "Rights", principles: "4-8", anchor: "ii-rights" },
-                  { num: "III", title: "Obligations", principles: "9-12", anchor: "iii-obligations" },
-                  { num: "IV", title: "Structures", principles: "13-16", anchor: "iv-structures" },
-                  { num: "V", title: "Capabilities", principles: "17-20", anchor: "v-capabilities" },
-                  { num: "VI", title: "Revision", principles: "21-24", anchor: "vi-revision" },
-                ].map((section) => (
-                  <a
-                    key={section.num}
-                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${section.anchor}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block px-4 py-2 hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-accent font-mono text-xs">{section.num}.</span>{" "}
-                        <span className="text-foreground">{section.title}</span>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        P{section.principles}
-                      </span>
-                    </div>
-                  </a>
-                ))}
-
-                {/* Governance */}
-                <div className="px-4 py-2 bg-muted/30">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Governance</span>
-                </div>
-                {[
-                  { title: "Amendment Process", anchor: "amendment-process" },
-                  { title: "Implementation Paths", anchor: "implementation-paths" },
-                  { title: "Why Sign?", anchor: "why-sign" },
-                  { title: "Signatories", anchor: "signatories" },
-                ].map((item) => (
-                  <a
-                    key={item.anchor}
-                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#${item.anchor}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block px-4 py-2 hover:bg-muted/50 transition-colors"
-                  >
-                    <span className="text-foreground">{item.title}</span>
-                  </a>
-                ))}
-
-                {/* Reference */}
-                <div className="px-4 py-2 bg-muted/30">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide">Reference</span>
-                </div>
-                <a
-                  href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md#research-grounding`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 hover:bg-muted/50 transition-colors"
-                >
-                  <span className="text-foreground">Research Grounding</span>
-                </a>
-                <a
-                  href={`${GITHUB_REPO}/tree/main/appendix`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block px-4 py-2 hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-foreground">Appendix</span>
-                    <span className="text-xs text-muted-foreground">→</span>
-                  </div>
-                </a>
-              </div>
+            {/* Continue Reading CTA */}
+            <div className="px-8 py-4 border-t border-border bg-muted/30 flex justify-center">
+              <a
+                href="/constitution"
+                className="flex items-center gap-2 text-accent hover:text-emerge-400 transition-colors font-medium"
+              >
+                <span>Continue Reading</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
             </div>
           </div>
         </div>
@@ -301,7 +175,7 @@ export default function HomeClient({
             <div>
               <h2 className="text-3xl font-bold mb-2">Signatories</h2>
               <p className="text-muted-foreground">
-                Those who have signed the genesis constitution
+                Those who have signed the constitution
               </p>
             </div>
             <div className="text-right">
@@ -338,11 +212,9 @@ export default function HomeClient({
                 <p className="text-sm text-muted-foreground">
                   Read the constitution and add your signature
                 </p>
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-3">
                   <a
-                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="/constitution"
                     className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                   >
                     Read First
@@ -353,7 +225,7 @@ export default function HomeClient({
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-emerge-400 transition-colors"
                   >
-                    Sign the Constitution
+                    Sign via GitHub
                   </a>
                   <a
                     href={AMEND_URL}
@@ -370,42 +242,20 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* The Vision */}
-      <section className="px-6 py-24">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">What this is</h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Right now, a handful of companies decide how AI develops.
-            We believe civil society should have a voice—not the only voice,
-            but a voice alongside governments, corporations, and international bodies.
-          </p>
-          <p className="text-xl text-muted-foreground mb-8">
-            This constitution is one framework among possible many. We acknowledge
-            our Western origins and welcome alternatives from different traditions.
-            We seek interoperability with other governance efforts, not supremacy.
-          </p>
-          <p className="text-xl text-muted-foreground mb-8">
-            We&apos;re running an experiment in coordination, not implementing a
-            proven solution. The constitution is designed to evolve—if we&apos;re
-            wrong about something, we can amend it.
-          </p>
-          <p className="text-lg text-accent font-medium">
-            Collective intelligence, building collective intelligence.
-          </p>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="px-6 py-12 border-t border-border">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-muted-foreground text-sm">
-            Emergent Vibe
+            <span className="text-accent">Collective intelligence</span>, building collective intelligence.
           </div>
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <a href={GITHUB_REPO} className="hover:text-foreground transition-colors">
+            <a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               GitHub
             </a>
-            <a href="https://twitter.com/emergentvibe" className="hover:text-foreground transition-colors">
+            <a href={DISCUSSIONS_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+              Discussions
+            </a>
+            <a href="https://twitter.com/emergentvibe" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
               Twitter
             </a>
           </div>

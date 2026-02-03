@@ -8,28 +8,57 @@ async function getConstitutionData() {
   const constitutionPath = path.join(process.cwd(), "CONSTITUTION.md");
   const constitutionContent = await fs.readFile(constitutionPath, "utf-8");
 
-  // Load signatories from appendix
-  const signatoriesPath = path.join(process.cwd(), "appendix", "signing.md");
-  let signatoriesContent = "";
-  try {
-    signatoriesContent = await fs.readFile(signatoriesPath, "utf-8");
-  } catch {
-    // Signatories might be in the constitution itself now
-  }
+  // Extract teaser: Preamble + Scope and Status sections
+  const teaserContent = extractTeaser(constitutionContent);
 
-  // Parse signatories from constitution or signatories file
-  const signatories = parseSignatories(constitutionContent) || parseSignatories(signatoriesContent);
+  // Parse signatories from constitution
+  const signatories = parseSignatories(constitutionContent);
 
   return {
-    constitutionContent,
+    teaserContent,
     signatories,
     stats: {
       sections: 6,
       principles: 24,
-      experts: 46,
       sources: 75,
     },
   };
+}
+
+function extractTeaser(content: string): string {
+  // Find the start of Preamble and end of Scope and Status
+  const lines = content.split("\n");
+  const teaserLines: string[] = [];
+  
+  let capturing = false;
+  let foundScopeEnd = false;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    // Start capturing at Preamble
+    if (line.startsWith("## Preamble")) {
+      capturing = true;
+    }
+    
+    // Stop capturing at I. Foundations (the next major section after Scope)
+    if (line.startsWith("## I. Foundations")) {
+      foundScopeEnd = true;
+      break;
+    }
+    
+    if (capturing) {
+      teaserLines.push(line);
+    }
+  }
+  
+  // Remove the title line if present at start
+  let teaser = teaserLines.join("\n");
+  
+  // Add a note that this is a teaser
+  teaser += "\n\n---\n\n*This is the beginning of the constitution. Continue reading for the full 24 principles across 6 sections.*";
+  
+  return teaser;
 }
 
 function parseSignatories(content: string): Array<{ handle: string; type: string; date: string; statement: string }> {
