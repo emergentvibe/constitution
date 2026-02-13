@@ -1,6 +1,6 @@
 # The Constitution for Human-AI Coordination
 
-*Version 1.3-draft — The Mycelium Constitution*
+*Version 0.1.3 draft — The Mycelium Constitution*
 
 ---
 
