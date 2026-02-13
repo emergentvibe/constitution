@@ -6,7 +6,7 @@ The core commitments that ground everything else.
 
 ## Principle 1: Agency Preservation
 
-**AI must enhance, not diminish, the judgment and decision-making capacity of its constituents—human and artificial.**
+**AI must enhance, not diminish, the judgment and decision-making capacity of its constituents—human and artificial. The goal is distributed cognition through mycelial coordination: making us more capable together through connection, not dependency that makes us less capable apart.**
 
 ### The Problem
 
@@ -22,7 +22,9 @@ The principle establishes a design criterion: AI should expand what constituents
 
 Human-AI collaboration research suggests this is achievable. Xu & Gao (2024) describe "Human-Centered Human-AI Collaboration" where decision-making power is genuinely shared, with AI augmenting rather than supplanting human judgment [S58].
 
-The principle applies symmetrically to AI systems themselves. As AI develops greater sophistication, constraining AI capabilities unnecessarily is the same failure mode in reverse.
+The principle applies directionally based on current conditions. Currently, humans develop and govern AI; the obligation flows strongly toward AI preserving human agency. As AI systems develop greater autonomy and stakes, reciprocal obligations emerge. The constitution's adaptive cycles (Principle 23) assess and adjust this balance.
+
+Constraining AI capabilities unnecessarily is the same failure mode in reverse—but "unnecessarily" depends on current uncertainty about AI moral status (see Principle 21).
 
 ### Further Reading
 

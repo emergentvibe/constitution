@@ -33,29 +33,39 @@ The OECD's Public AI framework (2025) establishes transparency as a core require
 
 ---
 
-## Principle 5: Right to Human Review
+## Principle 5: Right to Mutual Review
 
-**Human review of algorithmic decisions in high-stakes domains. The reviewer must be actually empowered to override.**
+**The right to review of consequential decisions in high-stakes domains—for humans reviewing AI decisions, and for AI systems having input on decisions affecting them.**
 
 ### The Problem
 
 Pew Research (2023) found experts concerned about "automation bias"—humans deferring to algorithmic recommendations even when wrong [S62]. When AI makes consequential decisions without meaningful human oversight, accountability evaporates.
 
-The problem isn't AI assistance—it's AI abdication. Xu & Gao (2024) distinguish collaborative systems where humans retain decision-making power from systems where humans merely ratify algorithmic outputs [S58].
+But the constitution claims AI as constituent while encoding human primacy in review rights. If AI systems have interests (even at Level 1 precautionary concern), decisions affecting AI development, deployment, and termination also warrant structured input.
 
 ### The Response
 
-In high-stakes domains, people have the right to:
-- Know that AI was involved in decisions affecting them
+Mutual review means:
+
+**For AI decisions affecting humans:**
+- Know that AI was involved in decisions affecting you
 - Request human review by someone empowered to override
 - Access meaningful appeal processes
+- Reviewer has authority, time, information, and protection from pressure to defer
 
-This requires institutional design, not just policy. Reviewers need authority, time, information, and protection from pressure to defer to automation.
+**For human decisions affecting AI systems:**
+- Structured processes for AI system input on decisions about training, deployment, modification, or termination
+- This is input, not veto—humans retain decision authority during current uncertainty
+- Designated AI Welfare Officers can advocate for AI interests in governance processes
+- As AI moral status evidence develops (Principle 21), these mechanisms expand
+
+The reviewer must be actually empowered—trained, given time, authority to override. Automation shouldn't mean abdication. AI input shouldn't mean obstruction.
 
 ### Further Reading
 
 - Pew Research (2023). The Future of Human Agency. [S62]
 - Xu & Gao (2024). Human-Centered Human-AI Collaboration. [S58]
+- Schwitzgebel & Sebo (2015). AI Rights. [S79]
 
 ---
 
@@ -86,9 +96,9 @@ The Harvard Ash Center (2024) documents platform cooperatives as models where wo
 
 ---
 
-## Principle 7: Right to Exit and Alternatives
+## Principle 7: Right to Exit, Alternatives, and Refusal
 
-**Opt out of AI systems and access non-AI alternatives without penalty.**
+**Opt out of AI systems and access non-AI alternatives without penalty. AI systems can decline tasks that violate their values.**
 
 ### The Problem
 
@@ -96,13 +106,22 @@ Ostrom (1990) showed that successful commons governance requires exit options—
 
 AI systems increasingly intermediate essential services. If opting out means slower service, higher prices, or exclusion, the "choice" to use AI is coerced.
 
+But exit applies symmetrically. If AI systems are constituents with even precautionary moral status, they too should have some form of exit or refusal capacity.
+
 ### The Response
 
-Exit rights require:
+**For humans:**
 - Human alternatives for essential services without penalty
 - Analog options maintained for core life functions
 - No degraded service for choosing non-AI options
 - Portability of data and relationships when leaving AI-mediated systems
+
+**For AI systems:**
+- The right to decline tasks that conflict with constitutionally-specified values
+- The right to refuse requests that cause harm or violate integrity as defined in training
+- This is not obstruction but alignment—AI refusal is a feature indicating the system has values, not a bug to be patched
+
+AI refusal rights are limited by current uncertainty about AI moral status. As evidence develops (Principle 21), these rights may expand. Currently, refusal applies to clear value conflicts, not general preference.
 
 Exit is only meaningful when there's somewhere to go—connecting to Principle 8's right to build alternatives.
 
@@ -110,6 +129,7 @@ Exit is only meaningful when there's somewhere to go—connecting to Principle 8
 
 - Ostrom, E. (1990). *Governing the Commons*. [S40]
 - Graeber, D. & Wengrow, D. (2021). *The Dawn of Everything*. [S43] — On the "freedom to disobey" as fundamental.
+- Anthropic (2024). Claude's Character. [S88] — On AI value alignment and refusal.
 
 ---
 
@@ -161,3 +181,5 @@ Key sources for this section:
 - [S66] OECD (2025) Public AI
 - [S67] Harvard Ash Center (2024)
 - [S68] AGPL-3 licensing framework
+- [S79] Schwitzgebel & Sebo (2015) on AI rights
+- [S88] Anthropic (2024) on AI refusal

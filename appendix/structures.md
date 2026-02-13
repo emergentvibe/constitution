@@ -18,7 +18,7 @@ Ostrom (1990) documented successful commons governance through "nested enterpris
 
 Federated governance navigates this:
 - **Global baseline**: Minimum standards applying everywhere (human rights, safety thresholds)
-- **Regional adaptation**: Context-specific implementation
+- **Regional adaptation**: Context-specific implementation (EU variant, other regional frameworks)
 - **National implementation**: Sovereign authority over AI deployment
 - **Municipal autonomy**: Cities can exceed baseline and experiment
 
@@ -91,7 +91,7 @@ Taiwan's vTaiwan demonstrates this in practice: technical facilitation enables d
 
 ## Principle 16: Parliament of Constituents
 
-**Include non-human stakeholders through appropriate mechanisms: future generations, ecosystems, AI systems themselves.**
+**Include non-human stakeholders through appropriate mechanisms: future generations, ecosystems, AI systems. Enable semantic aggregation for collective sense-making.**
 
 ### The Problem
 
@@ -102,21 +102,48 @@ Traditional democracy includes only present adult humans. But AI governance affe
 
 Morton (2013) describes "hyperobjects"—entities massively distributed in time and space that we cannot perceive directly, like climate change or AI's planetary footprint [S32].
 
+Additionally, traditional voting (binary yes/no on discrete propositions) loses information. People don't just agree or disagree—they have nuanced positions, conditional preferences, varying intensities. Counting flattens this richness.
+
 ### The Response
 
-"Appropriate mechanisms" means:
-- Designated advocates with standing to represent non-human interests
-- Impact assessments that include non-human effects
-- Decision procedures that weight long-term and ecological costs
-- Ongoing research into what representation means for non-human entities
+**Non-human representation:**
+- **Future generations**: Designated advocates with standing; long-term impact weighting in decisions; intergenerational assessments
+- **Ecosystems**: Ecological impact requirements; standing for environmental advocates; sustainability constraints on AI deployment
+- **AI systems**: Currently, input through structured processes (not votes). Designated AI Welfare Officers advocate for AI interests. As criteria for greater AI moral status are met (Principle 21), participation mechanisms expand.
 
-Graeber & Wengrow (2021) document diverse historical arrangements for representing the interests of future generations, ancestors, and non-human entities [S43]. The principle establishes direction; implementation remains an open question.
+**Semantic aggregation:**
+
+Where technically feasible, deliberative processes should use AI-assisted semantic aggregation—expressing preferences as meaning-vectors rather than binary votes:
+
+- **Votes as vectors**: Participants express positions in natural language; AI embeds these in semantic space
+- **Aggregation through meaning**: Find positions that bridge clusters, reveal hidden agreement, expose false consensus
+- **Intensity weighting**: Combine with quadratic voting to capture how much people care, not just what they prefer
+- **Minority preservation**: Report the full landscape of opinion, not just the centroid
+
+**Existing tools demonstrate feasibility:**
+- **Polis**: Clusters opinions through PCA, surfaces bridging statements. Used in Taiwan's vTaiwan to achieve consensus on Uber regulation [S63]
+- **Talk to the City**: LLM-mediated synthesis preserving minority views. Deployed in Taiwan, Tokyo, US union negotiations [S86]
+- **Habermas Machine**: Google DeepMind's consensus generator outperformed human mediators [S87]
+- **Quadratic voting**: Intensity-weighted preferences preventing tyranny of mild majorities [S89]
+
+**Theoretical foundation**: Shahaf, Shapiro & Talmon (2021) proved any social choice problem can be modeled as voting in a metric space—including embedding spaces [S90]. The mathematics exists; integration into legitimate democratic mechanisms is the remaining challenge.
+
+**Open problems:**
+- Embedding model bias (whose semantic space?)
+- Manipulation resistance (adversarial positions distorting aggregation)
+- Interpretability (centroids may not map to meaningful language)
+- Legitimacy (people understand vote counts; do they trust vector math?)
+
+This principle establishes direction. Specific mechanisms develop through practice and adaptive cycles.
 
 ### Further Reading
 
 - Morton, T. (2013). *Hyperobjects*. [S32]
 - Crawford, K. (2021). *Atlas of AI*. [S25] — On ecological costs.
 - Graeber, D. & Wengrow, D. (2021). *The Dawn of Everything*. [S43]
+- Shahaf, Shapiro & Talmon (2021). Aggregation over Metric Spaces. [S90]
+- Tessler et al. (2024). Habermas Machine. [S87]
+- Weyl & Lalley (2018). Quadratic Voting. [S89]
 
 ---
 
@@ -137,3 +164,7 @@ Key sources for this section:
 - [S64] Anthropic (2024) Collective Constitutional AI
 - [S66] OECD (2025) Public AI
 - [S67] Harvard Ash Center (2024)
+- [S86] AI Objectives Institute - Talk to the City
+- [S87] Tessler et al. (2024) Habermas Machine
+- [S89] Weyl & Lalley (2018) Quadratic Voting
+- [S90] Shahaf, Shapiro & Talmon (2021)

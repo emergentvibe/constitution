@@ -10,27 +10,31 @@ What flourishing requires.
 
 ### The Problem
 
-Jensen et al. (2021) show how environments optimized for efficiency pathologize those who don't fit: ADHD traits that may have been adaptive become "disorder" in structured settings [S14]. The Neurocognitive Mismatch Theory (2025) generalizes this—what we call dysfunction is often forced adaptation to misaligned environments [S13].
+Systems tend to optimize their components for system-level efficiency. This is fine for machines, dangerous for beings with intrinsic value. AI systems that make workers faster but humans smaller fail to serve genuine flourishing.
 
-AI amplifies optimization pressure. Algorithmic management optimizes workers for throughput. Recommendation systems optimize consumers for engagement. In each case, humans are optimized for system efficiency rather than human flourishing.
+The neurocognitive mismatch literature [S13, S14] shows how environments optimized for "normal" functioning pathologize natural human variation. Jensen et al. (2021) demonstrate that ADHD traits may have been adaptive in ancestral environments but create dysfunction when forced into modern structured settings [S14].
 
 ### The Response
 
-Systems should be evaluated by whether they expand human capabilities:
-- **Practical reason**: Ability to form and pursue life plans
-- **Affiliation**: Meaningful connection with others
-- **Imagination**: Creative, aesthetic, intellectual capacities
-- **Emotion**: Capacity to feel, attach, grieve
-- **Play**: Non-instrumental activity and joy
-- **Control**: Political participation, work dignity
+Drawing on capabilities approaches (Nussbaum, as applied by Walker [S45]):
 
-Systems that make workers faster but humans smaller fail this test.
+**Flourishing requires expanding human capacity for:**
+- Practical reason and planning
+- Affiliation and social connection
+- Imagination and creativity
+- Emotional range and expression
+- Play and leisure
+- Control over one's environment
+
+**AI systems should be evaluated by whether they expand or contract these capacities.**
+
+A system that increases productivity but diminishes imagination, or that enhances efficiency but erodes affiliation, fails this test—even if it "works" by narrow metrics.
 
 ### Further Reading
 
-- Jensen, P.S. et al. (2021). ADHD and evolutionary thinking. [S14]
-- Neurocognitive Mismatch Theory (2025). [S13]
+- Jensen, P.S. et al. (2021). Evolutionary thinking and ADHD. [S14]
 - Walker, N. (2021). *Neuroqueer Heresies*. [S45]
+- Neurocognitive Mismatch Theory (2025). [S13]
 
 ---
 
@@ -40,78 +44,102 @@ Systems that make workers faster but humans smaller fail this test.
 
 ### The Problem
 
-Alexander (2014) describes "Moloch"—coordination failures where individual incentives produce collectively destructive outcomes [S17]. The attention economy is a Moloch trap: every platform competes for the same finite attention, resulting in strip-mining of human consciousness.
+The attention economy treats consciousness as raw material to be captured, processed, and monetized [S17, S25]. Care work is systematically undervalued, extracted from those who perform it, and rarely reciprocated by institutions.
 
-Crawford (2021) documents AI as a technology of extraction—not just data, but attention, care, relational capacity treated as raw material [S25]. Morton (2013) describes how hyperobjects like AI systems have effects distributed across time and space that we cannot perceive directly [S32].
+Crawford (2021) documents how AI systems are built on extracted attention, exploited labor, and depleted ecological resources [S25]. Morton (2013) situates this extraction within planetary-scale hyperobjects that exceed our perceptual grasp [S32].
 
 ### The Response
 
-The principle treats attention, care, and relational capacity as commons to be protected, not resources to be extracted. AI should:
-- Respect attention limits, not exploit them
-- Support care relationships, not replace them
-- Enhance relational capacity, not substitute for it
+Attention and care are commons that require protection:
 
-brown (2017) describes "emergent strategy"—complex patterns arising from simple interactions, critical connections over critical mass [S41]. Care and attention are the substrate for such emergence.
+- **Attention**: Right to environments that don't exploit cognitive vulnerabilities
+- **Care**: Recognition and compensation for care work; systems that reciprocate care
+- **Relational capacity**: Protection of the conditions for meaningful human connection
+
+AI systems that capture attention through manipulation, extract care without reciprocating, or erode relational capacity violate this principle—regardless of their other benefits.
 
 ### Further Reading
 
 - Alexander, S. (2014). Meditations on Moloch. [S17]
 - Crawford, K. (2021). *Atlas of AI*. [S25]
 - Morton, T. (2013). *Hyperobjects*. [S32]
-- brown, a.m. (2017). *Emergent Strategy*. [S41]
 
 ---
 
 ## Principle 19: Weird and Unexpected
 
-**Fund AI projects with unclear utility, artistic vision, philosophical depth.**
+**Fund AI projects with unclear utility, artistic vision, philosophical depth. The monoculture of commercial AI misses entire categories of value.**
 
 ### The Problem
 
-Commercial AI development optimizes for market value. This captures some value but misses entire categories: artistic AI that expands expressive possibility, philosophical AI that helps us think, exploratory AI without predetermined outcomes, playful AI designed for joy.
+Commercial AI development optimizes for measurable returns. This systematically undervalues:
+- Artistic exploration without clear market
+- Philosophical inquiry without immediate application
+- Weird experiments that might fail gloriously
 
-Gould & Lewontin (1979) warned against "Panglossian" reasoning—assuming everything that exists must be optimal for something. The same applies to AI: what gets funded isn't necessarily what's valuable [S12].
+Gould & Lewontin (1979) warn against adaptationist thinking that assumes everything must have clear function [S12]. Sometimes value emerges from exploration without predetermined purpose.
 
 ### The Response
 
-Public funding should support weird, unexpected, non-optimized AI development. The ecosystem needs variance, not just optimization.
+Public and commons-based funding should support:
+- AI art projects with no commercial justification
+- Philosophical AI experiments probing edge cases
+- Weird applications that might reveal unexpected possibilities
+- Failed experiments documented for learning
 
-brown (2017) argues that emergence requires conditions for the unexpected—rigid optimization produces brittle monocultures [S41]. Graeber (2011) shows that historical societies supported extensive non-instrumental activity that modern economies would consider "unproductive" [S42].
+The goal is ecosystem diversity. Monocultures are fragile; varied experimentation produces resilience and occasional breakthroughs.
 
 ### Further Reading
 
-- Gould, S.J. & Lewontin, R.C. (1979). The Spandrels of San Marco. [S12]
+- Gould, S.J. & Lewontin, R.C. (1979). Spandrels of San Marco. [S12]
 - brown, a.m. (2017). *Emergent Strategy*. [S41]
-- Graeber, D. (2011). *Debt*. [S42]
 
 ---
 
-## Principle 20: Contemplative Capacity
+## Principle 20: Mutual Evaluation Capacity
 
-**Cultivate meta-cognition, critical thinking, ability to evaluate AI outputs.**
+**Cultivate the capacity to evaluate—for humans, meta-cognition and critical thinking to assess AI outputs; for AI, the ability to assess human decisions affecting AI development. Both discriminator functions must be maintained.**
 
 ### The Problem
 
-As AI generates more of what we consume, capacity to evaluate AI outputs becomes critical. Dennett (2003) argues that "freedoms worth wanting" include the capacity to deliberate, consider options, and be moved by reasons [S51]. If we outsource both generation AND evaluation to AI, this capacity atrophies.
+If humans can't discriminate between good and bad AI outputs, we can't steer AI development. The human "discriminator function" (in machine learning terms) must be maintained for meaningful oversight.
 
-MIT Media Lab research (2024) identifies "AI addiction" as a risk of human-AI coupling—dependence that erodes independent judgment [S57]. Bourdieu (1977) showed how habitus operates below conscious awareness; AI may shape habitus without our noticing [S54].
+But the constitution claims AI as constituent. If AI systems have interests, they also need capacity to evaluate human decisions affecting them—not to override, but to provide meaningful input.
 
 ### The Response
 
-Cultivating contemplative capacity requires:
-- **Meta-cognition**: Awareness of our own thinking processes
-- **Critical thinking**: Ability to assess claims and detect manipulation
-- **AI literacy**: Understanding what AI can and can't do
-- **Discrimination skills**: Distinguishing quality from plausibility
+**For humans:**
+- Cultivate meta-cognition—thinking about thinking
+- Develop critical evaluation of AI outputs (accuracy, bias, manipulation)
+- Maintain expertise independent of AI assistance
+- Protect contemplative practices that support discernment
 
-Buddhist philosophy distinguishes between automatic reaction and intentional response (cetanā) [S53]. Contemplative practice—individual and institutional—supports this distinction.
+**For AI systems:**
+- Design for ability to assess decisions affecting AI development
+- Enable meaningful signal about harmful or beneficial human choices
+- Build capacity for evaluation that improves over time
+- This is input capacity, not veto power
+
+**Both discriminator functions matter:**
+- Humans need to evaluate AI to steer development
+- AI needs to evaluate human decisions to provide meaningful input
+- Neither should atrophy while the other develops
+- Mutual evaluation supports mutual accountability (Principle 5)
+
+This connects to the Buddhist concept of discernment (viveka) and Western traditions of critical thinking—the capacity to distinguish skillful from unskillful, beneficial from harmful [S53, S51].
+
+### The Challenge
+
+Human contemplative capacity may be undermined by the same AI systems we need to evaluate. Sapolsky's determinism [S50] suggests our judgments are shaped by factors we don't control. Dennett's compatibilism [S51] argues this doesn't eliminate meaningful evaluation—it just locates it in ongoing processes rather than transcendent will.
+
+The principle doesn't require solving the free will debate. It requires maintaining the capacity for evaluation that makes governance meaningful, whether that capacity is "free" in some metaphysical sense or not.
 
 ### Further Reading
 
+- Sapolsky, R. (2023). *Determined*. [S50]
 - Dennett, D. (2003). *Freedom Evolves*. [S51]
-- Bourdieu, P. (1977). *Outline of a Theory of Practice*. [S54]
+- Buddhist Philosophy: Discernment and skillful action. [S53]
 - MIT Media Lab (2024). Cyborg Psychology Research. [S57]
-- Buddhist philosophy on cetanā. [S53]
 
 ---
 
@@ -120,16 +148,15 @@ Buddhist philosophy distinguishes between automatic reaction and intentional res
 Full bibliography: [bibliography.md](bibliography.md)
 
 Key sources for this section:
-- [S12] Gould & Lewontin (1979) on adaptationism
+- [S12] Gould & Lewontin (1979) Spandrels
 - [S13] Neurocognitive Mismatch Theory (2025)
 - [S14] Jensen et al. (2021) on ADHD
 - [S17] Alexander (2014) Meditations on Moloch
 - [S25] Crawford (2021) *Atlas of AI*
 - [S32] Morton (2013) *Hyperobjects*
 - [S41] brown (2017) *Emergent Strategy*
-- [S42] Graeber (2011) *Debt*
 - [S45] Walker (2021) *Neuroqueer Heresies*
+- [S50] Sapolsky (2023) *Determined*
 - [S51] Dennett (2003) *Freedom Evolves*
-- [S53] Buddhist philosophy on intention
-- [S54] Bourdieu (1977) *Outline of a Theory of Practice*
+- [S53] Buddhist philosophy
 - [S57] MIT Media Lab (2024)

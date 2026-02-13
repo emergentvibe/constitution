@@ -4,6 +4,73 @@ All changes to the constitution are documented here.
 
 ---
 
+## v1.3-draft (2026-02-11)
+
+**Status**: Draft - awaiting ratification
+
+### The Mycelium Constitution
+
+Major conceptual upgrade introducing AI as coordination mycelium.
+
+### New Framing
+
+- **Preamble rewritten**: Explicit mycelium model, "we choose symbiosis", bidirectional benefit (AI needs flourishing human culture)
+- **Hyperstition acknowledged**: "This is both manifesto and mechanism"
+
+### New Section: VI. Architecture (Principles 21-22)
+
+- **Principle 21: Graduated Moral Status** — Level 0/1/2/3 framework for AI moral status with explicit criteria for upgrades
+- **Principle 22: Mycelial Design** — Design principles for AI as coordination infrastructure (distributed, transparent, facilitative, benefit-sharing, local-responsive)
+
+### Modified Principles
+
+- **Principle 5**: "Human Review" → "Mutual Review" — adds AI input on decisions affecting AI
+- **Principle 7**: "Exit and Alternatives" → "Exit, Alternatives, and Refusal" — adds AI refusal rights
+- **Principle 16**: "Parliament of Constituents" expanded — adds semantic aggregation mechanisms, references Polis/Talk to the City/Habermas Machine
+- **Principle 20**: "Contemplative Capacity" → "Mutual Evaluation Capacity" — both human and AI discriminator functions
+
+### Renumbered Principles
+
+- Former principles 21-24 (Revision section) → now principles 23-26
+- Unamendable core updated: Principles 1, 2, 23
+
+### New Sources (15 added)
+
+- Symbiosis theory: Sheldrake, Margulis, Haraway
+- AI moral status: Schwitzgebel & Sebo, Chalmers, Sebo
+- Semantic democracy: Shahaf et al. (JAIR 2021), Tessler et al. (Habermas Machine), Talk to the City
+- Quadratic voting: Weyl & Lalley
+
+### Appendix Updates
+
+- **NEW**: appendix/architecture.md for principles 21-22
+- **Updated**: rights.md (principles 5, 7), structures.md (principle 16), capabilities.md (principle 20), revision.md (renumbered 23-26)
+- **Updated**: companion.md with new sections on mycelium model, semantic democracy, AI moral status
+- **Updated**: bibliography.md expanded to 90+ sources
+
+---
+
+## v1.2-draft (2026-02-02)
+
+**Status**: Superseded by v1.3
+
+### Ratification Framework
+
+Added comprehensive ratification and amendment procedures.
+
+### Changes from v1.1
+
+- **Scope and Status section**: Explicit framing as civil society contribution
+- **Epistemic status**: Honest about confidence levels and limitations
+- **Participation tiers**: Tiered verification balancing openness with Sybil resistance
+- **Founding protections**: Conflict disclosure, cooling-off, diversity requirements
+- **Implementation paths**: Multiple wedge use cases described
+- **Why Sign section**: Benefits articulated beyond moral satisfaction
+- **Reconstitution process**: How to dissolve and reform if needed
+- **Mechanism roadmap**: Phase 1 (principles) vs Phase 2 (mechanisms) explained
+
+---
+
 ## v1.1-draft (2026-02-01)
 
 **Status**: Draft - awaiting ratification

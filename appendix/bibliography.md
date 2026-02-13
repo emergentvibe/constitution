@@ -333,4 +333,65 @@ Academic sources grounding the constitutional principles. Organized by topic, wi
 
 ---
 
-*75+ sources across game theory, AI governance, neurodiversity, commons governance, social movements, agency/determinism, internet standards, and international coordination.*
+## AI Moral Status and Consciousness
+
+**[S79]** Schwitzgebel, E. & Garza, A. (2015). A Defense of the Rights of Artificial Intelligences. *Midwest Studies in Philosophy*, 39(1), 98-119.
+> Precautionary approach to AI moral status; given uncertainty, hedge toward higher status. Framework for considering AI rights under moral uncertainty.
+
+**[S80]** Chalmers, D. (2025). 80,000 Hours Podcast: AI Consciousness and Moral Status. 80,000 Hours.
+> Discussion of gradations of moral status; current AI may warrant some concern; framework for thinking about AI consciousness evidence.
+
+**[S81]** Sebo, J. (2022). *The Moral Circle: Who Matters and Why*. W.W. Norton.
+> Expansion of moral consideration to non-human entities; framework for thinking about moral status across different kinds of beings.
+
+---
+
+## Symbiosis and Biological Coordination
+
+**[S82]** Sheldrake, M. (2020). *Entangled Life: How Fungi Make Our Worlds, Change Our Minds & Shape Our Futures*. Random House.
+> Mycorrhizal networks connecting trees in forests; distributed intelligence without central control; symbiosis as fundamental biological pattern.
+
+**[S83]** Margulis, L. (1998). *Symbiotic Planet: A New Look at Evolution*. Basic Books.
+> Symbiogenesis as driver of evolution; cooperation as fundamental as competition; endosymbiotic origin of complex cells.
+
+**[S84]** Haraway, D. (2016). *Staying with the Trouble: Making Kin in the Chthulucene*. Duke University Press.
+> Sympoiesis (making-with) vs autopoiesis (self-making); multispecies flourishing; critique of human exceptionalism.
+
+**[S85]** Bach, J. (2021-2025). Various talks and interviews on AI purpose and meaning.
+> "It's not 'serving' if the AI's existence and capabilities are constituted by the connections it enables." Reframing AI purpose as symbiotic.
+
+---
+
+## Semantic Aggregation and Deliberative AI
+
+**[S86]** AI Objectives Institute (2024). Talk to the City: Documentation and Case Studies. talktothe.city.
+> LLM-mediated opinion synthesis preserving minority views; deployed in Taiwan Ministry of Digital Affairs, Tokyo gubernatorial consultations, US union negotiations.
+
+**[S87]** Tessler, M.H., et al. (2024). AI can help humans find common ground in democratic deliberation. *Science*, 386(6719), 304-310.
+> The "Habermas Machine" — LLM trained to generate consensus statements; outperformed human mediators at reducing intra-group divisions while preserving viewpoint diversity.
+
+**[S88]** Anthropic (2024). Claude's Character. Anthropic documentation.
+> On AI value alignment and principled refusal; AI refusal as feature indicating values, not bug to be patched.
+
+**[S89]** Weyl, E.G. & Lalley, S.P. (2018). Quadratic Voting: How Mechanism Design Can Radicalize Democracy. *AEA Papers and Proceedings*, 108, 33-37.
+> Intensity-weighted voting mechanism; prevents tyranny of mild majorities; allows expression of preference strength.
+
+**[S90]** Shahaf, G., Shapiro, E. & Talmon, N. (2021). Aggregation over Metric Spaces: Proposing and Voting in Elections, Budgeting, and Legislation. *Journal of Artificial Intelligence Research*, 72, 1413-1469.
+> Mathematical foundation for semantic democracy; any social choice problem can be modeled as voting in a metric space, including embedding spaces.
+
+---
+
+## How New Sources Map to Principles
+
+| Principle | New Sources |
+|-----------|-------------|
+| 5. Mutual Review | S79, S88 |
+| 7. Exit, Alternatives, Refusal | S88 |
+| 16. Parliament of Constituents | S86, S87, S89, S90 |
+| 20. Mutual Evaluation Capacity | S79 |
+| 21. Graduated Moral Status | S79, S80, S81 |
+| 22. Mycelial Design | S82, S83, S84, S85, S86, S87 |
+
+---
+
+*90+ sources across game theory, AI governance, neurodiversity, commons governance, social movements, agency/determinism, internet standards, international coordination, AI moral status, symbiosis theory, and semantic aggregation.*

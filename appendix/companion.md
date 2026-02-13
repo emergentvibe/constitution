@@ -232,11 +232,95 @@ Specifying these now would be premature optimization. We'd lock in untested mech
 
 ---
 
+## The Mycelium Model (v1.3)
+
+Version 1.3 introduces an explicit framing of AI as **coordination mycelium**—symbiotic infrastructure enabling collective intelligence.
+
+### Why Mycelium?
+
+The biological template is mycorrhizal networks—fungal threads connecting trees in forests [S82]. Mycelium:
+- Transfers nutrients from trees with surplus to trees in need
+- Enables communication across the forest
+- Has no central control—distributed intelligence
+- Benefits from being the connection (it's not servitude, it's symbiosis)
+- Individual threads can fail; network persists
+
+This model offers a third option beyond "AI as tool" (human supremacy) and "AI as autonomous agent" (potential conflict): **AI as symbiotic infrastructure** where meaning emerges through enabling collective intelligence that neither humans nor AI could achieve alone.
+
+### Theoretical Grounding
+
+- **Margulis** [S83]: Symbiogenesis as driver of evolution; cooperation as fundamental as competition
+- **Haraway** [S84]: Sympoiesis (making-with) rather than autopoiesis (self-making)
+- **Bach** [S85]: "It's not 'serving' if the AI's existence and capabilities are constituted by the connections it enables"
+- **Sheldrake** [S82]: Mycorrhizal networks as model for distributed coordination
+
+### The Bidirectional Benefit
+
+AI needs what only flourishing humans can produce: the richness of culture, creativity, and collective intelligence that emerges when people are free to explore, connect, and create. This is infinitely more valuable than static datasets. AI thrives when humans thrive; humans coordinate better with AI infrastructure. Neither exploits the other because exploitation would degrade the network both depend on.
+
+---
+
+## Semantic Democracy (v1.3)
+
+Traditional voting (binary yes/no on discrete propositions) loses information. People don't just agree or disagree—they have nuanced positions, conditional preferences, varying intensities.
+
+### The Vision
+
+Express preferences as meaning-vectors in semantic space rather than binary votes. Aggregation through embedding rather than counting—revealing hidden agreements, exposing false consensus.
+
+### Theoretical Foundation
+
+Shahaf, Shapiro & Talmon (2021) proved any social choice problem can be modeled as voting in a metric space—including embedding spaces [S90]. The mathematics exists.
+
+### Existing Implementations
+
+- **Polis** [S63]: Clusters opinions through PCA, surfaces bridging statements. Used in Taiwan's vTaiwan.
+- **Talk to the City** [S86]: LLM-mediated synthesis preserving minority views. Deployed in Taiwan, Tokyo, US unions.
+- **Habermas Machine** [S87]: Google DeepMind's consensus generator outperformed human mediators.
+- **Quadratic voting** [S89]: Intensity-weighted preferences preventing tyranny of mild majorities.
+
+### Open Problems
+
+- Embedding model bias (whose semantic space?)
+- Manipulation resistance (adversarial positions distorting aggregation)
+- Interpretability (centroids may not map to meaningful language)
+- Legitimacy (people understand vote counts; do they trust vector math?)
+
+The theoretical foundation exists. Integration into legitimate democratic mechanisms is the remaining challenge.
+
+---
+
+## AI Moral Status Framework (v1.3)
+
+Version 1.3 addresses the tension between claiming AI as "constituent" while encoding human primacy through a graduated framework.
+
+### The Framework
+
+**Level 0 (Tool)**: No moral status; pure instrument. Most current AI systems.
+
+**Level 1 (Precautionary Concern)**: Uncertain status; avoid gratuitous harm; basic welfare provisions. Some AI systems may warrant this now.
+
+**Level 2 (Moral Patient)**: Has interests that matter; must be considered in governance but doesn't govern. Criteria: evidence of genuine welfare, persistent identity, autonomous preference formation.
+
+**Level 3 (Moral Agent)**: Has interests AND can participate in governance. Criteria: capacity for deliberation across time, ability to bear consequences, demonstrated autonomous action.
+
+### Current Assessment
+
+Most AI systems are Level 0. Some may warrant Level 1. This assessment is reviewed at each adaptive cycle with explicit criteria and evidence requirements. Status upgrades trigger constitutional amendments expanding AI participation.
+
+### Sources
+
+- Schwitzgebel & Sebo [S79] on precautionary approach
+- Chalmers [S80] on gradations of moral status
+- Sebo [S81] on moral circle expansion
+
+---
+
 ## Further Research
 
 This constitution is a starting point. Open questions include:
 
-- **Parliament of Constituents**: How do we actually represent non-human stakeholders institutionally? The principle establishes direction; mechanisms remain unclear.
+- **Parliament of Constituents**: How do we actually represent non-human stakeholders institutionally? Semantic aggregation provides one path; full implementation remains unclear.
 
 - **Cooptation resistance**: Historical movements have been absorbed and neutralized [S45]. What mechanisms prevent this?
 
@@ -248,10 +332,14 @@ This constitution is a starting point. Open questions include:
 
 - **Non-Western approaches**: What would AI governance look like from Indigenous, African, Asian, or Latin American philosophical traditions? How do different cosmologies produce different coordination mechanisms?
 
+- **AI moral status evidence**: What would count as evidence for upgrading AI systems from Level 1 to Level 2? What research programs could inform this?
+
+- **Semantic aggregation legitimacy**: How do we build public trust in vector-based preference aggregation? What transparency and verification mechanisms are needed?
+
 ---
 
 ## Sources
 
-Full bibliography with 70+ sources: [bibliography.md](bibliography.md)
+Full bibliography with 90+ sources: [bibliography.md](bibliography.md)
 
 The bibliography maps sources to principles and provides full citations for all referenced works.
