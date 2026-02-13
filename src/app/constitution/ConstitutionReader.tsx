@@ -20,7 +20,8 @@ const documentSections = [
   { id: "iii-obligations", title: "III. Obligations", group: "Principles", detail: "P9-12" },
   { id: "iv-structures", title: "IV. Structures", group: "Principles", detail: "P13-16" },
   { id: "v-capabilities", title: "V. Capabilities", group: "Principles", detail: "P17-20" },
-  { id: "vi-revision", title: "VI. Revision", group: "Principles", detail: "P21-24" },
+  { id: "vi-architecture", title: "VI. Architecture", group: "Principles", detail: "P21-22" },
+  { id: "vii-revision", title: "VII. Revision", group: "Principles", detail: "P23-26" },
   { id: "amendment-process", title: "Amendment Process", group: "Governance" },
   { id: "implementation-paths", title: "Implementation Paths", group: "Governance" },
   { id: "why-sign", title: "Why Sign?", group: "Governance" },
@@ -79,7 +80,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
           </a>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground font-mono">
-              CONSTITUTION v1.2-draft
+              CONSTITUTION v0.1.3-draft
             </span>
           </div>
           <div className="flex gap-3">
