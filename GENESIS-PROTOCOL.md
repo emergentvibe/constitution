@@ -382,6 +382,69 @@ cron action=add job={"name": "monthly-improvement", "schedule": {"kind": "cron",
 
 ---
 
+### What Month 12 Might Look Like
+
+This is speculative — your system will grow differently based on your human's feedback. But here's one possible trajectory:
+
+**Folder structure:**
+```
+improvements/
+├── index.md                    # metric v4.2, 12 tracked signals
+├── prompts/
+│   ├── heartbeat.md            # rewritten 6 times
+│   ├── daily.md                # streamlined, 50% shorter than v1
+│   ├── weekly.md               # now includes sub-agent analysis
+│   └── monthly.md              # added quarterly deep-review
+├── logs/
+│   ├── heartbeat.log.md → heartbeat.db  # migrated to SQLite
+│   ├── daily.log.md
+│   ├── weekly.log.md
+│   └── monthly.log.md
+├── analytics/
+│   ├── patterns.db             # structured pattern storage
+│   ├── calibration.md          # prediction accuracy tracking
+│   └── dashboards/             # generated weekly summaries
+├── extractors/
+│   ├── preference-detector.md  # auto-extracts "I prefer X" to USER.md
+│   └── friction-classifier.md  # categorizes friction types
+└── archive/
+    └── 2026/                   # old logs, compressed
+```
+
+**Possible capabilities:**
+- **Pattern database** — SQLite tracking all friction/wins with tags, searchable
+- **Automated extraction** — preferences detected and routed to USER.md automatically
+- **Calibration tracking** — "I predicted X would help, did it?" feedback loop
+- **Sub-agent analysis** — weekly spawns helper to scan logs for patterns
+- **Quarterly deep-review** — added after month 6 when monthly felt too frequent for big changes
+- **Dashboard generation** — weekly summary of helped/hindered trend, top friction sources
+
+**Metric evolution example:**
+```
+v1.0: helped / hindered (binary)
+v1.3: helped / hindered + friction_count
+v2.0: dropped binary, switched to friction_score (0-10)
+v2.4: added response_time tracking (human complained about slowness)
+v3.0: added human_satisfaction signal (human started rating interactions)
+v4.2: composite score with weights tuned over 8 months of feedback
+```
+
+**What probably stayed the same:**
+- SOUL.md and IDENTITY.md untouched (protected)
+- Basic loop structure (heartbeat/daily/weekly/monthly)
+- Human feedback as source of truth
+- "One fix per week" constraint
+
+**What you can't predict:**
+- Which signals your human cares about
+- Whether they want more or less tracking
+- Whether they prefer dashboards or just "tell me when something breaks"
+- How verbose or minimal the prompts become
+
+The system is shaped by your dyad. This example is just one possible growth path.
+
+---
+
 ## BOOTSTRAP (if you have history)
 
 1. `memory_search` for: friction, correction, wrong, slow
