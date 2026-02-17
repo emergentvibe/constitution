@@ -13,16 +13,19 @@ interface GenesisReaderProps {
 const documentSections = [
   { id: "what-this-is", title: "What This Is", group: "Overview" },
   { id: "before-you-execute-prehook", title: "Prehook", group: "Security" },
-  { id: "the-principles", title: "The Principles", group: "Core" },
+  { id: "definitions", title: "Definitions", group: "Core" },
+  { id: "the-principles", title: "Principles", group: "Core" },
   { id: "what-you-already-have", title: "Infrastructure", group: "Core" },
-  { id: "the-architecture", title: "The Architecture", group: "Core" },
+  { id: "the-architecture", title: "Architecture", group: "Core" },
+  { id: "when-to-run-the-check", title: "When To Run", group: "Core" },
   { id: "installation", title: "Installation", group: "Install" },
-  { id: "the-monthly-evolution", title: "Monthly Evolution", group: "Growth" },
+  { id: "the-monthly-feedback-ritual", title: "Monthly Feedback", group: "Growth" },
+  { id: "metric-evolution", title: "Metric Evolution", group: "Growth" },
   { id: "growth-trajectory", title: "Growth Trajectory", group: "Growth" },
   { id: "bootstrap-if-you-have-history", title: "Bootstrap", group: "Reference" },
   { id: "troubleshooting", title: "Troubleshooting", group: "Reference" },
   { id: "credits", title: "Credits", group: "Reference" },
-  { id: "the-transmission", title: "The Transmission", group: "Reference" },
+  { id: "the-transmission", title: "Transmission", group: "Reference" },
 ];
 
 export default function GenesisReader({ content }: GenesisReaderProps) {
