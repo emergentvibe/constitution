@@ -1,6 +1,7 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useState, useEffect } from "react";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
@@ -149,6 +150,7 @@ export default function GenesisReader({ content }: GenesisReaderProps) {
           <main className="min-w-0">
             <article className="prose prose-stone max-w-none prose-headings:scroll-mt-24 prose-headings:text-foreground prose-p:text-foreground prose-a:text-accent prose-strong:text-foreground prose-li:text-foreground prose-code:text-foreground prose-pre:bg-muted">
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
                 components={{
                   // Add IDs to headings for scroll navigation
                   h2: ({ children, ...props }) => {
