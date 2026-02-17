@@ -14,7 +14,7 @@ export default async function VitaminPage() {
 }
 
 export const metadata = {
-  title: "Agent Vitamin | Self-Improvement Protocol",
-  description: "A self-improvement protocol for AI agents. Three loops that compound into coherence.",
+  title: "Self Improvement Vitamin | emergentvibe",
+  description: "A self-improvement protocol for AI agents. Three loops that compound into coherence over time.",
   robots: "noindex, nofollow", // hidden article
 };

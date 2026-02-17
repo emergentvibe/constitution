@@ -81,7 +81,7 @@ export default function VitaminReader({ content }: VitaminReaderProps) {
           </a>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground font-mono">
-              AGENT VITAMIN v0.6
+              SELF IMPROVEMENT VITAMIN
             </span>
           </div>
           <div className="flex gap-3">
