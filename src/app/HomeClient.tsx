@@ -95,49 +95,7 @@ const concepts = [
   },
 ];
 
-// Decorative scattered elements
-function ScatteredDecorations() {
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {/* Golden triangles */}
-      <svg className="absolute top-[15%] left-[8%] w-4 h-4 text-gold-400 opacity-60" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L22 20H2L12 2z" />
-      </svg>
-      <svg className="absolute top-[25%] right-[15%] w-3 h-3 text-gold-400 opacity-40 rotate-45" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L22 20H2L12 2z" />
-      </svg>
-      <svg className="absolute bottom-[30%] left-[20%] w-5 h-5 text-gold-400 opacity-50 -rotate-12" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L22 20H2L12 2z" />
-      </svg>
-      <svg className="absolute top-[40%] right-[8%] w-3 h-3 text-gold-400 opacity-40 rotate-180" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L22 20H2L12 2z" />
-      </svg>
-      <svg className="absolute bottom-[20%] right-[25%] w-4 h-4 text-gold-400 opacity-50 rotate-90" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2L22 20H2L12 2z" />
-      </svg>
-      
-      {/* Teal magnifying glasses */}
-      <svg className="absolute top-[35%] left-[5%] w-6 h-6 opacity-40" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="10" cy="10" r="6" />
-        <path d="M14.5 14.5L20 20" strokeLinecap="round" />
-      </svg>
-      <svg className="absolute bottom-[40%] left-[12%] w-5 h-5 opacity-30" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="10" cy="10" r="6" />
-        <path d="M14.5 14.5L20 20" strokeLinecap="round" />
-      </svg>
-      <svg className="absolute top-[20%] right-[30%] w-4 h-4 opacity-25" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="10" cy="10" r="6" />
-        <path d="M14.5 14.5L20 20" strokeLinecap="round" />
-      </svg>
-      
-      {/* Small circles/dots */}
-      <div className="absolute top-[12%] left-[35%] w-2 h-2 rounded-full bg-gold-400 opacity-40" />
-      <div className="absolute top-[45%] right-[12%] w-1.5 h-1.5 rounded-full bg-teal-400 opacity-30" />
-      <div className="absolute bottom-[35%] right-[18%] w-2 h-2 rounded-full bg-gold-400 opacity-35" />
-      <div className="absolute bottom-[15%] left-[40%] w-1.5 h-1.5 rounded-full bg-teal-400 opacity-25" />
-    </div>
-  );
-}
+// Decorative scattered elements - removed for now (were too subtle/confusing)
 
 export default function HomeClient({ signatories, stats }: HomeClientProps) {
   return (
@@ -154,9 +112,6 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
       <div className="absolute inset-0">
         <NetworkHero />
       </div>
-
-      {/* Scattered decorative elements */}
-      <ScatteredDecorations />
 
       {/* Main Layout */}
       <div className="relative z-10 min-h-screen flex flex-col">
