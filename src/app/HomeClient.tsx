@@ -20,64 +20,76 @@ interface HomeClientProps {
 // Teal color for icons
 const TEAL = "#4ECDC4";
 
-// Concept box data with teal outlined icons
+// Concept box data - aligned with Constitution sections
 const concepts = [
   {
-    id: "federated",
-    title: "Federated Governance",
+    id: "collective",
+    title: "Collective Governance",
+    subtitle: "Democratic oversight",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="12" cy="4" r="2" />
-        <circle cx="4" cy="12" r="2" />
-        <circle cx="20" cy="12" r="2" />
-        <circle cx="8" cy="20" r="2" />
-        <circle cx="16" cy="20" r="2" />
-        <path d="M12 6v4m-6 0l4 2m8-2l-4 2m-6 4l2-2m8 0l-2-2" strokeLinecap="round" />
+        <circle cx="12" cy="5" r="2.5" />
+        <circle cx="6" cy="12" r="2" />
+        <circle cx="18" cy="12" r="2" />
+        <circle cx="8" cy="19" r="2" />
+        <circle cx="16" cy="19" r="2" />
+        <path d="M12 7.5v2M8 12l2.5 1M16 12l-2.5 1M9.5 17l1-1.5M14.5 17l-1-1.5" strokeLinecap="round" />
       </svg>
     ),
   },
   {
-    id: "collective",
-    title: "Collective Governance",
+    id: "federated",
+    title: "Federated Structure",
+    subtitle: "Layered scales",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="12" cy="7" r="3" />
-        <circle cx="6" cy="17" r="2.5" />
-        <circle cx="18" cy="17" r="2.5" />
-        <path d="M12 10v3m-3 2l3-2 3 2" strokeLinecap="round" />
+        <circle cx="12" cy="4" r="2.5" />
+        <circle cx="6" cy="12" r="2" />
+        <circle cx="18" cy="12" r="2" />
+        <circle cx="3" cy="20" r="1.5" />
+        <circle cx="9" cy="20" r="1.5" />
+        <circle cx="15" cy="20" r="1.5" />
+        <circle cx="21" cy="20" r="1.5" />
+        <path d="M12 6.5v3.5M8 12v6M16 12v6M6 14v4.5M18 14v4.5" strokeLinecap="round" />
       </svg>
     ),
   },
   {
     id: "transparency",
     title: "Transparency",
-    icon: (
-      <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <rect x="4" y="4" width="16" height="18" rx="2" />
-        <path d="M8 8h8M8 12h8M8 16h4" strokeLinecap="round" />
-        <circle cx="18" cy="6" r="3" fill="none" />
-        <path d="M18 6v1.5" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    id: "rights",
-    title: "Rights & Obligations",
-    icon: (
-      <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <path d="M12 3l8 4v6c0 4-3.5 7.5-8 9-4.5-1.5-8-5-8-9V7l8-4z" />
-        <path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
-  {
-    id: "hybrid",
-    title: "Hybrid Expertise",
+    subtitle: "Right to understand",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3" />
-        <path d="M12 2v4m0 12v4M2 12h4m12 0h4" strokeLinecap="round" />
-        <path d="M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" strokeLinecap="round" />
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+      </svg>
+    ),
+  },
+  {
+    id: "exit",
+    title: "Exit Rights",
+    subtitle: "Right to opt out",
+    icon: (
+      <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M16 17l5-5-5-5M21 12H9" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    id: "mycelial",
+    title: "Mycelial Design",
+    subtitle: "AI as infrastructure",
+    icon: (
+      <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="2" />
+        <circle cx="6" cy="6" r="1.5" />
+        <circle cx="18" cy="6" r="1.5" />
+        <circle cx="4" cy="14" r="1.5" />
+        <circle cx="20" cy="14" r="1.5" />
+        <circle cx="8" cy="20" r="1.5" />
+        <circle cx="16" cy="20" r="1.5" />
+        <path d="M7.5 7l3 3.5M16.5 7l-3 3.5M5.5 14l5 -1M18.5 14l-5 -1M9 18.5l2-5M15 18.5l-2-5" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -181,7 +193,7 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
             <div className="absolute bottom-[22%] left-[6%] md:left-[12%] pointer-events-auto hidden lg:block">
               <div className="bg-white/50 backdrop-blur-md rounded-2xl px-5 py-4 max-w-[200px] shadow-sm">
                 <p className="text-sm text-stone-600 leading-relaxed">
-                  A coordination mechanism for human-AI futures
+                  AI as coordination mycelium — distributed infrastructure for collective intelligence
                 </p>
               </div>
             </div>
@@ -458,13 +470,20 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
 // Concept Box Component - More rounded, translucent, no border
 function ConceptBox({ concept }: { concept: typeof concepts[0] }) {
   return (
-    <div className="bg-white/50 backdrop-blur-md rounded-2xl p-5 flex flex-col items-center gap-3 min-w-[130px] hover:bg-white/70 transition-all cursor-default shadow-sm">
+    <div className="bg-white/50 backdrop-blur-md rounded-2xl p-4 flex flex-col items-center gap-2 min-w-[120px] max-w-[140px] hover:bg-white/70 transition-all cursor-default shadow-sm">
       <div>
         {concept.icon}
       </div>
-      <span className="text-xs md:text-sm font-medium text-stone-700 text-center leading-tight">
-        {concept.title}
-      </span>
+      <div className="text-center">
+        <span className="text-xs md:text-sm font-medium text-stone-700 leading-tight block">
+          {concept.title}
+        </span>
+        {concept.subtitle && (
+          <span className="text-[10px] text-stone-500 leading-tight">
+            {concept.subtitle}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
