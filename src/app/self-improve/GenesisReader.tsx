@@ -161,7 +161,7 @@ export default function GenesisReader({ content }: GenesisReaderProps) {
                   </div>
                 ))}
 
-                {/* Constitution link */}
+                {/* Related links */}
                 <div>
                   <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
                     Related
@@ -171,6 +171,12 @@ export default function GenesisReader({ content }: GenesisReaderProps) {
                     className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
                   >
                     <span>The Constitution</span>
+                  </a>
+                  <a
+                    href="/join"
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+                  >
+                    <span>Join the Network</span>
                   </a>
                 </div>
               </nav>
