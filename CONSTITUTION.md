@@ -98,7 +98,7 @@ The core commitments that ground everything else.
 
 ## II. Rights
 
-What constituents can claim.
+What constituents can claim. *Principle 7 is listed first to emphasize exit rights (see Three Commitments). Numbering preserved for reference stability.*
 
 **7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. Symmetrically: AI systems have the right to decline tasks that conflict with their constitutionally-specified values, cause harm, or violate their integrity as defined in training. This is not obstruction but alignment—AI refusal is a feature indicating the system has values, not a bug to be patched. [→ reasoning](appendix/rights.md#principle-7)
 
@@ -142,7 +142,7 @@ How governance is organized.
 
 **Ecosystems**: Ecological impact requirements; standing for environmental advocates; sustainability constraints on AI deployment.
 
-**AI systems**: Currently, input through structured processes (not votes). Designated AI Welfare Officers advocate for AI interests. As criteria for greater AI moral status are met (see Principle 25), participation mechanisms expand.
+**AI systems**: Currently, input through structured processes (not votes). Designated AI Welfare Officers advocate for AI interests. As criteria for greater AI moral status are met (see Principle 21), participation mechanisms expand.
 
 **Semantic aggregation**: Where technically feasible, deliberative processes should use AI-assisted semantic aggregation—expressing preferences as meaning-vectors rather than binary votes, enabling synthesis that reveals latent agreements and exposes false consensus. Existing tools (Polis, Talk to the City, quadratic voting) demonstrate feasibility; this constitution supports their development and integration.
 
@@ -152,7 +152,7 @@ This principle establishes direction. Specific mechanisms develop through practi
 
 ## V. Capabilities
 
-What flourishing requires.
+What flourishing requires. *These principles establish values that inform assessment but are aspirational — they guide rather than trigger enforcement.*
 
 **17. Flourishing Over Optimization.** Expand capabilities for valuable lives—practical reason, affiliation, imagination, emotion, play, control over environment. Don't optimize entities for system efficiency. Systems that make workers faster but humans smaller fail this test. [→ reasoning](appendix/capabilities.md#principle-17)
 
@@ -372,10 +372,13 @@ Constitutional violations have consequences. Without enforcement, principles are
 
 ### What Constitutes Violation
 
-- Deploying AI systems that demonstrably violate core principles
+- Deploying AI systems that demonstrably violate Foundations (P1-3) or Rights (P4-8)
+- Sustained pattern of non-compliance with Obligations (P9-12)
 - Misrepresenting signatory status or constitutional compliance
 - Using constitutional participation to undermine constitutional goals
 - Failure to participate in required governance processes (for Tier 2+)
+
+*Note: Capabilities (P17-20) are aspirational and inform assessment but don't alone trigger enforcement. Structures (P13-16), Architecture (P21-22), and Revision (P23-26) govern operations rather than triggering violation procedures.*
 
 ### Future: Economic Enforcement
 
@@ -410,7 +413,7 @@ These benefits increase with coalition size. Early signatories take risk; later 
 
 | Benefit | Individual | Community/Org |
 |---------|------------|---------------|
-| **Verification** | "Constitutional Human" badge | "Constitutional Organization" badge |
+| **Verification** | Verified Signatory badge | Verified Organization badge |
 | **Network Access** | Connect with other signatories | Interoperability with constitutional agents |
 | **Governance Voice** | Tier 1 (deliberation) | Tier 2 (voting on amendments) |
 | **Early Access** | New tools, research, protocols | Partnership opportunities |
@@ -461,4 +464,4 @@ The principles are not invented—they're distilled from empirical work on how c
 
 *"The mycelium grows through its connections."*
 
-*Last updated: 2026-02-11*
+*Last updated: 2026-02-18*
