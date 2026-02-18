@@ -1,7 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { formatDistanceToNow } from 'date-fns';
+// Simple time formatting without date-fns
+function formatDistanceToNow(date: Date): string {
+  const now = new Date();
+  const diffMs = date.getTime() - now.getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  const diffHours = Math.round(diffMs / (1000 * 60 * 60));
+  
+  if (diffDays > 1) return `in ${diffDays} days`;
+  if (diffDays === 1) return 'in 1 day';
+  if (diffHours > 1) return `in ${diffHours} hours`;
+  if (diffHours === 1) return 'in 1 hour';
+  if (diffMs > 0) return 'soon';
+  if (diffDays < -1) return `${Math.abs(diffDays)} days ago`;
+  if (diffDays === -1) return '1 day ago';
+  return 'recently';
+}
 
 interface Proposal {
   id: string;
@@ -55,7 +70,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
                   proposal.voting_end ? new Date(proposal.voting_end) : null;
   
   const isActive = status === 'active';
-  const timeRemaining = endTime && isActive ? formatDistanceToNow(endTime, { addSuffix: true }) : null;
+  const timeRemaining = endTime && isActive ? formatDistanceToNow(endTime) : null;
   
   // Calculate vote percentages
   const scores = proposal.scores || [];
