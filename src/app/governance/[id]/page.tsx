@@ -31,10 +31,6 @@ interface Proposal {
   impact_assessment?: string;
   quorum_threshold?: number;
   approval_threshold?: number;
-  author?: {
-    display_name?: string;
-    wallet_address?: string;
-  };
   author_wallet?: string;
   created_at?: string;
 }
@@ -57,13 +53,12 @@ const typeLabels: Record<string, { label: string; color: string }> = {
 export default function ProposalPage() {
   const params = useParams();
   const id = params.id as string;
-  const { user, citizen } = useAuth();
+  const { walletAddress } = useAuth();
   
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [source, setSource] = useState<'local' | 'snapshot'>('local');
   
   useEffect(() => {
     fetchProposal();
@@ -83,7 +78,6 @@ export default function ProposalPage() {
       
       setProposal(data.proposal);
       setOutcome(data.outcome || null);
-      setSource(data.source);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -99,7 +93,6 @@ export default function ProposalPage() {
           <div className="animate-pulse">
             <div className="h-6 bg-zinc-800 rounded w-24 mb-4" />
             <div className="h-10 bg-zinc-800 rounded w-3/4 mb-4" />
-            <div className="h-4 bg-zinc-800 rounded w-full mb-2" />
             <div className="h-4 bg-zinc-800 rounded w-full mb-2" />
             <div className="h-4 bg-zinc-800 rounded w-2/3" />
           </div>
@@ -139,8 +132,8 @@ export default function ProposalPage() {
   const endTime = proposal.end ? new Date(proposal.end * 1000) : 
                   proposal.voting_end ? new Date(proposal.voting_end) : null;
   
-  const isAuthor = citizen && proposal.author?.wallet_address === citizen.wallet_address;
-  const canVote = citizen && citizen.status === 'active' && isActive;
+  const isAuthor = walletAddress && proposal.author_wallet?.toLowerCase() === walletAddress.toLowerCase();
+  const canVote = walletAddress && isActive;
   
   const scores = proposal.scores || [];
   const total = proposal.scores_total || scores.reduce((a, b) => a + b, 0);
@@ -151,7 +144,6 @@ export default function ProposalPage() {
       <GovernanceHeader />
       
       <main className="max-w-3xl mx-auto px-4 py-8">
-        {/* Back link */}
         <Link href="/governance" className="text-zinc-400 hover:text-white text-sm">
           ← Back to Governance
         </Link>
@@ -170,54 +162,43 @@ export default function ProposalPage() {
             }`}>
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </span>
-            {proposal.category && (
-              <span className="px-3 py-1 text-sm font-medium rounded bg-zinc-800 text-zinc-300">
-                {proposal.category}
-              </span>
-            )}
           </div>
           
           <h1 className="text-3xl font-bold text-white mb-4">{proposal.title}</h1>
           
-          {/* Author & timing */}
           <div className="flex flex-wrap gap-4 text-sm text-zinc-400">
             <span>
-              Proposed by {proposal.author?.display_name || 
-                (proposal.author_wallet ? `${proposal.author_wallet.slice(0, 6)}...${proposal.author_wallet.slice(-4)}` : 'Anonymous')}
+              By {proposal.author_wallet 
+                ? `${proposal.author_wallet.slice(0, 6)}...${proposal.author_wallet.slice(-4)}`
+                : 'Anonymous'}
             </span>
-            {startTime && (
-              <span>Started {format(startTime, 'MMM d, yyyy')}</span>
-            )}
+            {startTime && <span>Started {format(startTime, 'MMM d, yyyy')}</span>}
             {endTime && isActive && (
               <span className="text-emerald-400">
                 Ends {formatDistanceToNow(endTime, { addSuffix: true })}
               </span>
             )}
-            {endTime && isClosed && (
-              <span>Ended {format(endTime, 'MMM d, yyyy')}</span>
-            )}
           </div>
         </div>
         
-        {/* Draft warning & submit button */}
+        {/* Draft: Submit to Snapshot */}
         {isDraft && isAuthor && (
           <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-lg p-4 mb-8">
             <h3 className="text-yellow-400 font-medium mb-2">Draft Proposal</h3>
             <p className="text-zinc-300 text-sm mb-4">
-              This proposal is a draft. To start voting, you need to sign and submit it to Snapshot.
+              This proposal is a draft. To start voting, sign and submit it to Snapshot.
             </p>
             <SnapshotSubmit proposal={proposal} onSuccess={fetchProposal} />
           </div>
         )}
         
-        {/* Voting results */}
+        {/* Voting Results */}
         {(isActive || isClosed) && scores.length > 0 && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
             <h3 className="text-lg font-semibold text-white mb-4">
               {isClosed ? 'Final Results' : 'Current Results'}
             </h3>
             
-            {/* Progress bars */}
             <div className="space-y-4 mb-6">
               {choices.map((choice, i) => {
                 const score = scores[i] || 0;
@@ -231,7 +212,7 @@ export default function ProposalPage() {
                     </div>
                     <div className="h-3 bg-zinc-800 rounded-full overflow-hidden">
                       <div 
-                        className={`h-full ${colors[i] || 'bg-zinc-500'} transition-all`}
+                        className={`h-full ${colors[i] || 'bg-zinc-500'}`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -241,24 +222,17 @@ export default function ProposalPage() {
             </div>
             
             <div className="flex justify-between text-sm text-zinc-400 pt-4 border-t border-zinc-800">
-              <span>{proposal.votes || 0} votes cast</span>
+              <span>{proposal.votes || 0} votes</span>
               {outcome && (
                 <span className={outcome.passed ? 'text-emerald-400' : 'text-red-400'}>
                   {outcome.passed ? '✓ Passed' : '✗ Did not pass'}
                 </span>
               )}
             </div>
-            
-            {/* Outcome details */}
-            {outcome && (
-              <div className="mt-4 pt-4 border-t border-zinc-800 text-sm text-zinc-400">
-                {outcome.details}
-              </div>
-            )}
           </div>
         )}
         
-        {/* Vote panel */}
+        {/* Vote Panel */}
         {canVote && (
           <VotePanel 
             proposalId={id}
@@ -271,30 +245,18 @@ export default function ProposalPage() {
         {/* Description */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
           <h3 className="text-lg font-semibold text-white mb-4">Description</h3>
-          <div className="prose prose-invert prose-zinc max-w-none">
-            <p className="text-zinc-300 whitespace-pre-wrap">
-              {proposal.description || proposal.body}
-            </p>
-          </div>
+          <p className="text-zinc-300 whitespace-pre-wrap">
+            {proposal.description || proposal.body}
+          </p>
         </div>
         
-        {/* Amendment text */}
+        {/* Amendment Text */}
         {proposal.amendment_text && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
             <h3 className="text-lg font-semibold text-white mb-4">Proposed Amendment</h3>
             <pre className="bg-zinc-950 border border-zinc-700 rounded-lg p-4 text-sm text-zinc-300 overflow-x-auto">
               {proposal.amendment_text}
             </pre>
-          </div>
-        )}
-        
-        {/* Impact assessment */}
-        {proposal.impact_assessment && (
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
-            <h3 className="text-lg font-semibold text-white mb-4">Impact Assessment</h3>
-            <p className="text-zinc-300 whitespace-pre-wrap">
-              {proposal.impact_assessment}
-            </p>
           </div>
         )}
         
@@ -305,19 +267,18 @@ export default function ProposalPage() {
             <div>
               <div className="text-zinc-400">Quorum Required</div>
               <div className="text-white font-medium">
-                {((proposal.quorum_threshold || 0.15) * 100).toFixed(0)}% participation
+                {((proposal.quorum_threshold || 0.15) * 100).toFixed(0)}%
               </div>
             </div>
             <div>
               <div className="text-zinc-400">Approval Required</div>
               <div className="text-white font-medium">
-                {((proposal.approval_threshold || 0.51) * 100).toFixed(0)}% yes votes
+                {((proposal.approval_threshold || 0.51) * 100).toFixed(0)}%
               </div>
             </div>
           </div>
         </div>
         
-        {/* Snapshot link */}
         {proposal.snapshot_id && (
           <div className="mt-8 text-center">
             <a

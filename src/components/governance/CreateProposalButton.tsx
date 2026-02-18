@@ -5,45 +5,24 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 
 export function CreateProposalButton() {
-  const { user, citizen } = useAuth();
+  const { walletAddress, connect, connecting } = useAuth();
   const [showTooltip, setShowTooltip] = useState(false);
   
-  if (!user) {
+  if (!walletAddress) {
     return (
       <div className="relative">
         <button
+          onClick={connect}
+          disabled={connecting}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
-          className="bg-zinc-700 text-zinc-400 px-4 py-2 rounded-lg font-medium cursor-not-allowed"
+          className="bg-zinc-700 hover:bg-zinc-600 text-zinc-300 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
         >
-          Create Proposal
+          {connecting ? 'Connecting...' : 'Create Proposal'}
         </button>
-        {showTooltip && (
+        {showTooltip && !connecting && (
           <div className="absolute top-full right-0 mt-2 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-300 w-64 shadow-xl z-10">
-            <p className="mb-2">You must be a citizen to create proposals.</p>
-            <Link href="/citizens/apply" className="text-emerald-400 hover:underline">
-              Apply for citizenship →
-            </Link>
-          </div>
-        )}
-      </div>
-    );
-  }
-  
-  if (!citizen || citizen.status !== 'active') {
-    return (
-      <div className="relative">
-        <button
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-          className="bg-zinc-700 text-zinc-400 px-4 py-2 rounded-lg font-medium cursor-not-allowed"
-        >
-          Create Proposal
-        </button>
-        {showTooltip && (
-          <div className="absolute top-full right-0 mt-2 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-300 w-64 shadow-xl z-10">
-            <p>Your citizenship application is {citizen?.status || 'pending'}.</p>
-            <p className="text-zinc-500 mt-1">You can create proposals once approved.</p>
+            <p>Connect your wallet to create proposals.</p>
           </div>
         )}
       </div>

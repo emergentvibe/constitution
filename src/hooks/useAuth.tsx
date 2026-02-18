@@ -1,109 +1,85 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import type { User } from '@supabase/supabase-js';
-
-interface Citizen {
-  id: string;
-  user_id: string;
-  wallet_address: string | null;
-  display_name: string | null;
-  status: 'pending' | 'active' | 'suspended' | 'revoked';
-  created_at: string;
-}
 
 interface AuthContextType {
-  user: User | null;
-  citizen: Citizen | null;
-  loading: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signOut: () => Promise<void>;
-  refreshCitizen: () => Promise<void>;
+  walletAddress: string | null;
+  connecting: boolean;
+  connect: () => Promise<string | null>;
+  disconnect: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      on: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener: (event: string, callback: (...args: any[]) => void) => void;
+      selectedAddress: string | null;
+    };
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [citizen, setCitizen] = useState<Citizen | null>(null);
-  const [loading, setLoading] = useState(true);
-  
-  const supabase = createClient();
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [connecting, setConnecting] = useState(false);
   
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchCitizen(session.user.id);
+    // Check if already connected
+    if (window.ethereum?.selectedAddress) {
+      setWalletAddress(window.ethereum.selectedAddress);
+    }
+    
+    // Listen for account changes
+    const handleAccountsChanged = (accounts: string[]) => {
+      if (accounts.length > 0) {
+        setWalletAddress(accounts[0]);
       } else {
-        setLoading(false);
+        setWalletAddress(null);
       }
-    });
+    };
     
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchCitizen(session.user.id);
-        } else {
-          setCitizen(null);
-          setLoading(false);
-        }
-      }
-    );
+    window.ethereum?.on('accountsChanged', handleAccountsChanged);
     
-    return () => subscription.unsubscribe();
+    return () => {
+      window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+    };
   }, []);
   
-  async function fetchCitizen(userId: string) {
+  async function connect(): Promise<string | null> {
+    if (!window.ethereum) {
+      alert('Please install MetaMask or another Web3 wallet');
+      return null;
+    }
+    
+    setConnecting(true);
+    
     try {
-      const { data, error } = await supabase
-        .from('citizens')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
+      const accounts = await window.ethereum.request({ 
+        method: 'eth_requestAccounts' 
+      });
       
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-        console.error('Error fetching citizen:', error);
+      if (accounts.length > 0) {
+        setWalletAddress(accounts[0]);
+        return accounts[0];
       }
-      
-      setCitizen(data || null);
-    } catch (err) {
-      console.error('Error fetching citizen:', err);
+      return null;
+    } catch (err: any) {
+      console.error('Wallet connection error:', err);
+      return null;
     } finally {
-      setLoading(false);
+      setConnecting(false);
     }
   }
   
-  async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error as Error | null };
-  }
-  
-  async function signUp(email: string, password: string) {
-    const { error } = await supabase.auth.signUp({ email, password });
-    return { error: error as Error | null };
-  }
-  
-  async function signOut() {
-    await supabase.auth.signOut();
-    setCitizen(null);
-  }
-  
-  async function refreshCitizen() {
-    if (user) {
-      await fetchCitizen(user.id);
-    }
+  function disconnect() {
+    setWalletAddress(null);
   }
   
   return (
-    <AuthContext.Provider 
-      value={{ user, citizen, loading, signIn, signUp, signOut, refreshCitizen }}
-    >
+    <AuthContext.Provider value={{ walletAddress, connecting, connect, disconnect }}>
       {children}
     </AuthContext.Provider>
   );
@@ -115,4 +91,12 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+}
+
+// Helper hook for checking if user can perform actions
+export function useCanVote() {
+  const { walletAddress } = useAuth();
+  // For now, anyone with a connected wallet can vote
+  // Later: check against whitelist or Snapshot space members
+  return !!walletAddress;
 }

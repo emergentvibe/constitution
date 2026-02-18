@@ -1,8 +1,8 @@
 // POST /api/governance/proposals/[id]/vote - Record a vote
-// This records the vote locally and provides the Snapshot message to sign
+// GET /api/governance/proposals/[id]/vote - Get votes for a proposal
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getDb } from '@/lib/db';
 import { createVoteMessage, SNAPSHOT_SPACE } from '@/lib/snapshot';
 
 export async function POST(
@@ -10,30 +10,13 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = await createClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
-    // Check if user is a citizen
-    const { data: citizen, error: citizenError } = await supabase
-      .from('citizens')
-      .select('id, status, wallet_address')
-      .eq('user_id', user.id)
-      .single();
-    
-    if (citizenError || !citizen || citizen.status !== 'active') {
-      return NextResponse.json({ 
-        error: 'Only active citizens can vote' 
-      }, { status: 403 });
-    }
-    
     const { id } = params;
     const body = await request.json();
-    const { choice, reason, snapshot_id } = body;
+    const { choice, reason, snapshot_id, wallet_address } = body;
+    
+    if (!wallet_address) {
+      return NextResponse.json({ error: 'wallet_address is required' }, { status: 401 });
+    }
     
     // Validate choice
     if (typeof choice !== 'number' || choice < 1) {
@@ -42,38 +25,37 @@ export async function POST(
       }, { status: 400 });
     }
     
-    // Get the proposal
-    const { data: proposal, error: fetchError } = await supabase
-      .from('governance_proposals')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const db = getDb();
     
-    if (fetchError || !proposal) {
+    // Get the proposal
+    const [proposal] = await db`
+      SELECT * FROM governance_proposals WHERE id = ${id}::uuid
+    `;
+    
+    if (!proposal) {
       return NextResponse.json({ error: 'Proposal not found' }, { status: 404 });
     }
     
     // Check proposal is active
-    if (proposal.status !== 'active') {
+    if (proposal.status !== 'active' && proposal.status !== 'draft') {
       return NextResponse.json({ 
         error: 'Can only vote on active proposals' 
       }, { status: 400 });
     }
     
     // Check choice is valid for this proposal
-    if (proposal.choices && choice > proposal.choices.length) {
+    const choices = proposal.choices || ['For', 'Against', 'Abstain'];
+    if (choice > choices.length) {
       return NextResponse.json({ 
-        error: `Invalid choice. Must be between 1 and ${proposal.choices.length}` 
+        error: `Invalid choice. Must be between 1 and ${choices.length}` 
       }, { status: 400 });
     }
     
     // Check if already voted
-    const { data: existingVote } = await supabase
-      .from('governance_votes')
-      .select('id')
-      .eq('proposal_id', id)
-      .eq('citizen_id', citizen.id)
-      .single();
+    const [existingVote] = await db`
+      SELECT id FROM governance_votes 
+      WHERE proposal_id = ${id}::uuid AND wallet_address = ${wallet_address.toLowerCase()}
+    `;
     
     if (existingVote) {
       return NextResponse.json({ 
@@ -81,23 +63,21 @@ export async function POST(
       }, { status: 400 });
     }
     
-    // Record vote locally
-    const { data: vote, error: voteError } = await supabase
-      .from('governance_votes')
-      .insert({
-        proposal_id: id,
-        citizen_id: citizen.id,
-        wallet_address: citizen.wallet_address,
+    // Record vote
+    const [vote] = await db`
+      INSERT INTO governance_votes (
+        proposal_id,
+        wallet_address,
         choice,
-        reason,
-        snapshot_vote_id: null, // Will be updated after Snapshot submission
-      })
-      .select()
-      .single();
-    
-    if (voteError) {
-      return NextResponse.json({ error: voteError.message }, { status: 500 });
-    }
+        reason
+      ) VALUES (
+        ${id}::uuid,
+        ${wallet_address.toLowerCase()},
+        ${choice},
+        ${reason || null}
+      )
+      RETURNING *
+    `;
     
     // Prepare Snapshot vote message for signing
     const snapshotProposalId = snapshot_id || proposal.snapshot_id;
@@ -126,44 +106,35 @@ export async function POST(
   }
 }
 
-// GET votes for a proposal
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = await createClient();
     const { id } = params;
+    const db = getDb();
     
-    const { data: votes, error } = await supabase
-      .from('governance_votes')
-      .select(`
-        *,
-        citizen:citizens(
-          display_name,
-          wallet_address
-        )
-      `)
-      .eq('proposal_id', id)
-      .order('created_at', { ascending: false });
-    
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const votes = await db`
+      SELECT * FROM governance_votes 
+      WHERE proposal_id = ${id}::uuid
+      ORDER BY created_at DESC
+    `;
     
     // Calculate vote breakdown
     const breakdown: Record<number, { count: number; voters: string[] }> = {};
-    for (const vote of votes || []) {
+    for (const vote of votes) {
       if (!breakdown[vote.choice]) {
         breakdown[vote.choice] = { count: 0, voters: [] };
       }
       breakdown[vote.choice].count++;
-      breakdown[vote.choice].voters.push(vote.citizen?.display_name || 'Anonymous');
+      breakdown[vote.choice].voters.push(
+        `${vote.wallet_address?.slice(0, 6)}...${vote.wallet_address?.slice(-4)}`
+      );
     }
     
     return NextResponse.json({
       votes,
-      total: votes?.length || 0,
+      total: votes.length,
       breakdown
     });
   } catch (error: any) {

@@ -1,10 +1,10 @@
 // GET /api/governance/proposals - List proposals
-// POST /api/governance/proposals - Create proposal (requires auth)
+// POST /api/governance/proposals - Create proposal
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getDb } from '@/lib/db';
 import { 
-  getProposals, 
+  getProposals as getSnapshotProposals, 
   SNAPSHOT_SPACE,
   ProposalType,
   getVotingPeriod,
@@ -14,8 +14,8 @@ import {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const state = searchParams.get('state') as 'pending' | 'active' | 'closed' | null;
-    const source = searchParams.get('source') || 'all'; // 'snapshot', 'local', 'all'
+    const state = searchParams.get('state');
+    const source = searchParams.get('source') || 'all';
     const first = parseInt(searchParams.get('first') || '20');
     const skip = parseInt(searchParams.get('skip') || '0');
     
@@ -24,36 +24,44 @@ export async function GET(request: NextRequest) {
     // Fetch from Snapshot if requested
     if (source === 'snapshot' || source === 'all') {
       try {
-        const snapshotProposals = await getProposals(SNAPSHOT_SPACE, state || undefined, first, skip);
+        const snapshotProposals = await getSnapshotProposals(
+          SNAPSHOT_SPACE, 
+          state as any || undefined, 
+          first, 
+          skip
+        );
         results.snapshot = snapshotProposals;
         results.proposals.push(...snapshotProposals.map(p => ({ ...p, source: 'snapshot' })));
       } catch (err: any) {
-        // Snapshot might not have the space yet
         results.snapshotError = err.message;
       }
     }
     
     // Fetch from local DB if requested
     if (source === 'local' || source === 'all') {
-      const supabase = await createClient();
-      
-      let query = supabase
-        .from('governance_proposals')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(skip, skip + first - 1);
-      
-      if (state) {
-        query = query.eq('status', state);
-      }
-      
-      const { data: localProposals, error } = await query;
-      
-      if (error) {
-        results.localError = error.message;
-      } else {
+      try {
+        const db = getDb();
+        
+        let localProposals;
+        if (state) {
+          localProposals = await db`
+            SELECT * FROM governance_proposals 
+            WHERE status = ${state}
+            ORDER BY created_at DESC
+            LIMIT ${first} OFFSET ${skip}
+          `;
+        } else {
+          localProposals = await db`
+            SELECT * FROM governance_proposals 
+            ORDER BY created_at DESC
+            LIMIT ${first} OFFSET ${skip}
+          `;
+        }
+        
         results.local = localProposals;
-        results.proposals.push(...(localProposals || []).map(p => ({ ...p, source: 'local' })));
+        results.proposals.push(...localProposals.map(p => ({ ...p, source: 'local' })));
+      } catch (err: any) {
+        results.localError = err.message;
       }
     }
     
@@ -73,27 +81,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
-    // Check if user is a citizen
-    const { data: citizen, error: citizenError } = await supabase
-      .from('citizens')
-      .select('id, status, wallet_address')
-      .eq('user_id', user.id)
-      .single();
-    
-    if (citizenError || !citizen || citizen.status !== 'active') {
-      return NextResponse.json({ 
-        error: 'Only active citizens can create proposals' 
-      }, { status: 403 });
-    }
-    
     const body = await request.json();
     const { 
       title, 
@@ -103,7 +90,8 @@ export async function POST(request: NextRequest) {
       choices = ['For', 'Against', 'Abstain'],
       related_articles,
       amendment_text,
-      impact_assessment
+      impact_assessment,
+      author_wallet // Required for now
     } = body;
     
     // Validation
@@ -113,45 +101,51 @@ export async function POST(request: NextRequest) {
     if (!description || description.length < 100) {
       return NextResponse.json({ error: 'Description must be at least 100 characters' }, { status: 400 });
     }
+    if (!author_wallet) {
+      return NextResponse.json({ error: 'author_wallet is required' }, { status: 400 });
+    }
     
-    // Calculate voting period
+    // Calculate voting period and thresholds
     const votingPeriod = getVotingPeriod(type);
     const threshold = getVotingThreshold(type);
     
-    // Store proposal locally first
-    const { data: proposal, error: insertError } = await supabase
-      .from('governance_proposals')
-      .insert({
+    const db = getDb();
+    
+    const [proposal] = await db`
+      INSERT INTO governance_proposals (
         title,
         description,
-        proposal_type: type,
+        proposal_type,
         category,
         choices,
         related_articles,
         amendment_text,
         impact_assessment,
-        author_citizen_id: citizen.id,
-        author_wallet: citizen.wallet_address,
-        status: 'draft', // Starts as draft until submitted to Snapshot
-        voting_period_seconds: votingPeriod,
-        quorum_threshold: threshold.quorum,
-        approval_threshold: threshold.approval,
-        metadata: {
-          type,
-          category,
-          related_articles,
-          impact_assessment
-        }
-      })
-      .select()
-      .single();
+        author_wallet,
+        status,
+        voting_period_seconds,
+        quorum_threshold,
+        approval_threshold,
+        metadata
+      ) VALUES (
+        ${title},
+        ${description},
+        ${type},
+        ${category || null},
+        ${JSON.stringify(choices)},
+        ${related_articles || null},
+        ${amendment_text || null},
+        ${impact_assessment || null},
+        ${author_wallet},
+        'draft',
+        ${votingPeriod},
+        ${threshold.quorum},
+        ${threshold.approval},
+        ${JSON.stringify({ type, category, related_articles, impact_assessment })}
+      )
+      RETURNING *
+    `;
     
-    if (insertError) {
-      console.error('Insert error:', insertError);
-      return NextResponse.json({ error: insertError.message }, { status: 500 });
-    }
-    
-    // Return the draft proposal with instructions for Snapshot submission
     return NextResponse.json({
       proposal,
       nextSteps: {
@@ -169,15 +163,9 @@ export async function POST(request: NextRequest) {
         body: description,
         choices,
         type: 'single-choice',
-        start: Math.floor(Date.now() / 1000) + 3600, // Start in 1 hour
+        start: Math.floor(Date.now() / 1000) + 3600,
         end: Math.floor(Date.now() / 1000) + 3600 + votingPeriod,
-        metadata: {
-          type,
-          category,
-          related_articles,
-          amendment_text,
-          impact_assessment
-        }
+        metadata: { type, category, related_articles, amendment_text, impact_assessment }
       }
     });
   } catch (error: any) {

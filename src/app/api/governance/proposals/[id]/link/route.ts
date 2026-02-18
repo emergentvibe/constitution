@@ -1,8 +1,7 @@
 // POST /api/governance/proposals/[id]/link - Link local proposal to Snapshot
-// Called after the proposal is successfully submitted to Snapshot
 
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getDb } from '@/lib/db';
 import { getProposal } from '@/lib/snapshot';
 
 export async function POST(
@@ -10,20 +9,16 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = await createClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
     const { id } = params;
     const body = await request.json();
-    const { snapshot_id } = body;
+    const { snapshot_id, author_wallet } = body;
     
     if (!snapshot_id) {
       return NextResponse.json({ error: 'snapshot_id is required' }, { status: 400 });
+    }
+    
+    if (!author_wallet) {
+      return NextResponse.json({ error: 'author_wallet required for auth' }, { status: 401 });
     }
     
     // Verify the Snapshot proposal exists
@@ -34,22 +29,20 @@ export async function POST(
       }, { status: 404 });
     }
     
-    // Get local proposal
-    const { data: proposal, error: fetchError } = await supabase
-      .from('governance_proposals')
-      .select('*, author:citizens!governance_proposals_author_citizen_id_fkey(user_id)')
-      .eq('id', id)
-      .single();
+    const db = getDb();
     
-    if (fetchError || !proposal) {
+    // Get local proposal
+    const [proposal] = await db`
+      SELECT * FROM governance_proposals WHERE id = ${id}::uuid
+    `;
+    
+    if (!proposal) {
       return NextResponse.json({ error: 'Local proposal not found' }, { status: 404 });
     }
     
     // Verify ownership
-    if (proposal.author?.user_id !== user.id) {
-      return NextResponse.json({ 
-        error: 'Only the author can link this proposal' 
-      }, { status: 403 });
+    if (proposal.author_wallet?.toLowerCase() !== author_wallet.toLowerCase()) {
+      return NextResponse.json({ error: 'Only the author can link this proposal' }, { status: 403 });
     }
     
     // Check not already linked
@@ -61,22 +54,17 @@ export async function POST(
     }
     
     // Update with Snapshot data
-    const { data: updated, error: updateError } = await supabase
-      .from('governance_proposals')
-      .update({
-        snapshot_id,
-        status: snapshotProposal.state,
-        voting_start: new Date(snapshotProposal.start * 1000).toISOString(),
-        voting_end: new Date(snapshotProposal.end * 1000).toISOString(),
-        snapshot_data: snapshotProposal
-      })
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (updateError) {
-      return NextResponse.json({ error: updateError.message }, { status: 500 });
-    }
+    const [updated] = await db`
+      UPDATE governance_proposals SET
+        snapshot_id = ${snapshot_id},
+        status = ${snapshotProposal.state},
+        voting_start = ${new Date(snapshotProposal.start * 1000).toISOString()},
+        voting_end = ${new Date(snapshotProposal.end * 1000).toISOString()},
+        snapshot_data = ${JSON.stringify(snapshotProposal)},
+        updated_at = NOW()
+      WHERE id = ${id}::uuid
+      RETURNING *
+    `;
     
     return NextResponse.json({
       proposal: updated,

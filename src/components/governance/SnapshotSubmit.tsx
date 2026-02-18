@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Proposal {
   id: string;
@@ -19,6 +20,7 @@ interface SnapshotSubmitProps {
 const SNAPSHOT_SPACE = 'emergentvibe.eth';
 
 export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
+  const { walletAddress, connect } = useAuth();
   const [step, setStep] = useState<'ready' | 'connecting' | 'signing' | 'submitting' | 'linking' | 'done'>('ready');
   const [error, setError] = useState<string | null>(null);
   const [snapshotId, setSnapshotId] = useState<string | null>(null);
@@ -29,48 +31,30 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
       return;
     }
     
+    let address = walletAddress;
+    
+    if (!address) {
+      setStep('connecting');
+      address = await connect();
+      if (!address) {
+        setStep('ready');
+        return;
+      }
+    }
+    
     setError(null);
     
     try {
-      // Step 1: Connect wallet
-      setStep('connecting');
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const address = accounts[0];
-      
-      // Step 2: Get current block for snapshot
-      const provider = window.ethereum;
-      const blockNumber = await provider.request({ 
-        method: 'eth_blockNumber' 
-      });
+      // Get current block for snapshot
+      setStep('signing');
+      const blockNumber = await window.ethereum.request({ method: 'eth_blockNumber' });
       const snapshot = parseInt(blockNumber, 16);
       
-      // Step 3: Create proposal message
+      // Create proposal message
       const now = Math.floor(Date.now() / 1000);
-      const votingPeriod = proposal.voting_period_seconds || 604800; // 7 days default
+      const votingPeriod = proposal.voting_period_seconds || 604800;
       
-      const proposalMessage = {
-        space: SNAPSHOT_SPACE,
-        type: 'single-choice',
-        title: proposal.title,
-        body: proposal.description || '',
-        choices: proposal.choices || ['For', 'Against', 'Abstain'],
-        start: now + 3600, // Start in 1 hour
-        end: now + 3600 + votingPeriod,
-        snapshot,
-        plugins: '{}',
-        app: 'emergentvibe-constitution',
-        discussion: '',
-        metadata: proposal.metadata ? JSON.stringify(proposal.metadata) : '{}',
-      };
-      
-      // Step 4: Sign the message
-      setStep('signing');
-      
-      // Snapshot uses EIP-712 typed data
-      const domain = {
-        name: 'snapshot',
-        version: '0.1.4',
-      };
+      const domain = { name: 'snapshot', version: '0.1.4' };
       
       const types = {
         Proposal: [
@@ -92,18 +76,18 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
       
       const message = {
         from: address,
-        space: proposalMessage.space,
+        space: SNAPSHOT_SPACE,
         timestamp: now,
-        type: proposalMessage.type,
-        title: proposalMessage.title,
-        body: proposalMessage.body,
-        discussion: proposalMessage.discussion,
-        choices: proposalMessage.choices,
-        start: proposalMessage.start,
-        end: proposalMessage.end,
-        snapshot: proposalMessage.snapshot,
-        plugins: proposalMessage.plugins,
-        app: proposalMessage.app,
+        type: 'single-choice',
+        title: proposal.title,
+        body: proposal.description || '',
+        discussion: '',
+        choices: proposal.choices || ['For', 'Against', 'Abstain'],
+        start: now + 3600,
+        end: now + 3600 + votingPeriod,
+        snapshot,
+        plugins: '{}',
+        app: 'emergentvibe-constitution',
       };
       
       const signature = await window.ethereum.request({
@@ -111,7 +95,7 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
         params: [address, JSON.stringify({ domain, types, message, primaryType: 'Proposal' })],
       });
       
-      // Step 5: Submit to Snapshot
+      // Submit to Snapshot
       setStep('submitting');
       
       const submitResponse = await fetch('https://hub.snapshot.org/api/msg', {
@@ -120,11 +104,7 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
         body: JSON.stringify({
           address,
           sig: signature,
-          data: {
-            domain,
-            types,
-            message,
-          },
+          data: { domain, types, message },
         }),
       });
       
@@ -137,20 +117,14 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
       const newSnapshotId = submitResult.id;
       setSnapshotId(newSnapshotId);
       
-      // Step 6: Link to local proposal
+      // Link to local proposal
       setStep('linking');
       
-      const linkResponse = await fetch(`/api/governance/proposals/${proposal.id}/link`, {
+      await fetch(`/api/governance/proposals/${proposal.id}/link`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ snapshot_id: newSnapshotId }),
+        body: JSON.stringify({ snapshot_id: newSnapshotId, author_wallet: address }),
       });
-      
-      if (!linkResponse.ok) {
-        const linkError = await linkResponse.json();
-        console.error('Link error:', linkError);
-        // Don't fail completely - the Snapshot proposal is created
-      }
       
       setStep('done');
       onSuccess?.();
@@ -218,8 +192,7 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
       </button>
       
       <p className="text-xs text-zinc-500 mt-3">
-        This will create the proposal on Snapshot.org where citizens can vote.
-        You&apos;ll need to sign a message with your wallet (no gas fees).
+        This will create the proposal on Snapshot.org where citizens can vote (no gas fees).
       </p>
     </div>
   );

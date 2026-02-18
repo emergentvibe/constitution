@@ -48,7 +48,7 @@ const proposalTypes: { value: ProposalType; label: string; description: string; 
 
 export default function NewProposalPage() {
   const router = useRouter();
-  const { user, citizen, loading } = useAuth();
+  const { walletAddress, connect, connecting } = useAuth();
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -63,6 +63,12 @@ export default function NewProposalPage() {
   
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    
+    if (!walletAddress) {
+      await connect();
+      return;
+    }
+    
     setSubmitting(true);
     setError(null);
     
@@ -77,6 +83,7 @@ export default function NewProposalPage() {
           category,
           impact_assessment: impactAssessment,
           amendment_text: isAmendment ? amendmentText : undefined,
+          author_wallet: walletAddress,
         }),
       });
       
@@ -86,53 +93,12 @@ export default function NewProposalPage() {
         throw new Error(data.error || 'Failed to create proposal');
       }
       
-      // Redirect to the new proposal
       router.push(`/governance/${data.proposal.id}`);
     } catch (err: any) {
       setError(err.message);
     } finally {
       setSubmitting(false);
     }
-  }
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-950">
-        <GovernanceHeader />
-        <main className="max-w-2xl mx-auto px-4 py-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-zinc-800 rounded w-48 mb-4" />
-            <div className="h-4 bg-zinc-800 rounded w-96 mb-8" />
-            <div className="space-y-4">
-              <div className="h-12 bg-zinc-800 rounded" />
-              <div className="h-32 bg-zinc-800 rounded" />
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-  
-  if (!user || !citizen || citizen.status !== 'active') {
-    return (
-      <div className="min-h-screen bg-zinc-950">
-        <GovernanceHeader />
-        <main className="max-w-2xl mx-auto px-4 py-8 text-center">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-8">
-            <div className="text-4xl mb-4">🔒</div>
-            <h1 className="text-2xl font-bold text-white mb-2">Citizenship Required</h1>
-            <p className="text-zinc-400 mb-6">
-              Only active citizens can create governance proposals.
-            </p>
-            <Link href="/citizens/apply">
-              <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                Apply for Citizenship
-              </button>
-            </Link>
-          </div>
-        </main>
-      </div>
-    );
   }
   
   return (
@@ -149,6 +115,19 @@ export default function NewProposalPage() {
             Submit a proposal for the community to vote on.
           </p>
         </div>
+        
+        {!walletAddress && (
+          <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-lg p-4 mb-8">
+            <p className="text-yellow-400 mb-2">Connect your wallet to create a proposal</p>
+            <button
+              onClick={connect}
+              disabled={connecting}
+              className="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm font-medium"
+            >
+              {connecting ? 'Connecting...' : 'Connect Wallet'}
+            </button>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Proposal Type */}
@@ -223,7 +202,6 @@ export default function NewProposalPage() {
             </label>
             <p className="text-xs text-zinc-400 mb-2">
               Explain your proposal in detail. Include motivation, proposed changes, and expected outcomes.
-              Markdown is supported.
             </p>
             <textarea
               id="description"
@@ -240,15 +218,12 @@ export default function NewProposalPage() {
             </div>
           </div>
           
-          {/* Amendment Text (for constitutional amendments) */}
+          {/* Amendment Text */}
           {isAmendment && (
             <div>
               <label htmlFor="amendmentText" className="block text-sm font-medium text-white mb-2">
                 Proposed Amendment Text
               </label>
-              <p className="text-xs text-zinc-400 mb-2">
-                Provide the exact text to be added, modified, or removed from the constitution.
-              </p>
               <textarea
                 id="amendmentText"
                 value={amendmentText}
@@ -265,9 +240,6 @@ export default function NewProposalPage() {
             <label htmlFor="impact" className="block text-sm font-medium text-white mb-2">
               Impact Assessment (optional)
             </label>
-            <p className="text-xs text-zinc-400 mb-2">
-              Describe how this proposal will affect citizens, resources, or governance.
-            </p>
             <textarea
               id="impact"
               value={impactAssessment}
@@ -278,14 +250,12 @@ export default function NewProposalPage() {
             />
           </div>
           
-          {/* Error */}
           {error && (
             <div className="bg-red-900/20 border border-red-700/30 rounded-lg p-4 text-red-400">
               {error}
             </div>
           )}
           
-          {/* Submit */}
           <div className="flex gap-4 pt-4">
             <Link href="/governance">
               <button
@@ -297,16 +267,12 @@ export default function NewProposalPage() {
             </Link>
             <button
               type="submit"
-              disabled={submitting}
+              disabled={submitting || !walletAddress}
               className="flex-1 bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-700 disabled:text-zinc-400 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               {submitting ? 'Creating...' : 'Create Draft Proposal'}
             </button>
           </div>
-          
-          <p className="text-xs text-zinc-500 text-center">
-            Your proposal will be created as a draft. You&apos;ll need to sign and submit it to Snapshot to start voting.
-          </p>
         </form>
       </main>
     </div>

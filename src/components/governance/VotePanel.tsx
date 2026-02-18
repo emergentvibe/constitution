@@ -11,7 +11,7 @@ interface VotePanelProps {
 }
 
 export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: VotePanelProps) {
-  const { citizen } = useAuth();
+  const { walletAddress, connect } = useAuth();
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -22,6 +22,11 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
   async function handleVote() {
     if (selectedChoice === null) {
       setError('Please select an option');
+      return;
+    }
+    
+    if (!walletAddress) {
+      await connect();
       return;
     }
     
@@ -36,6 +41,7 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
           choice: selectedChoice + 1, // Convert to 1-indexed
           reason,
           snapshot_id: snapshotId,
+          wallet_address: walletAddress,
         }),
       });
       
@@ -47,7 +53,6 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
       
       setSuccess(true);
       
-      // If there's a Snapshot message to sign, show it
       if (data.snapshotMessage) {
         setSnapshotMessage(data.snapshotMessage);
       }
@@ -70,14 +75,12 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const address = accounts[0];
       
-      // Sign the message
       const message = JSON.stringify(snapshotMessage.message);
       const signature = await window.ethereum.request({
         method: 'personal_sign',
         params: [message, address],
       });
       
-      // Submit to Snapshot
       const submitResponse = await fetch('https://hub.snapshot.org/api/msg', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -113,9 +116,7 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
         <div className="text-center">
           <div className="text-4xl mb-2">✓</div>
           <h3 className="text-lg font-semibold text-emerald-400 mb-2">Vote Recorded</h3>
-          <p className="text-zinc-300 text-sm">
-            Your vote has been recorded locally.
-          </p>
+          <p className="text-zinc-300 text-sm">Your vote has been recorded.</p>
         </div>
       </div>
     );
@@ -150,9 +151,6 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
             Skip
           </button>
         </div>
-        <p className="text-xs text-zinc-500 mt-2">
-          Signing is optional but makes your vote verifiable on-chain.
-        </p>
       </div>
     );
   }
@@ -161,7 +159,6 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
     <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6 mb-8">
       <h3 className="text-lg font-semibold text-white mb-4">Cast Your Vote</h3>
       
-      {/* Choices */}
       <div className="space-y-3 mb-6">
         {choices.map((choice, i) => (
           <label
@@ -184,7 +181,6 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
         ))}
       </div>
       
-      {/* Reason (optional) */}
       <div className="mb-6">
         <label htmlFor="reason" className="block text-sm text-zinc-400 mb-2">
           Reason (optional)
@@ -199,25 +195,25 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
         />
       </div>
       
-      {/* Error */}
       {error && (
         <div className="bg-red-900/20 border border-red-700/30 rounded-lg p-3 mb-4 text-red-400 text-sm">
           {error}
         </div>
       )}
       
-      {/* Submit */}
       <button
         onClick={handleVote}
         disabled={submitting || selectedChoice === null}
         className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-zinc-700 disabled:text-zinc-400 text-white px-4 py-3 rounded-lg font-medium transition-colors"
       >
-        {submitting ? 'Submitting...' : 'Submit Vote'}
+        {!walletAddress ? 'Connect Wallet to Vote' : submitting ? 'Submitting...' : 'Submit Vote'}
       </button>
       
-      <p className="text-xs text-zinc-500 text-center mt-3">
-        Voting as {citizen?.display_name || 'Citizen'}
-      </p>
+      {walletAddress && (
+        <p className="text-xs text-zinc-500 text-center mt-3">
+          Voting as {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+        </p>
+      )}
     </div>
   );
 }
