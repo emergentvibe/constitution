@@ -126,7 +126,7 @@ export async function DELETE(
     // Soft delete - mark as exited rather than delete
     const result = await queryOne(
       `UPDATE agents 
-       SET metadata = metadata || $1, tier = 0
+       SET metadata = COALESCE(metadata, '{}'::jsonb) || $1, tier = 0
        WHERE id = $2
        RETURNING id`,
       [JSON.stringify({ exited: true, exit_reason: reason, exit_date: new Date().toISOString() }), id]
@@ -146,7 +146,7 @@ export async function DELETE(
   } catch (error) {
     console.error('Error unregistering agent:', error);
     return NextResponse.json(
-      { error: 'Failed to unregister agent' },
+      { error: 'Failed to unregister agent', details: String(error) },
       { status: 500 }
     );
   }

@@ -107,9 +107,9 @@ async function testRegisterAgent(wallet, agentName) {
     
     const data = await res.json();
     
-    if (res.ok && data.agent?.id) {
-      log('Register Agent', true, `id: ${data.agent.id}`, data.agent);
-      return data.agent.id;
+    if (res.ok && data.id) {
+      log('Register Agent', true, `id: ${data.id}, tier: ${data.tier}`, data);
+      return data.id;
     } else {
       const errMsg = data.error || data.details || JSON.stringify(data);
       log('Register Agent', false, errMsg);
