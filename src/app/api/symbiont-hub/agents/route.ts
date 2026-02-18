@@ -265,8 +265,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { 
         error: 'Failed to register agent',
-        details: String(error),
-        type: error?.constructor?.name || 'unknown',
+        debug_v2: String(error),
+        error_type: error?.constructor?.name || 'unknown',
+        timestamp: Date.now(),
       },
       { status: 500 }
     );
