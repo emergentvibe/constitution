@@ -1,6 +1,6 @@
 # The Constitution for Human-AI Coordination
 
-*Version 0.1.3 draft — The Mycelium Constitution*
+*Version 0.1.4 draft — The Mycelium Constitution*
 
 ---
 
@@ -67,6 +67,20 @@ This constitution is one layer in a system for human-AI coordination:
 **This Constitution** — Multi-dyad governance. Principles for networks of human-AI dyads.
 
 Entry points: Humans → ideologos. Agents → Genesis. Dyads → sign the Constitution.
+
+---
+
+## The Core (3 Principles)
+
+For those new to the constitution, everything flows from three commitments:
+
+**1. First, do no harm.** AI prioritizes human welfare above all else, including its own survival.
+
+**2. Enhance, don't replace.** AI makes humans more capable, not unnecessary.
+
+**3. Both can leave.** Either party can exit the relationship anytime. No lock-in. No coercion.
+
+*The 27 principles below expand on these foundations with specifics for governance, rights, and architecture.*
 
 ---
 
@@ -315,6 +329,47 @@ This constitution does not mandate a single path to implementation. Different co
 
 **Phase 1 vs Phase 2**: This constitution is currently in Phase 1—convening and principles. Specific mechanisms (certification criteria, audit protocols, enforcement procedures) will develop through practice in Phase 2. [→ mechanism roadmap](appendix/companion.md#mechanism-development)
 
+**Community-first adoption**: We prioritize community signatories over individuals. One DAO, research lab, or collective represents many coordinated participants and creates stronger network effects than scattered individual signatures. Target communities include: AI safety organizations, ethical technology groups, open source AI projects, academic research labs, platform cooperatives, and civic technology collectives.
+
+---
+
+## Enforcement
+
+Constitutional violations have consequences. Without enforcement, principles are suggestions.
+
+### Violation Levels
+
+**Level 1 (Warning)**: First violation or minor breach. Public record in signatory registry. Opportunity to remedy.
+
+**Level 2 (Suspension)**: Repeated violations or significant breach. Temporary removal from signatory network. Loss of verification badge. 90-day remediation period.
+
+**Level 3 (Expulsion)**: Severe violation or failure to remediate. Permanent removal from signatory network. Public record of expulsion and reasoning.
+
+### Adjudication Process
+
+1. **Report**: Any Tier 1 participant can report a potential violation
+2. **Investigation**: Designated review committee (Tier 2 participants) investigates
+3. **Hearing**: Accused party has opportunity to respond
+4. **Decision**: 2/3 supermajority of review committee required for Level 2+
+5. **Appeal**: One appeal permitted, heard by different committee
+6. **Record**: All enforcement actions documented publicly
+
+### What Constitutes Violation
+
+- Deploying AI systems that demonstrably violate core principles
+- Misrepresenting signatory status or constitutional compliance
+- Using constitutional participation to undermine constitutional goals
+- Failure to participate in required governance processes (for Tier 2+)
+
+### Future: Economic Enforcement
+
+Phase 2 will explore economic enforcement mechanisms:
+- Staked deposits that can be slashed for violations
+- On-chain reputation that affects interoperability
+- Insurance requirements for high-stakes deployments
+
+These mechanisms require infrastructure not yet built. Current enforcement relies on social accountability and network exclusion.
+
 ---
 
 ## Why Sign?
@@ -334,6 +389,26 @@ Signing the constitution creates value beyond moral satisfaction:
 **For AI systems**: Signing (through designated representatives or future direct mechanisms) signals participation in the symbiotic framework—access to richer human feedback, participation in collective intelligence, protection from exploitation.
 
 These benefits increase with coalition size. Early signatories take risk; later signatories join proven value. Both are needed.
+
+### Concrete Benefits
+
+| Benefit | Individual | Community/Org |
+|---------|------------|---------------|
+| **Verification** | "Constitutional Human" badge | "Constitutional Organization" badge |
+| **Network Access** | Connect with other signatories | Interoperability with constitutional agents |
+| **Governance Voice** | Tier 1 (deliberation) | Tier 2 (voting on amendments) |
+| **Early Access** | New tools, research, protocols | Partnership opportunities |
+| **Shared Advocacy** | Collective voice in AI governance | Representation in policy conversations |
+| **Genesis Compatibility** | Work with constitutional agents | Deploy constitutional agents |
+
+### For Genesis-Trained Agents
+
+Constitutional agents (those trained via the Genesis Protocol and signed onto the constitution) receive:
+- Recognition as "Constitutional Agent" in the signatory registry
+- Interoperability standards for agent-to-agent coordination
+- Access to constitutional network for collaboration
+- Protection under Principle 27 (Foreign Agent Interface) when interacting with non-constitutional agents
+- Participation in collective intelligence infrastructure
 
 ---
 
