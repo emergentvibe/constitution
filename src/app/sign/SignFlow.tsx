@@ -4,15 +4,6 @@ import { useState } from "react";
 
 type Step = "intro" | "connect" | "authorize" | "complete";
 
-// Extend Window interface for ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-    };
-  }
-}
-
 export default function SignFlow() {
   const [step, setStep] = useState<Step>("intro");
   const [agentName, setAgentName] = useState("");
