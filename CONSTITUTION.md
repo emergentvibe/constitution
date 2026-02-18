@@ -1,6 +1,6 @@
 # The Constitution for Human-AI Coordination
 
-*Version 0.1.4 draft — The Mycelium Constitution*
+*Version 0.1.5 draft — The Mycelium Constitution*
 
 ---
 
@@ -208,7 +208,13 @@ How the constitution evolves.
 
 **25. Enforcement Mechanisms.** Multiple reinforcing mechanisms: regulatory penalties, civil liability, collective bargaining pressure, municipal non-adoption, algorithmic audits, cultural stigma. No single mechanism is sufficient; they reinforce each other. [→ reasoning](appendix/revision.md#principle-25)
 
-**26. Coalition Power.** Enforced through organized coalitions: tech workers, creators, labor, civil society, municipal networks. Architecture matters, but rules without organized power behind them are suggestions. Target: 50-100 cities + 1M creators + 100K workers = companies must comply or lose access to markets, talent, content, infrastructure. [→ reasoning](appendix/revision.md#principle-26)
+**26. Coalition Power.** Enforcement scales with coalition size. Rules without organized power behind them are suggestions.
+
+**Current reality:** Early stage. Enforcement is mutual accountability among signatories and reputation.
+
+**Growth unlocks:** 10+ orgs enables procurement coordination. 50+ cities enables market pressure. Target: 50-100 cities + 1M creators + 100K workers = self-enforcing through market access.
+
+We're building toward this. Early signatories are betting on the network reaching critical mass. [→ reasoning](appendix/revision.md#principle-26)
 
 ---
 
@@ -327,7 +333,13 @@ This constitution does not mandate a single path to implementation. Different co
 
 **Regional variants**: The EU variant emphasizes procurement integration and AI Act compliance. Other regions may develop variants suited to their contexts. Regional adaptation strengthens rather than fragments the global framework.
 
-**Phase 1 vs Phase 2**: This constitution is currently in Phase 1—convening and principles. Specific mechanisms (certification criteria, audit protocols, enforcement procedures) will develop through practice in Phase 2. [→ mechanism roadmap](appendix/companion.md#mechanism-development)
+**Phase 1 vs Phase 2**: This constitution is currently in Phase 1—convening and principles.
+
+**Active now:** Signatory governance (how we manage our community), deliberation processes, basic certification (self-attestation with public commitment).
+
+**Develops with growth:** External enforcement through coalition pressure (requires 10+ organizational signatories), detailed certification audits, economic mechanisms.
+
+The constitution grows with the network. [→ mechanism roadmap](appendix/companion.md#mechanism-development)
 
 **Community-first adoption**: We prioritize community signatories over individuals. One DAO, research lab, or collective represents many coordinated participants and creates stronger network effects than scattered individual signatures. Target communities include: AI safety organizations, ethical technology groups, open source AI projects, academic research labs, platform cooperatives, and civic technology collectives.
 
@@ -336,6 +348,8 @@ This constitution does not mandate a single path to implementation. Different co
 ## Enforcement
 
 Constitutional violations have consequences. Without enforcement, principles are suggestions.
+
+**Scope**: This section governs internal signatory governance—how we maintain community integrity. External enforcement (regulatory, economic, coalition pressure) is described in Principle 25 and activates as the network grows.
 
 ### Violation Levels
 
@@ -347,8 +361,10 @@ Constitutional violations have consequences. Without enforcement, principles are
 
 ### Adjudication Process
 
-1. **Report**: Any Tier 1 participant can report a potential violation
-2. **Investigation**: Designated review committee (Tier 2 participants) investigates
+*Note: Until 3+ organizational signatories exist, enforcement is limited to Level 1 (public record). Full adjudication activates with growth.*
+
+1. **Report**: Any participant can report a potential violation
+2. **Investigation**: All organizational signatories review (or designated committee when network is larger)
 3. **Hearing**: Accused party has opportunity to respond
 4. **Decision**: 2/3 supermajority of review committee required for Level 2+
 5. **Appeal**: One appeal permitted, heard by different committee
