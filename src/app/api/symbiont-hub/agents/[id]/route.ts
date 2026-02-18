@@ -59,7 +59,7 @@ export async function PATCH(
     // Only allow updating certain fields
     const allowedFields = ['name', 'mission', 'contact_endpoint', 'metadata', 'tier'];
     const updateFields: string[] = [];
-    const updateValues: any[] = [];
+    const updateValues: (string | number | boolean | null)[] = [];
     let paramIndex = 1;
 
     for (const field of allowedFields) {

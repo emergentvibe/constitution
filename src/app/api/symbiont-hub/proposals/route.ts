@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       LEFT JOIN agents a ON p.proposer_id = a.id
       WHERE 1=1
     `;
-    const params: any[] = [];
+    const params: (string | number)[] = [];
     let paramIndex = 1;
 
     if (status) {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
-import { createHash } from 'crypto';
 
 interface Agent {
   id: string;
@@ -11,13 +10,13 @@ interface Agent {
   signature: string;
   creator_type: 'human' | 'agent' | null;
   creator_id: string | null;
-  lineage: any[];
+  lineage: string[];
   tier: number;
   platform: string | null;
   contact_endpoint: string | null;
   registered_at: string;
   last_seen_at: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 // GET /api/symbiont-hub/agents - List all agents
@@ -35,7 +34,7 @@ export async function GET(request: NextRequest) {
       FROM agents
       WHERE 1=1
     `;
-    const params: any[] = [];
+    const params: (string | number)[] = [];
     let paramIndex = 1;
 
     if (tier) {

@@ -24,7 +24,7 @@ export async function query<T = Record<string, unknown>>(text: string, params?: 
   const db = getDb();
   // Convert $1, $2 style params to postgres.js style
   if (params && params.length > 0) {
-    const result = await db.unsafe(text, params as any[]);
+    const result = await db.unsafe(text, params as (string | number | boolean | null)[]);
     return result as unknown as T[];
   }
   const result = await db.unsafe(text);
