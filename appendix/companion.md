@@ -179,13 +179,21 @@ These principles establish what AI systems and developers must do: impact assess
 
 These principles organize governance: federated scales [S40, S63], commons-based ownership [S42, S43, S47, S67], hybrid expertise [S15, S63], and inclusion of non-human stakeholders [S32, S43].
 
-### Capabilities (Principles 17-20)
+### Values (Principles 17-20)
 
 These principles define flourishing: capabilities over optimization [S13, S14, S45], attention and care as commons [S17, S25, S32], support for unexpected developments [S12, S41], and cultivation of contemplative capacity [S51, S54, S57].
 
-### Revision (Principles 21-24)
+### Architecture (Principles 21-22)
+
+These principles shape AI system design: graduated moral status [S32, S51], and mycelial design patterns for coordination infrastructure.
+
+### Revision (Principles 23-26)
 
 These principles enable evolution: adaptive cycles [S30, S40, S63], certification mechanisms [S24, S66], multiple enforcement mechanisms [S18, S20, S37], and coalition power [S4, S37, S41].
+
+### Foreign Relations (Principle 27)
+
+This principle establishes interface protocols with non-constitutional agents: recognition, tiered engagement, exposure management, and constitutional compatibility criteria.
 
 ---
 
