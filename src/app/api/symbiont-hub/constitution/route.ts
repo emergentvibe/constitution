@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/symbiont-hub/constitution - Get current constitution version
 export async function GET(request: NextRequest) {
   try {

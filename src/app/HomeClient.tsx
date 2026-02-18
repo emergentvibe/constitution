@@ -4,9 +4,6 @@ import NetworkHero from "@/components/NetworkHero";
 import { Separator } from "@/components/Separator";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
-const SIGN_URL = `${GITHUB_REPO}/issues/new?template=sign-constitution.md`;
-const AMEND_URL = `${GITHUB_REPO}/issues/new?template=propose-amendment.md`;
-const DISCUSSIONS_URL = `${GITHUB_REPO}/discussions`;
 
 interface HomeClientProps {
   signatories: Array<{ handle: string; type: string; date: string; statement: string }>;
