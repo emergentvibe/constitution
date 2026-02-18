@@ -135,8 +135,8 @@ export default function NetworkHero() {
         particles.push({
           x,
           y,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2,
+          vx: (Math.random() - 0.5) * 0.8,
+          vy: (Math.random() - 0.5) * 0.8,
           seed: Math.random() * 100,
           colorIdx: Math.floor((x / width) * 19),
         });
@@ -168,13 +168,17 @@ export default function NetworkHero() {
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         
-        // Flow field - FASTER
-        const angle = Math.sin(p.x * 0.006 + t * 0.15 + p.seed) * Math.PI;
-        const flowX = Math.cos(angle) * 0.12;
-        const flowY = Math.sin(angle) * 0.12;
+        // Flow field - organic with per-particle variation
+        const angle = (
+          Math.sin(p.x * 0.012 + t * 0.08 + p.seed) +
+          Math.sin(p.y * 0.010 - t * 0.06 + p.seed * 0.7) +
+          Math.sin((p.x + p.y) * 0.008 + t * 0.1)
+        ) * Math.PI * 0.5;
+        const flowX = Math.cos(angle) * 0.06;
+        const flowY = Math.sin(angle) * 0.06;
 
-        // Divergence for attract/repel
-        const div = Math.sin(p.x * 0.003 + t * 0.08) + Math.sin(p.y * 0.003 - t * 0.06);
+        // Divergence for attract/repel - slower changing
+        const div = Math.sin(p.x * 0.004 + t * 0.04) + Math.sin(p.y * 0.005 - t * 0.03);
         
         // Neighbor interaction using spatial grid
         let forceX = 0, forceY = 0;
@@ -186,10 +190,10 @@ export default function NetworkHero() {
           const dy = other.y - p.y;
           const distSq = dx * dx + dy * dy;
           
-          if (distSq < 6400 && distSq > 4) { // 80px interaction radius
+          if (distSq < 5000 && distSq > 4) { // ~70px interaction radius
             const dist = Math.sqrt(distSq);
-            const strength = (80 - dist) / 80;
-            const factor = strength * 0.003;
+            const strength = (70 - dist) / 70;
+            const factor = strength * 0.0015;
             
             if (div < 0) {
               forceX += (dx / dist) * factor;
@@ -201,8 +205,8 @@ export default function NetworkHero() {
           }
         }
 
-        p.vx = p.vx * 0.97 + flowX + forceX; // Less damping
-        p.vy = p.vy * 0.97 + flowY + forceY;
+        p.vx = p.vx * 0.96 + flowX + forceX;
+        p.vy = p.vy * 0.96 + flowY + forceY;
         p.x += p.vx;
         p.y += p.vy;
 
