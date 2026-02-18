@@ -95,31 +95,31 @@ const concepts = [
   },
 ];
 
-// Spokes SVG component - connects center to islands
+// Spokes SVG component - connects center to islands (rendered inside hero section)
 function Spokes() {
   return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 5 }}>
+    <svg className="absolute inset-0 w-full h-full pointer-events-none">
       <defs>
         {/* Gradient for gold-teal spokes */}
-        <linearGradient id="spoke-gradient-1" x1="50%" y1="50%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        <linearGradient id="spoke-gradient-tl" x1="50%" y1="50%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
         </linearGradient>
-        <linearGradient id="spoke-gradient-2" x1="50%" y1="50%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        <linearGradient id="spoke-gradient-tr" x1="50%" y1="50%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
         </linearGradient>
-        <linearGradient id="spoke-gradient-3" x1="50%" y1="50%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        <linearGradient id="spoke-gradient-bl" x1="50%" y1="50%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
         </linearGradient>
-        <linearGradient id="spoke-gradient-4" x1="50%" y1="50%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        <linearGradient id="spoke-gradient-br" x1="50%" y1="50%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
         </linearGradient>
         {/* Glow filter */}
         <filter id="spoke-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feGaussianBlur stdDeviation="2" result="blur" />
           <feMerge>
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
@@ -127,19 +127,19 @@ function Spokes() {
         </filter>
       </defs>
       
-      {/* Spokes from center (50%, 50%) to each island */}
-      {/* Top Left */}
-      <line x1="50%" y1="50%" x2="15%" y2="15%" stroke="url(#spoke-gradient-1)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Left Middle */}
-      <line x1="50%" y1="50%" x2="12%" y2="48%" stroke="url(#spoke-gradient-1)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Top Right */}
-      <line x1="50%" y1="50%" x2="88%" y2="18%" stroke="url(#spoke-gradient-2)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Right Middle */}
-      <line x1="50%" y1="50%" x2="90%" y2="52%" stroke="url(#spoke-gradient-2)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden lg:block" />
-      {/* Bottom Right */}
-      <line x1="50%" y1="50%" x2="82%" y2="78%" stroke="url(#spoke-gradient-4)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Bottom Left */}
-      <line x1="50%" y1="50%" x2="18%" y2="75%" stroke="url(#spoke-gradient-3)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden lg:block" />
+      {/* Spokes from center to each island - matching concept box positions */}
+      {/* Top Left - concept[0]: top-[12%] left-[10%] */}
+      <line x1="50%" y1="50%" x2="14%" y2="16%" stroke="url(#spoke-gradient-tl)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" />
+      {/* Left Middle - concept[1]: top-[45%] left-[8%] */}
+      <line x1="50%" y1="50%" x2="11%" y2="48%" stroke="url(#spoke-gradient-tl)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden md:block" />
+      {/* Top Right - concept[2]: top-[15%] right-[12%] = left 88% */}
+      <line x1="50%" y1="50%" x2="86%" y2="18%" stroke="url(#spoke-gradient-tr)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" />
+      {/* Right Middle - concept[3]: top-[50%] right-[10%] = left 90% */}
+      <line x1="50%" y1="50%" x2="88%" y2="53%" stroke="url(#spoke-gradient-tr)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden lg:block" />
+      {/* Bottom Right - concept[4]: bottom-[18%] right-[18%] = top 82%, left 82% */}
+      <line x1="50%" y1="50%" x2="80%" y2="79%" stroke="url(#spoke-gradient-br)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden md:block" />
+      {/* Bottom Left - tagline: bottom-[22%] left-[12%] = top 78% */}
+      <line x1="50%" y1="50%" x2="15%" y2="76%" stroke="url(#spoke-gradient-bl)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden lg:block" />
     </svg>
   );
 }
@@ -160,13 +160,13 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
         <NetworkHero />
       </div>
 
-      {/* Spokes connecting center to islands */}
-      <Spokes />
-
       {/* Main Layout */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Hero Section - Full viewport */}
         <section className="flex-1 relative flex items-center justify-center p-4 md:p-8 min-h-screen">
+          {/* Spokes connecting center to islands */}
+          <Spokes />
+          
           {/* Concept Boxes - Asymmetric positioning */}
           <div className="absolute inset-0 pointer-events-none">
             {/* Top Left - Federated Governance */}
