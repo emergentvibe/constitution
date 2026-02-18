@@ -15,6 +15,7 @@ interface ConstitutionReaderProps {
 const documentSections = [
   { id: "preamble", title: "Preamble", group: "Overview" },
   { id: "scope-and-status", title: "Scope and Status", group: "Overview" },
+  { id: "the-stack", title: "The Stack", group: "Overview" },
   { id: "i-foundations", title: "I. Foundations", group: "Principles", detail: "P1-3" },
   { id: "ii-rights", title: "II. Rights", group: "Principles", detail: "P4-8" },
   { id: "iii-obligations", title: "III. Obligations", group: "Principles", detail: "P9-12" },
@@ -22,6 +23,7 @@ const documentSections = [
   { id: "v-capabilities", title: "V. Capabilities", group: "Principles", detail: "P17-20" },
   { id: "vi-architecture", title: "VI. Architecture", group: "Principles", detail: "P21-22" },
   { id: "vii-revision", title: "VII. Revision", group: "Principles", detail: "P23-26" },
+  { id: "viii-foreign-relations", title: "VIII. Foreign Relations", group: "Principles", detail: "P27" },
   { id: "amendment-process", title: "Amendment Process", group: "Governance" },
   { id: "implementation-paths", title: "Implementation Paths", group: "Governance" },
   { id: "why-sign", title: "Why Sign?", group: "Governance" },
