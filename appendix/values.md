@@ -1,6 +1,6 @@
-# V. Capabilities
+# V. Values
 
-What flourishing requires.
+What we believe flourishing requires. These principles guide interpretation and inform assessment but are aspirational — they shape the constitution's spirit rather than trigger enforcement.
 
 ---
 

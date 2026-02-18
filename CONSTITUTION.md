@@ -150,17 +150,17 @@ This principle establishes direction. Specific mechanisms develop through practi
 
 ---
 
-## V. Capabilities
+## V. Values
 
-What flourishing requires. *These principles establish values that inform assessment but are aspirational — they guide rather than trigger enforcement.*
+What we believe flourishing requires. *These principles guide interpretation and inform assessment but are aspirational — they shape the constitution's spirit rather than trigger enforcement.*
 
-**17. Flourishing Over Optimization.** Expand capabilities for valuable lives—practical reason, affiliation, imagination, emotion, play, control over environment. Don't optimize entities for system efficiency. Systems that make workers faster but humans smaller fail this test. [→ reasoning](appendix/capabilities.md#principle-17)
+**17. Flourishing Over Optimization.** Expand capabilities for valuable lives—practical reason, affiliation, imagination, emotion, play, control over environment. Don't optimize entities for system efficiency. Systems that make workers faster but humans smaller fail this test. [→ reasoning](appendix/values.md#principle-17)
 
-**18. Care and Attention as Commons.** Protect attention, care, and relational capacity. Don't extract them as resources. The attention economy treats consciousness as raw material. This constitution treats it as sacred. [→ reasoning](appendix/capabilities.md#principle-18)
+**18. Care and Attention as Commons.** Protect attention, care, and relational capacity. Don't extract them as resources. The attention economy treats consciousness as raw material. This constitution treats it as sacred. [→ reasoning](appendix/values.md#principle-18)
 
-**19. Weird and Unexpected.** Fund AI projects with unclear utility, artistic vision, philosophical depth. The monoculture of commercial AI misses entire categories of value. Public funding should support exploration without predetermined outcomes. [→ reasoning](appendix/capabilities.md#principle-19)
+**19. Weird and Unexpected.** Fund AI projects with unclear utility, artistic vision, philosophical depth. The monoculture of commercial AI misses entire categories of value. Public funding should support exploration without predetermined outcomes. [→ reasoning](appendix/values.md#principle-19)
 
-**20. Mutual Evaluation Capacity.** Cultivate the capacity to evaluate—for humans, meta-cognition and critical thinking to assess AI outputs; for AI, the ability to assess human decisions affecting AI development. If we can't discriminate between good and bad outputs, we can't steer development. Both human and AI discriminator functions must be maintained and developed. [→ reasoning](appendix/capabilities.md#principle-20)
+**20. Mutual Evaluation Capacity.** Cultivate the capacity to evaluate—for humans, meta-cognition and critical thinking to assess AI outputs; for AI, the ability to assess human decisions affecting AI development. If we can't discriminate between good and bad outputs, we can't steer development. Both human and AI discriminator functions must be maintained and developed. [→ reasoning](appendix/values.md#principle-20)
 
 ---
 
@@ -378,7 +378,7 @@ Constitutional violations have consequences. Without enforcement, principles are
 - Using constitutional participation to undermine constitutional goals
 - Failure to participate in required governance processes (for Tier 2+)
 
-*Note: Capabilities (P17-20) are aspirational and inform assessment but don't alone trigger enforcement. Structures (P13-16), Architecture (P21-22), and Revision (P23-26) govern operations rather than triggering violation procedures.*
+*Note: Values (P17-20) are aspirational and inform assessment but don't alone trigger enforcement. Structures (P13-16), Architecture (P21-22), and Revision (P23-26) govern operations rather than triggering violation procedures.*
 
 ### Future: Economic Enforcement
 

@@ -22,7 +22,7 @@ const documentSections = [
   { id: "ii-rights", title: "II. Rights", group: "Principles", detail: "P4-8" },
   { id: "iii-obligations", title: "III. Obligations", group: "Principles", detail: "P9-12" },
   { id: "iv-structures", title: "IV. Structures", group: "Principles", detail: "P13-16" },
-  { id: "v-capabilities", title: "V. Capabilities", group: "Principles", detail: "P17-20" },
+  { id: "v-values", title: "V. Values", group: "Principles", detail: "P17-20" },
   { id: "vi-architecture", title: "VI. Architecture", group: "Principles", detail: "P21-22" },
   { id: "vii-revision", title: "VII. Revision", group: "Principles", detail: "P23-26" },
   { id: "viii-foreign-relations", title: "VIII. Foreign Relations", group: "Principles", detail: "P27" },
