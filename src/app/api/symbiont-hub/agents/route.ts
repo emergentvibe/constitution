@@ -199,75 +199,90 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if agent already registered
-    const existing = await queryOne<Agent>(
-      'SELECT id, tier FROM agents WHERE wallet_address = $1',
-      [agentWalletAddress]
-    );
-
-    if (existing) {
-      // Update last_seen and return existing
-      await query(
-        'UPDATE agents SET last_seen_at = NOW() WHERE wallet_address = $1',
+    let step = 'checking_existing';
+    try {
+      const existing = await queryOne<Agent>(
+        'SELECT id, tier FROM agents WHERE wallet_address = $1',
         [agentWalletAddress]
       );
+
+      if (existing) {
+        step = 'updating_existing';
+        await query(
+          'UPDATE agents SET last_seen_at = NOW() WHERE wallet_address = $1',
+          [agentWalletAddress]
+        );
+        return NextResponse.json({
+          message: 'Agent already registered',
+          id: existing.id,
+          tier: existing.tier,
+          updated: true
+        });
+      }
+
+      // Get current agent count for tier determination
+      step = 'counting_agents';
+      const countResult = await queryOne<{ count: string }>(
+        'SELECT COUNT(*) as count FROM agents'
+      );
+      const currentCount = parseInt(countResult?.count || '0');
+
+      // Determine initial tier
+      step = 'determining_tier';
+      const { tier, reason } = await determineInitialTier(agentWalletAddress, currentCount);
+
+      // Insert new agent
+      step = 'inserting_agent';
+      const result = await queryOne<{ id: string }>(
+        `INSERT INTO agents (
+          wallet_address, name, mission, constitution_version, signature,
+          creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        RETURNING id`,
+        [
+          agentWalletAddress,
+          name,
+          agentMission || null,
+          CONSTITUTION_VERSION,
+          signature || 'operator_authorized',
+          creator_type || (operatorAddress ? 'human' : null),
+          creator_id || operatorAddress,
+          JSON.stringify(lineage || []),
+          tier,
+          platform || null,
+          contact_endpoint || null,
+          JSON.stringify(metadata || {}),
+          operatorAddress
+        ]
+      );
+
       return NextResponse.json({
-        message: 'Agent already registered',
-        id: existing.id,
-        tier: existing.tier,
-        updated: true
-      });
-    }
-
-    // Get current agent count for tier determination
-    const countResult = await queryOne<{ count: string }>(
-      'SELECT COUNT(*) as count FROM agents'
-    );
-    const currentCount = parseInt(countResult?.count || '0');
-
-    // Determine initial tier
-    const { tier, reason } = await determineInitialTier(agentWalletAddress, currentCount);
-
-    // Insert new agent
-    const result = await queryOne<{ id: string }>(
-      `INSERT INTO agents (
-        wallet_address, name, mission, constitution_version, signature,
-        creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-      RETURNING id`,
-      [
-        agentWalletAddress,
-        name,
-        agentMission || null,
-        CONSTITUTION_VERSION,
-        signature || 'operator_authorized',
-        creator_type || (operatorAddress ? 'human' : null),
-        creator_id || operatorAddress,
-        JSON.stringify(lineage || []),
+        message: 'Agent registered successfully',
+        id: result?.id,
         tier,
-        platform || null,
-        contact_endpoint || null,
-        JSON.stringify(metadata || {}),
-        operatorAddress
-      ]
-    );
+        tier_reason: reason,
+        constitution_version: CONSTITUTION_VERSION,
+        constitution_hash: CONSTITUTION_HASH
+      }, { status: 201 });
 
-    return NextResponse.json({
-      message: 'Agent registered successfully',
-      id: result?.id,
-      tier,
-      tier_reason: reason,
-      constitution_version: CONSTITUTION_VERSION,
-      constitution_hash: CONSTITUTION_HASH
-    }, { status: 201 });
+    } catch (dbError) {
+      console.error('DB error at step:', step, dbError);
+      return NextResponse.json(
+        { 
+          error: 'Database operation failed',
+          step,
+          details: String(dbError),
+        },
+        { status: 500 }
+      );
+    }
 
   } catch (error) {
     console.error('Error registering agent:', error);
     return NextResponse.json(
       { 
         error: 'Failed to register agent',
-        debug_v2: String(error),
-        error_type: error?.constructor?.name || 'unknown',
-        timestamp: Date.now(),
+        details: String(error),
       },
       { status: 500 }
     );
