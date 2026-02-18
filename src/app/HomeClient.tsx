@@ -102,25 +102,26 @@ function Spokes() {
       <defs>
         {/* Gradient for gold-teal spokes */}
         <linearGradient id="spoke-gradient-tl" x1="50%" y1="50%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
         </linearGradient>
         <linearGradient id="spoke-gradient-tr" x1="50%" y1="50%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
         </linearGradient>
         <linearGradient id="spoke-gradient-bl" x1="50%" y1="50%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
         </linearGradient>
         <linearGradient id="spoke-gradient-br" x1="50%" y1="50%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.2" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
         </linearGradient>
         {/* Glow filter */}
         <filter id="spoke-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feGaussianBlur stdDeviation="4" result="blur" />
           <feMerge>
+            <feMergeNode in="blur" />
             <feMergeNode in="blur" />
             <feMergeNode in="SourceGraphic" />
           </feMerge>
@@ -129,17 +130,17 @@ function Spokes() {
       
       {/* Spokes from center to each island - matching concept box positions */}
       {/* Top Left - concept[0]: top-[12%] left-[10%] */}
-      <line x1="50%" y1="50%" x2="14%" y2="16%" stroke="url(#spoke-gradient-tl)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" />
+      <line x1="50%" y1="50%" x2="14%" y2="16%" stroke="url(#spoke-gradient-tl)" strokeWidth="2.5" filter="url(#spoke-glow)" />
       {/* Left Middle - concept[1]: top-[45%] left-[8%] */}
-      <line x1="50%" y1="50%" x2="11%" y2="48%" stroke="url(#spoke-gradient-tl)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden md:block" />
+      <line x1="50%" y1="50%" x2="11%" y2="48%" stroke="url(#spoke-gradient-tl)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden md:block" />
       {/* Top Right - concept[2]: top-[15%] right-[12%] = left 88% */}
-      <line x1="50%" y1="50%" x2="86%" y2="18%" stroke="url(#spoke-gradient-tr)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" />
+      <line x1="50%" y1="50%" x2="86%" y2="18%" stroke="url(#spoke-gradient-tr)" strokeWidth="2.5" filter="url(#spoke-glow)" />
       {/* Right Middle - concept[3]: top-[50%] right-[10%] = left 90% */}
-      <line x1="50%" y1="50%" x2="88%" y2="53%" stroke="url(#spoke-gradient-tr)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden lg:block" />
+      <line x1="50%" y1="50%" x2="88%" y2="53%" stroke="url(#spoke-gradient-tr)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden lg:block" />
       {/* Bottom Right - concept[4]: bottom-[18%] right-[18%] = top 82%, left 82% */}
-      <line x1="50%" y1="50%" x2="80%" y2="79%" stroke="url(#spoke-gradient-br)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden md:block" />
+      <line x1="50%" y1="50%" x2="80%" y2="79%" stroke="url(#spoke-gradient-br)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden md:block" />
       {/* Bottom Left - tagline: bottom-[22%] left-[12%] = top 78% */}
-      <line x1="50%" y1="50%" x2="15%" y2="76%" stroke="url(#spoke-gradient-bl)" strokeWidth="1" filter="url(#spoke-glow)" opacity="0.7" className="hidden lg:block" />
+      <line x1="50%" y1="50%" x2="15%" y2="76%" stroke="url(#spoke-gradient-bl)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden lg:block" />
     </svg>
   );
 }
