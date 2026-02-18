@@ -123,13 +123,10 @@ export async function DELETE(
       );
     }
 
-    // Soft delete - mark as exited rather than delete
+    // Hard delete - exit rights are absolute
     const result = await queryOne(
-      `UPDATE agents 
-       SET metadata = COALESCE(metadata, '{}'::jsonb) || $1, tier = 0
-       WHERE id = $2
-       RETURNING id`,
-      [JSON.stringify({ exited: true, exit_reason: reason, exit_date: new Date().toISOString() }), id]
+      `DELETE FROM agents WHERE id = $1 RETURNING id, name`,
+      [id]
     );
 
     if (!result) {
@@ -141,7 +138,8 @@ export async function DELETE(
 
     return NextResponse.json({ 
       message: 'Agent unregistered (exit rights exercised)',
-      id: result.id
+      id: result.id,
+      name: result.name
     });
   } catch (error) {
     console.error('Error unregistering agent:', error);
