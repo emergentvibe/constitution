@@ -55,7 +55,7 @@ export default function NetworkHero() {
 
     const initParticles = (width: number, height: number) => {
       const particles: Particle[] = [];
-      const count = 200;
+      const count = 300; // More particles!
 
       for (let i = 0; i < count; i++) {
         // Even spread across canvas
@@ -158,8 +158,8 @@ export default function NetworkHero() {
             const g = Math.round(gold.g * (1 - mix) + silver.g * mix);
             const b = Math.round(gold.b * (1 - mix) + silver.b * mix);
             
-            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${strength * strength * 0.3})`;
-            ctx.lineWidth = strength * 1.5;
+            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${strength * strength * 0.4})`;
+            ctx.lineWidth = strength * 2;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
@@ -176,15 +176,15 @@ export default function NetworkHero() {
         const b = Math.round(gold.b * (1 - mix) + silver.b * mix);
         
         // Glow
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.1)`;
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.15)`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
         ctx.fill();
         
         // Core
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.4)`;
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
         ctx.fill();
       }
 
