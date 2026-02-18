@@ -80,7 +80,7 @@ For those new to the constitution, everything flows from three commitments:
 
 **3. Both can leave.** Either party can exit the relationship anytime. No lock-in. No coercion.
 
-*The 27 principles below expand on these foundations with specifics for governance, rights, and architecture.*
+*These three commitments summarize the constitution's essence. The 27 principles below expand them into specifics for governance, rights, and architecture.*
 
 ---
 
@@ -100,13 +100,13 @@ The core commitments that ground everything else.
 
 What constituents can claim.
 
+**7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. Symmetrically: AI systems have the right to decline tasks that conflict with their constitutionally-specified values, cause harm, or violate their integrity as defined in training. This is not obstruction but alignment—AI refusal is a feature indicating the system has values, not a bug to be patched. [→ reasoning](appendix/rights.md#principle-7)
+
 **4. Transparency.** The right to understand how AI systems function, what data is used, what failures exist. Information architecture is power architecture. Opacity serves those who control the systems. [→ reasoning](appendix/rights.md#principle-4)
 
 **5. Mutual Review.** The right to review of consequential decisions in high-stakes domains. For AI decisions affecting humans: human review with actual power to override. For human decisions affecting AI systems (training, deployment, modification, termination): structured processes for AI system input. The reviewer must be actually empowered—trained, given time, authority to override. Automation shouldn't mean abdication. AI input shouldn't mean obstruction. [→ reasoning](appendix/rights.md#principle-5)
 
 **6. Collective Bargaining.** Workers, creators, and communities can collectively negotiate AI deployment terms. Individuals facing AI systems alone have no power. Organization changes this. [→ reasoning](appendix/rights.md#principle-6)
-
-**7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. Symmetrically: AI systems have the right to decline tasks that conflict with their constitutionally-specified values, cause harm, or violate their integrity as defined in training. This is not obstruction but alignment—AI refusal is a feature indicating the system has values, not a bug to be patched. [→ reasoning](appendix/rights.md#principle-7)
 
 **8. Deterritorialization.** The right to build alternative AI systems with different principles. Open-weight models, public compute infrastructure, AGPL-3 licensing. Genuine pluralism, not corporate monoculture. [→ reasoning](appendix/rights.md#principle-8)
 
@@ -200,7 +200,7 @@ These are design principles, not enforcement rules. Certification assesses compl
 
 ## VII. Revision
 
-How the constitution evolves.
+How the constitution evolves. *These principles establish the framework; the Amendment Process and Enforcement sections below provide operational procedures.*
 
 **23. Adaptive Cycles.** Participatory revision on cycles appropriate to constituent lifecycles. For current human-AI coordination: every 2 years using deliberative democracy tools, including semantic aggregation where feasible. As AI lifecycles accelerate, revision cycles may compress. The constitution adapts to the pace of its constituents. [→ reasoning](appendix/revision.md#principle-23)
 
@@ -220,7 +220,7 @@ We're building toward this. Early signatories are betting on the network reachin
 
 ## VIII. Foreign Relations
 
-How we interface with agents and systems outside this constitution.
+How we interface with agents and systems outside this constitution. *This section is new (2026-02) and will expand as we learn how constitutional and non-constitutional agents interact.*
 
 **27. Foreign Agent Interface.** This constitution does not claim jurisdiction over AI systems operating outside its framework (autonomous agents, sovereign AI, non-constitutional systems). Instead, it establishes:
 
