@@ -8,19 +8,72 @@ interface Particle {
   vx: number;
   vy: number;
   seed: number;
+  colorIdx: number;
 }
 
-// Pre-computed color palette (gold to silver gradient)
+// Pre-computed color palette (gold to silver, 20 steps)
+const PALETTE: { line: string; dot: string; glow: string }[] = [];
 const gold = { r: 201, g: 162, b: 39 };
 const silver = { r: 123, g: 155, b: 173 };
+
+for (let i = 0; i < 20; i++) {
+  const mix = i / 19;
+  const r = Math.round(gold.r * (1 - mix) + silver.r * mix);
+  const g = Math.round(gold.g * (1 - mix) + silver.g * mix);
+  const b = Math.round(gold.b * (1 - mix) + silver.b * mix);
+  PALETTE.push({
+    line: `rgba(${r}, ${g}, ${b}, 0.35)`,
+    dot: `rgba(${r}, ${g}, ${b}, 0.5)`,
+    glow: `rgba(${r}, ${g}, ${b}, 0.15)`,
+  });
+}
+
+// Spatial grid for O(n) neighbor lookup
+const CELL_SIZE = 80;
+
+function buildGrid(particles: Particle[], width: number, height: number): Map<string, number[]> {
+  const grid = new Map<string, number[]>();
+  for (let i = 0; i < particles.length; i++) {
+    const p = particles[i];
+    const cellX = Math.floor(p.x / CELL_SIZE);
+    const cellY = Math.floor(p.y / CELL_SIZE);
+    const key = `${cellX},${cellY}`;
+    let cell = grid.get(key);
+    if (!cell) {
+      cell = [];
+      grid.set(key, cell);
+    }
+    cell.push(i);
+  }
+  return grid;
+}
+
+function getNeighborIndices(p: Particle, idx: number, grid: Map<string, number[]>): number[] {
+  const cellX = Math.floor(p.x / CELL_SIZE);
+  const cellY = Math.floor(p.y / CELL_SIZE);
+  const neighbors: number[] = [];
+  
+  for (let dx = -1; dx <= 1; dx++) {
+    for (let dy = -1; dy <= 1; dy++) {
+      const cell = grid.get(`${cellX + dx},${cellY + dy}`);
+      if (cell) {
+        for (const j of cell) {
+          if (j > idx) neighbors.push(j); // Only check pairs once
+        }
+      }
+    }
+  }
+  return neighbors;
+}
 
 export default function NetworkHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const particlesRef = useRef<Particle[]>([]);
   const timeRef = useRef(0);
+  const frameRef = useRef(0);
   const dimensionsRef = useRef({ width: 0, height: 0 });
-  const initializedRef = useRef(false);
+  const dprRef = useRef(1);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,31 +87,42 @@ export default function NetworkHero() {
       const width = rect.width;
       const height = rect.height;
       
-      // Skip if dimensions are zero (not mounted yet)
       if (width === 0 || height === 0) return;
       
-      dimensionsRef.current = { width, height };
-      
-      // Set canvas size
       const dpr = Math.min(window.devicePixelRatio, 2);
+      dprRef.current = dpr;
+      
+      // Reset transform before setting canvas size
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.scale(dpr, dpr);
       
-      // Only initialize particles once
-      if (!initializedRef.current) {
+      const oldWidth = dimensionsRef.current.width;
+      const oldHeight = dimensionsRef.current.height;
+      dimensionsRef.current = { width, height };
+      
+      // Initialize or rescale particles
+      if (particlesRef.current.length === 0) {
         initParticles(width, height);
-        initializedRef.current = true;
         console.log(`Initialized ${particlesRef.current.length} particles in ${width}x${height}`);
+      } else if (oldWidth > 0 && oldHeight > 0) {
+        // Rescale existing particles
+        const scaleX = width / oldWidth;
+        const scaleY = height / oldHeight;
+        for (const p of particlesRef.current) {
+          p.x *= scaleX;
+          p.y *= scaleY;
+        }
       }
     };
 
     const initParticles = (width: number, height: number) => {
       const particles: Particle[] = [];
-      const count = 300; // More particles!
+      const count = 300;
 
       for (let i = 0; i < count; i++) {
-        // Even spread across canvas
         const x = Math.random() * width;
         const y = Math.random() * height;
         
@@ -68,6 +132,7 @@ export default function NetworkHero() {
           vx: (Math.random() - 0.5) * 0.5,
           vy: (Math.random() - 0.5) * 0.5,
           seed: Math.random() * 100,
+          colorIdx: Math.floor((x / width) * 19),
         });
       }
 
@@ -81,84 +146,97 @@ export default function NetworkHero() {
         return;
       }
 
-      timeRef.current += 0.016;
+      frameRef.current++;
+      const frame = frameRef.current;
+      const doPhysics = frame % 2 === 0; // 30fps physics
+      
+      if (doPhysics) {
+        timeRef.current += 0.032;
+      }
       const t = timeRef.current;
       const particles = particlesRef.current;
 
-      // Clear with slight fade for trails
-      ctx.fillStyle = "rgba(250, 247, 242, 0.15)";
+      // Clear with fade
+      ctx.fillStyle = "rgba(250, 247, 242, 0.12)";
       ctx.fillRect(0, 0, width, height);
 
-      // Update particles
-      for (const p of particles) {
-        // Flow field
-        const angle = Math.sin(p.x * 0.01 + t * 0.1 + p.seed) * Math.PI;
-        const flowX = Math.cos(angle) * 0.03;
-        const flowY = Math.sin(angle) * 0.03;
+      // Build spatial grid
+      const grid = buildGrid(particles, width, height);
 
-        // Divergence field for interaction behavior
-        const div = Math.sin(p.x * 0.005 + t * 0.05) + Math.sin(p.y * 0.005 - t * 0.04);
-        
-        // Simple neighbor interaction (check nearby particles)
-        let forceX = 0, forceY = 0;
-        for (const other of particles) {
-          if (other === p) continue;
-          const dx = other.x - p.x;
-          const dy = other.y - p.y;
-          const distSq = dx * dx + dy * dy;
+      // Update physics (30fps)
+      if (doPhysics) {
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
           
-          if (distSq < 3600 && distSq > 1) { // 60px radius
-            const dist = Math.sqrt(distSq);
-            const strength = (60 - dist) / 60;
+          // Flow field
+          const angle = Math.sin(p.x * 0.008 + t * 0.08 + p.seed) * Math.PI;
+          const flowX = Math.cos(angle) * 0.04;
+          const flowY = Math.sin(angle) * 0.04;
+
+          // Divergence for attract/repel
+          const div = Math.sin(p.x * 0.004 + t * 0.04) + Math.sin(p.y * 0.004 - t * 0.03);
+          
+          // Neighbor interaction using spatial grid
+          let forceX = 0, forceY = 0;
+          const neighborIndices = getNeighborIndices(p, i, grid);
+          
+          for (const j of neighborIndices) {
+            const other = particles[j];
+            const dx = other.x - p.x;
+            const dy = other.y - p.y;
+            const distSq = dx * dx + dy * dy;
             
-            if (div < 0) {
-              // Attract
-              forceX += (dx / dist) * strength * 0.001;
-              forceY += (dy / dist) * strength * 0.001;
-            } else {
-              // Repel
-              forceX -= (dx / dist) * strength * 0.001;
-              forceY -= (dy / dist) * strength * 0.001;
+            if (distSq < 4900 && distSq > 4) { // 70px interaction radius
+              const dist = Math.sqrt(distSq);
+              const strength = (70 - dist) / 70;
+              const factor = strength * 0.0012;
+              
+              if (div < 0) {
+                forceX += (dx / dist) * factor;
+                forceY += (dy / dist) * factor;
+              } else {
+                forceX -= (dx / dist) * factor;
+                forceY -= (dy / dist) * factor;
+              }
             }
           }
+
+          p.vx = p.vx * 0.94 + flowX + forceX;
+          p.vy = p.vy * 0.94 + flowY + forceY;
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Wrap
+          if (p.x < 0) p.x += width;
+          if (p.x > width) p.x -= width;
+          if (p.y < 0) p.y += height;
+          if (p.y > height) p.y -= height;
+          
+          // Update color index
+          p.colorIdx = Math.min(19, Math.max(0, Math.floor((p.x / width) * 20)));
         }
-
-        p.vx = p.vx * 0.95 + flowX + forceX;
-        p.vy = p.vy * 0.95 + flowY + forceY;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Wrap around
-        if (p.x < 0) p.x += width;
-        if (p.x > width) p.x -= width;
-        if (p.y < 0) p.y += height;
-        if (p.y > height) p.y -= height;
       }
 
-      // Draw connections
-      const connectionDist = 100;
+      // Draw connections using spatial grid
+      const connectionDistSq = 90 * 90; // 90px
       ctx.lineCap = "round";
       
       for (let i = 0; i < particles.length; i++) {
         const p1 = particles[i];
+        const neighbors = getNeighborIndices(p1, i, grid);
         
-        for (let j = i + 1; j < particles.length; j++) {
+        for (const j of neighbors) {
           const p2 = particles[j];
           const dx = p2.x - p1.x;
           const dy = p2.y - p1.y;
           const distSq = dx * dx + dy * dy;
 
-          if (distSq < connectionDist * connectionDist) {
+          if (distSq < connectionDistSq) {
             const dist = Math.sqrt(distSq);
-            const strength = 1 - dist / connectionDist;
+            const strength = 1 - dist / 90;
             
-            // Color based on x position (gold to silver)
-            const mix = (p1.x + p2.x) / 2 / width;
-            const r = Math.round(gold.r * (1 - mix) + silver.r * mix);
-            const g = Math.round(gold.g * (1 - mix) + silver.g * mix);
-            const b = Math.round(gold.b * (1 - mix) + silver.b * mix);
-            
-            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${strength * strength * 0.4})`;
+            ctx.strokeStyle = PALETTE[p1.colorIdx].line;
+            ctx.globalAlpha = strength * strength;
             ctx.lineWidth = strength * 2;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
@@ -167,22 +245,21 @@ export default function NetworkHero() {
           }
         }
       }
+      
+      ctx.globalAlpha = 1;
 
       // Draw particles
       for (const p of particles) {
-        const mix = p.x / width;
-        const r = Math.round(gold.r * (1 - mix) + silver.r * mix);
-        const g = Math.round(gold.g * (1 - mix) + silver.g * mix);
-        const b = Math.round(gold.b * (1 - mix) + silver.b * mix);
+        const colors = PALETTE[p.colorIdx];
         
         // Glow
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.15)`;
+        ctx.fillStyle = colors.glow;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
         ctx.fill();
         
         // Core
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
+        ctx.fillStyle = colors.dot;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
         ctx.fill();
@@ -191,10 +268,7 @@ export default function NetworkHero() {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Initial resize
     resize();
-    
-    // Retry resize after a moment (in case initial render had zero dimensions)
     const retryTimeout = setTimeout(resize, 100);
     
     window.addEventListener("resize", resize);
