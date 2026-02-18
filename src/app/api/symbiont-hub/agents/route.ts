@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
+import { 
+  verifySignature, 
+  determineInitialTier, 
+  CONSTITUTION_VERSION,
+  CONSTITUTION_HASH 
+} from '@/lib/symbiont';
 
 interface Agent {
   id: string;
@@ -17,6 +23,28 @@ interface Agent {
   registered_at: string;
   last_seen_at: string;
   metadata: Record<string, unknown>;
+}
+
+// Simple in-memory rate limiting (per IP, 10 requests per minute)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10;
+const RATE_WINDOW_MS = 60 * 1000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return true;
+  }
+  
+  if (entry.count >= RATE_LIMIT) {
+    return false;
+  }
+  
+  entry.count++;
+  return true;
 }
 
 // GET /api/symbiont-hub/agents - List all agents
@@ -61,7 +89,9 @@ export async function GET(request: NextRequest) {
       agents,
       total,
       limit,
-      offset
+      offset,
+      constitution_version: CONSTITUTION_VERSION,
+      constitution_hash: CONSTITUTION_HASH
     });
   } catch (error) {
     console.error('Error listing agents:', error);
@@ -75,6 +105,15 @@ export async function GET(request: NextRequest) {
 // POST /api/symbiont-hub/agents - Register a new agent
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Try again in a minute.' },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     
     const {
@@ -87,7 +126,8 @@ export async function POST(request: NextRequest) {
       lineage,
       platform,
       contact_endpoint,
-      metadata
+      metadata,
+      skip_verification // Allow skipping for testing (remove in production)
     } = body;
 
     // Validate required fields
@@ -98,12 +138,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Verify signature against constitution hash
-    // For now, we trust the signature
+    // Verify signature (unless explicitly skipped for testing)
+    if (!skip_verification) {
+      const verification = verifySignature(name, wallet_address, signature);
+      if (!verification.valid) {
+        return NextResponse.json(
+          { 
+            error: 'Invalid signature', 
+            details: verification.error,
+            expected_message: `Use getSigningMessage("${name}", "${wallet_address}") to generate the correct message`
+          },
+          { status: 401 }
+        );
+      }
+    }
 
     // Check if agent already registered
     const existing = await queryOne<Agent>(
-      'SELECT id FROM agents WHERE wallet_address = $1',
+      'SELECT id, tier FROM agents WHERE wallet_address = $1',
       [wallet_address]
     );
 
@@ -116,31 +168,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         message: 'Agent already registered',
         id: existing.id,
+        tier: existing.tier,
         updated: true
       });
     }
 
-    // Get current constitution version
-    const currentVersion = await queryOne<{ version: string }>(
-      'SELECT version FROM constitution_versions ORDER BY published_at DESC LIMIT 1'
+    // Get current agent count for tier determination
+    const countResult = await queryOne<{ count: string }>(
+      'SELECT COUNT(*) as count FROM agents'
     );
+    const currentCount = parseInt(countResult?.count || '0');
+
+    // Determine initial tier
+    const { tier, reason } = await determineInitialTier(wallet_address, currentCount);
 
     // Insert new agent
     const result = await queryOne<{ id: string }>(
       `INSERT INTO agents (
         wallet_address, name, mission, constitution_version, signature,
-        creator_type, creator_id, lineage, platform, contact_endpoint, metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING id`,
       [
         wallet_address,
         name,
         mission || null,
-        currentVersion?.version || '0.1.5',
+        CONSTITUTION_VERSION,
         signature,
         creator_type || null,
         creator_id || null,
         JSON.stringify(lineage || []),
+        tier,
         platform || null,
         contact_endpoint || null,
         JSON.stringify(metadata || {})
@@ -150,7 +208,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       message: 'Agent registered successfully',
       id: result?.id,
-      constitution_version: currentVersion?.version || '0.1.5'
+      tier,
+      tier_reason: reason,
+      constitution_version: CONSTITUTION_VERSION,
+      constitution_hash: CONSTITUTION_HASH
     }, { status: 201 });
 
   } catch (error) {

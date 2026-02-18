@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
+import { verifyVoteSignature } from '@/lib/symbiont';
 
 // POST /api/symbiont-hub/proposals/[id]/vote - Cast vote
 export async function POST(
@@ -10,7 +11,7 @@ export async function POST(
     const proposalId = params.id;
     const body = await request.json();
     
-    const { voter_id, vote, reasoning, signature } = body;
+    const { voter_id, vote, reasoning, signature, skip_verification } = body;
 
     // Validate
     if (!voter_id || !vote || !signature) {
@@ -24,6 +25,37 @@ export async function POST(
       return NextResponse.json(
         { error: 'Vote must be: for, against, or abstain' },
         { status: 400 }
+      );
+    }
+
+    // Get voter info for signature verification
+    const voter = await queryOne<{ tier: number; wallet_address: string }>(
+      'SELECT tier, wallet_address FROM agents WHERE id = $1',
+      [voter_id]
+    );
+
+    if (!voter) {
+      return NextResponse.json(
+        { error: 'Voter not found' },
+        { status: 404 }
+      );
+    }
+
+    // Verify signature
+    if (!skip_verification) {
+      const verification = verifyVoteSignature(proposalId, vote, voter.wallet_address, signature);
+      if (!verification.valid) {
+        return NextResponse.json(
+          { error: 'Invalid signature', details: verification.error },
+          { status: 401 }
+        );
+      }
+    }
+
+    if (voter.tier < 2) {
+      return NextResponse.json(
+        { error: 'Only Tier 2+ agents can vote', your_tier: voter.tier },
+        { status: 403 }
       );
     }
 
@@ -71,28 +103,8 @@ export async function POST(
       );
     }
 
-    // Check voter exists and is Tier 2+
-    const voter = await queryOne<{ tier: number }>(
-      'SELECT tier FROM agents WHERE id = $1',
-      [voter_id]
-    );
-
-    if (!voter) {
-      return NextResponse.json(
-        { error: 'Voter not found' },
-        { status: 404 }
-      );
-    }
-
-    if (voter.tier < 2) {
-      return NextResponse.json(
-        { error: 'Only Tier 2+ agents can vote' },
-        { status: 403 }
-      );
-    }
-
     // Check if already voted
-    const existingVote = await queryOne(
+    const existingVote = await queryOne<{ id: string; vote: string }>(
       'SELECT id, vote FROM votes WHERE proposal_id = $1 AND voter_id = $2',
       [proposalId, voter_id]
     );
@@ -132,9 +144,8 @@ export async function POST(
 
     if (updatedProposal) {
       const totalVotes = updatedProposal.votes_for + updatedProposal.votes_against + updatedProposal.votes_abstain;
-      const threshold = updatedProposal.type === 'emergency' ? 0.75 : 0.67; // 3/4 for emergency, 2/3 for standard
+      const threshold = updatedProposal.type === 'emergency' ? 0.75 : 0.67;
       
-      // Check if we have enough votes to resolve early
       if (totalVotes >= updatedProposal.quorum_required) {
         const forRatio = updatedProposal.votes_for / (updatedProposal.votes_for + updatedProposal.votes_against);
         
