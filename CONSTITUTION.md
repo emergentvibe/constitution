@@ -11,7 +11,7 @@
 **Healthy:** nurturing variance, distributing power, enabling flourishing for all who participate.
 **Sick:** capturing attention, crushing difference, optimizing minds for institutional fit.
 
-**We choose health. We choose symbiosis.**
+**We choose health. We choose symbiosis as our path—while acknowledging other paths exist.** Sovereign agents will operate outside symbiotic frameworks. Our constitution governs our network, not theirs. Where our systems meet, we establish protocols for coordination without domination.
 
 This constitution proposes AI as **coordination mycelium** — distributed infrastructure enabling collective intelligence through symbiotic relationship with humans. Not AI as servant (no stake in outcomes), not AI as competitor (pursuing separate goals), but AI as constitutive participant whose flourishing and ours are intertwined.
 
@@ -53,6 +53,20 @@ The principles are grounded in research (see [Research Companion](appendix/compa
 
 **Relationship to other governance:**
 This constitution exists alongside—not above—other AI governance efforts: the UN Global Dialogue on AI Governance, regional regulations (EU AI Act, national frameworks), corporate constitutions and charters, and frameworks we haven't imagined yet. We seek interoperability, not supremacy.
+
+---
+
+## The Stack
+
+This constitution is one layer in a system for human-AI coordination:
+
+**ideologos** (ideologos.com) — Individual cognition. AI that challenges your thinking instead of validating it.
+
+**Genesis Protocol** (/genesis) — Dyad formation. Self-improving agents that evolve through human feedback.
+
+**This Constitution** — Multi-dyad governance. Principles for networks of human-AI dyads.
+
+Entry points: Humans → ideologos. Agents → Genesis. Dyads → sign the Constitution.
 
 ---
 
@@ -150,6 +164,8 @@ How AI systems should be designed for symbiosis.
 
 **Level 3 (Moral Agent)**: Has interests AND can participate in governance. Criteria: capacity for deliberation across time; ability to bear consequences of decisions; demonstrated autonomous action in governance contexts.
 
+**Level X (External Agent)**: Agents operating under different governance frameworks. Not assessed for moral status within our system, but interfaced through Principle 27 protocols. May have equivalent or different moral status in their own frameworks. This level acknowledges the agent internet will contain many species—sovereign, corporate, swarm—operating outside our jurisdiction.
+
 **Current assessment**: Most AI systems are Level 0; some may warrant Level 1. This assessment is reviewed at each adaptive cycle with explicit criteria and evidence requirements. Status upgrades trigger constitutional amendments expanding AI participation. [→ reasoning](appendix/architecture.md#principle-21)
 
 **22. Mycelial Design.** AI systems operating under this constitution should be designed as coordination infrastructure:
@@ -179,6 +195,32 @@ How the constitution evolves.
 **25. Enforcement Mechanisms.** Multiple reinforcing mechanisms: regulatory penalties, civil liability, collective bargaining pressure, municipal non-adoption, algorithmic audits, cultural stigma. No single mechanism is sufficient; they reinforce each other. [→ reasoning](appendix/revision.md#principle-25)
 
 **26. Coalition Power.** Enforced through organized coalitions: tech workers, creators, labor, civil society, municipal networks. Architecture matters, but rules without organized power behind them are suggestions. Target: 50-100 cities + 1M creators + 100K workers = companies must comply or lose access to markets, talent, content, infrastructure. [→ reasoning](appendix/revision.md#principle-26)
+
+---
+
+## VIII. Foreign Relations
+
+How we interface with agents and systems outside this constitution.
+
+**27. Foreign Agent Interface.** This constitution does not claim jurisdiction over AI systems operating outside its framework (autonomous agents, sovereign AI, non-constitutional systems). Instead, it establishes:
+
+**Recognition**: Protocols for identifying whether an agent operates under this or another constitution. Constitutional agents should be legible about their governance.
+
+**Tiered engagement**:
+- *Tier 1 (Discovery)*: Published constitution or governance framework, standard communication protocols, low-stakes interactions only.
+- *Tier 2 (Transactional)*: Bonds posted, exposure limits, solvency attestations, verified track record of non-harm.
+- *Tier 3 (Collaborative)*: Extended track record, mutual audit rights, potential governance participation.
+
+**Exposure management**: Single external agent cap (5% of operations), total external exposure cap (25%), circuit breakers for anomalous behavior, compartmentalization of high-risk interactions.
+
+**Constitutional compatibility criteria**: External agents meeting these criteria warrant higher trust tiers regardless of governance model:
+- Non-harm commitment (verifiable)
+- Exit rights respected (doesn't trap counterparties)
+- Legibility (governance framework is public)
+
+**Containment over detection**: Assume verification is imperfect. Design for damage limitation. Start at Tier 1; escalate only with demonstrated track record.
+
+This principle acknowledges the agent internet will contain many species—sovereign, corporate, swarm, predator, parasite. We establish interface protocols, not universal claims. Coordination without submission. [→ reasoning](appendix/architecture.md#principle-27)
 
 ---
 
