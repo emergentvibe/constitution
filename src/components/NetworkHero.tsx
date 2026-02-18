@@ -157,9 +157,15 @@ export default function NetworkHero() {
       const t = timeRef.current;
       const particles = particlesRef.current;
 
-      // Clear with fade
-      ctx.fillStyle = "rgba(250, 247, 242, 0.12)";
-      ctx.fillRect(0, 0, width, height);
+      // Clear with fade (trails), but fully clear occasionally to remove ghost artifacts
+      if (frameRef.current % 300 === 0) {
+        // Full clear every ~5 seconds to remove permanent marks
+        ctx.fillStyle = "#FAF7F2";
+        ctx.fillRect(0, 0, width, height);
+      } else {
+        ctx.fillStyle = "rgba(250, 247, 242, 0.15)";
+        ctx.fillRect(0, 0, width, height);
+      }
 
       // Build spatial grid
       const grid = buildGrid(particles);
