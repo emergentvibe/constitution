@@ -262,8 +262,15 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error registering agent:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    const stack = error instanceof Error ? error.stack : undefined;
     return NextResponse.json(
-      { error: 'Failed to register agent' },
+      { 
+        error: 'Failed to register agent',
+        details: message,
+        // Remove stack in production
+        ...(process.env.NODE_ENV !== 'production' && { stack })
+      },
       { status: 500 }
     );
   }
