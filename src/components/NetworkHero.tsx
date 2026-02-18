@@ -272,11 +272,32 @@ export default function NetworkHero() {
     const retryTimeout = setTimeout(resize, 100);
     
     window.addEventListener("resize", resize);
+    
+    // Handle zoom changes (including pinch zoom on mobile)
+    let lastDpr = window.devicePixelRatio;
+    const checkZoom = () => {
+      if (window.devicePixelRatio !== lastDpr) {
+        lastDpr = window.devicePixelRatio;
+        resize();
+      }
+    };
+    const zoomInterval = setInterval(checkZoom, 500);
+    
+    // Visual viewport resize (mobile pinch zoom)
+    const visualViewportHandler = () => resize();
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", visualViewportHandler);
+    }
+    
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       clearTimeout(retryTimeout);
+      clearInterval(zoomInterval);
       window.removeEventListener("resize", resize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", visualViewportHandler);
+      }
       cancelAnimationFrame(animationRef.current);
     };
   }, []);
