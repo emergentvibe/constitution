@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import BackgroundTextures from "@/components/BackgroundTextures";
+import { AuthProvider } from "@/hooks/useAuth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -45,9 +46,11 @@ export default function RootLayout({
         {/* Background texture layers */}
         <BackgroundTextures />
         {/* Main content */}
-        <div className="relative z-10">
-          {children}
-        </div>
+        <AuthProvider>
+          <div className="relative z-10">
+            {children}
+          </div>
+        </AuthProvider>
         {/* Footer */}
         <footer className="relative z-10 py-6 text-center text-sm text-neutral-500">
           <a 
