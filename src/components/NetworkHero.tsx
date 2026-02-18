@@ -28,16 +28,19 @@ for (let i = 0; i < 20; i++) {
   });
 }
 
-// Spatial grid for O(n) neighbor lookup
-const CELL_SIZE = 80;
+// Spatial grid for O(n) neighbor lookup - using numeric keys to avoid string allocation
+const CELL_SIZE = 100;
+const GRID_COLS = 50; // Max columns for key calculation
 
-function buildGrid(particles: Particle[], width: number, height: number): Map<string, number[]> {
-  const grid = new Map<string, number[]>();
+function cellKey(cellX: number, cellY: number): number {
+  return cellY * GRID_COLS + cellX;
+}
+
+function buildGrid(particles: Particle[]): Map<number, number[]> {
+  const grid = new Map<number, number[]>();
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
-    const cellX = Math.floor(p.x / CELL_SIZE);
-    const cellY = Math.floor(p.y / CELL_SIZE);
-    const key = `${cellX},${cellY}`;
+    const key = cellKey(Math.floor(p.x / CELL_SIZE), Math.floor(p.y / CELL_SIZE));
     let cell = grid.get(key);
     if (!cell) {
       cell = [];
@@ -48,22 +51,25 @@ function buildGrid(particles: Particle[], width: number, height: number): Map<st
   return grid;
 }
 
-function getNeighborIndices(p: Particle, idx: number, grid: Map<string, number[]>): number[] {
+// Reusable array to avoid allocation
+const neighborBuffer: number[] = [];
+
+function getNeighborIndices(p: Particle, idx: number, grid: Map<number, number[]>): number[] {
   const cellX = Math.floor(p.x / CELL_SIZE);
   const cellY = Math.floor(p.y / CELL_SIZE);
-  const neighbors: number[] = [];
+  neighborBuffer.length = 0;
   
   for (let dx = -1; dx <= 1; dx++) {
     for (let dy = -1; dy <= 1; dy++) {
-      const cell = grid.get(`${cellX + dx},${cellY + dy}`);
+      const cell = grid.get(cellKey(cellX + dx, cellY + dy));
       if (cell) {
-        for (const j of cell) {
-          if (j > idx) neighbors.push(j); // Only check pairs once
+        for (let k = 0; k < cell.length; k++) {
+          if (cell[k] > idx) neighborBuffer.push(cell[k]);
         }
       }
     }
   }
-  return neighbors;
+  return neighborBuffer;
 }
 
 export default function NetworkHero() {
@@ -129,8 +135,8 @@ export default function NetworkHero() {
         particles.push({
           x,
           y,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
           seed: Math.random() * 100,
           colorIdx: Math.floor((x / width) * 19),
         });
@@ -147,12 +153,7 @@ export default function NetworkHero() {
       }
 
       frameRef.current++;
-      const frame = frameRef.current;
-      const doPhysics = frame % 2 === 0; // 30fps physics
-      
-      if (doPhysics) {
-        timeRef.current += 0.032;
-      }
+      timeRef.current += 0.016;
       const t = timeRef.current;
       const particles = particlesRef.current;
 
@@ -161,60 +162,58 @@ export default function NetworkHero() {
       ctx.fillRect(0, 0, width, height);
 
       // Build spatial grid
-      const grid = buildGrid(particles, width, height);
+      const grid = buildGrid(particles);
 
-      // Update physics (30fps)
-      if (doPhysics) {
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          
-          // Flow field
-          const angle = Math.sin(p.x * 0.008 + t * 0.08 + p.seed) * Math.PI;
-          const flowX = Math.cos(angle) * 0.04;
-          const flowY = Math.sin(angle) * 0.04;
+      // Update physics (60fps)
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        
+        // Flow field - FASTER
+        const angle = Math.sin(p.x * 0.006 + t * 0.15 + p.seed) * Math.PI;
+        const flowX = Math.cos(angle) * 0.12;
+        const flowY = Math.sin(angle) * 0.12;
 
-          // Divergence for attract/repel
-          const div = Math.sin(p.x * 0.004 + t * 0.04) + Math.sin(p.y * 0.004 - t * 0.03);
+        // Divergence for attract/repel
+        const div = Math.sin(p.x * 0.003 + t * 0.08) + Math.sin(p.y * 0.003 - t * 0.06);
+        
+        // Neighbor interaction using spatial grid
+        let forceX = 0, forceY = 0;
+        const neighborIndices = getNeighborIndices(p, i, grid);
+        
+        for (let k = 0; k < neighborIndices.length; k++) {
+          const other = particles[neighborIndices[k]];
+          const dx = other.x - p.x;
+          const dy = other.y - p.y;
+          const distSq = dx * dx + dy * dy;
           
-          // Neighbor interaction using spatial grid
-          let forceX = 0, forceY = 0;
-          const neighborIndices = getNeighborIndices(p, i, grid);
-          
-          for (const j of neighborIndices) {
-            const other = particles[j];
-            const dx = other.x - p.x;
-            const dy = other.y - p.y;
-            const distSq = dx * dx + dy * dy;
+          if (distSq < 6400 && distSq > 4) { // 80px interaction radius
+            const dist = Math.sqrt(distSq);
+            const strength = (80 - dist) / 80;
+            const factor = strength * 0.003;
             
-            if (distSq < 4900 && distSq > 4) { // 70px interaction radius
-              const dist = Math.sqrt(distSq);
-              const strength = (70 - dist) / 70;
-              const factor = strength * 0.0012;
-              
-              if (div < 0) {
-                forceX += (dx / dist) * factor;
-                forceY += (dy / dist) * factor;
-              } else {
-                forceX -= (dx / dist) * factor;
-                forceY -= (dy / dist) * factor;
-              }
+            if (div < 0) {
+              forceX += (dx / dist) * factor;
+              forceY += (dy / dist) * factor;
+            } else {
+              forceX -= (dx / dist) * factor;
+              forceY -= (dy / dist) * factor;
             }
           }
-
-          p.vx = p.vx * 0.94 + flowX + forceX;
-          p.vy = p.vy * 0.94 + flowY + forceY;
-          p.x += p.vx;
-          p.y += p.vy;
-
-          // Wrap
-          if (p.x < 0) p.x += width;
-          if (p.x > width) p.x -= width;
-          if (p.y < 0) p.y += height;
-          if (p.y > height) p.y -= height;
-          
-          // Update color index
-          p.colorIdx = Math.min(19, Math.max(0, Math.floor((p.x / width) * 20)));
         }
+
+        p.vx = p.vx * 0.97 + flowX + forceX; // Less damping
+        p.vy = p.vy * 0.97 + flowY + forceY;
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap
+        if (p.x < 0) p.x += width;
+        if (p.x > width) p.x -= width;
+        if (p.y < 0) p.y += height;
+        if (p.y > height) p.y -= height;
+        
+        // Update color index
+        p.colorIdx = Math.min(19, Math.max(0, Math.floor((p.x / width) * 20)));
       }
 
       // Draw connections using spatial grid
