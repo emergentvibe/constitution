@@ -73,23 +73,24 @@ export default function NetworkHero() {
 
     const initParticles = (width: number, height: number) => {
       const particles: Particle[] = [];
-      const count = 180; // More bodies!
+      const count = 250; // Lots of bodies!
 
       for (let i = 0; i < count; i++) {
-        let x, y;
-        if (Math.random() < 0.6) {
-          x = Math.random() * width * 0.7;
-          y = height * 0.3 + Math.random() * height * 0.7;
-        } else {
-          x = Math.random() * width;
-          y = Math.random() * height;
+        // Spread across entire canvas, with slight bias to bottom-left
+        let x = Math.random() * width;
+        let y = Math.random() * height;
+        
+        // 30% extra bias to bottom-left for asymmetry
+        if (Math.random() < 0.3) {
+          x = x * 0.6;
+          y = height * 0.4 + y * 0.6;
         }
         
         particles.push({
           x,
           y,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
           seed: Math.random() * 50,
           colorIdx: Math.floor(Math.random() * 10),
         });
