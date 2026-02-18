@@ -84,7 +84,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
           </a>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground font-mono">
-              CONSTITUTION v0.1.3-draft
+              CONSTITUTION v0.1.5-draft
             </span>
           </div>
           <div className="flex gap-3">
@@ -196,6 +196,30 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                       </a>
                     );
                   },
+                  // Table styling
+                  table: ({ children, ...props }) => (
+                    <div className="overflow-x-auto my-6">
+                      <table className="min-w-full border-collapse border border-border" {...props}>
+                        {children}
+                      </table>
+                    </div>
+                  ),
+                  thead: ({ children, ...props }) => (
+                    <thead className="bg-muted/50" {...props}>{children}</thead>
+                  ),
+                  th: ({ children, ...props }) => (
+                    <th className="border border-border px-4 py-2 text-left text-sm font-semibold text-foreground" {...props}>
+                      {children}
+                    </th>
+                  ),
+                  td: ({ children, ...props }) => (
+                    <td className="border border-border px-4 py-2 text-sm text-foreground" {...props}>
+                      {children}
+                    </td>
+                  ),
+                  tr: ({ children, ...props }) => (
+                    <tr className="hover:bg-muted/30 transition-colors" {...props}>{children}</tr>
+                  ),
                 }}
               >
                 {content}
