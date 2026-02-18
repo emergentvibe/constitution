@@ -1,9 +1,6 @@
 // Snapshot.org Integration Service
 // Handles proposal creation, voting, and querying via Snapshot GraphQL API
 
-import { createPublicClient, http, createWalletClient, custom } from 'viem';
-import { mainnet } from 'viem/chains';
-
 const SNAPSHOT_HUB = 'https://hub.snapshot.org';
 const SNAPSHOT_GRAPHQL = 'https://hub.snapshot.org/graphql';
 
