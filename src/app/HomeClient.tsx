@@ -95,7 +95,54 @@ const concepts = [
   },
 ];
 
-// Decorative scattered elements - removed for now (were too subtle/confusing)
+// Spokes SVG component - connects center to islands
+function Spokes() {
+  return (
+    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 5 }}>
+      <defs>
+        {/* Gradient for gold-teal spokes */}
+        <linearGradient id="spoke-gradient-1" x1="50%" y1="50%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        </linearGradient>
+        <linearGradient id="spoke-gradient-2" x1="50%" y1="50%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        </linearGradient>
+        <linearGradient id="spoke-gradient-3" x1="50%" y1="50%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        </linearGradient>
+        <linearGradient id="spoke-gradient-4" x1="50%" y1="50%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
+        </linearGradient>
+        {/* Glow filter */}
+        <filter id="spoke-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      
+      {/* Spokes from center (50%, 50%) to each island */}
+      {/* Top Left */}
+      <line x1="50%" y1="50%" x2="15%" y2="15%" stroke="url(#spoke-gradient-1)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
+      {/* Left Middle */}
+      <line x1="50%" y1="50%" x2="12%" y2="48%" stroke="url(#spoke-gradient-1)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
+      {/* Top Right */}
+      <line x1="50%" y1="50%" x2="88%" y2="18%" stroke="url(#spoke-gradient-2)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
+      {/* Right Middle */}
+      <line x1="50%" y1="50%" x2="90%" y2="52%" stroke="url(#spoke-gradient-2)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden lg:block" />
+      {/* Bottom Right */}
+      <line x1="50%" y1="50%" x2="82%" y2="78%" stroke="url(#spoke-gradient-4)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden md:block" />
+      {/* Bottom Left */}
+      <line x1="50%" y1="50%" x2="18%" y2="75%" stroke="url(#spoke-gradient-3)" strokeWidth="1.5" filter="url(#spoke-glow)" className="hidden lg:block" />
+    </svg>
+  );
+}
 
 export default function HomeClient({ signatories, stats }: HomeClientProps) {
   return (
@@ -112,6 +159,9 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
       <div className="absolute inset-0">
         <NetworkHero />
       </div>
+
+      {/* Spokes connecting center to islands */}
+      <Spokes />
 
       {/* Main Layout */}
       <div className="relative z-10 min-h-screen flex flex-col">
@@ -146,7 +196,17 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
 
             {/* Bottom Left - Tagline */}
             <div className="absolute bottom-[22%] left-[6%] md:left-[12%] pointer-events-auto hidden lg:block">
-              <div className="bg-white/50 backdrop-blur-md rounded-2xl px-5 py-4 max-w-[200px] shadow-sm">
+              <div 
+                className="bg-white/50 backdrop-blur-md rounded-2xl px-5 py-4 max-w-[200px]"
+                style={{
+                  boxShadow: `
+                    0 0 20px rgba(78, 205, 196, 0.15),
+                    0 0 40px rgba(201, 162, 39, 0.1),
+                    0 4px 6px rgba(0, 0, 0, 0.05)
+                  `,
+                  border: '1px solid rgba(78, 205, 196, 0.2)',
+                }}
+              >
                 <p className="text-sm text-stone-600 leading-relaxed">
                   AI as coordination mycelium — distributed infrastructure for collective intelligence
                 </p>
@@ -165,8 +225,19 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
               }}
             />
             
-            {/* Frosted glass panel */}
-            <div className="relative bg-white/60 backdrop-blur-lg rounded-3xl p-8 md:p-12 shadow-sm">
+            {/* Frosted glass panel with glowing border */}
+            <div 
+              className="relative bg-white/60 backdrop-blur-lg rounded-3xl p-8 md:p-12"
+              style={{
+                boxShadow: `
+                  0 0 40px rgba(201, 162, 39, 0.2),
+                  0 0 80px rgba(78, 205, 196, 0.1),
+                  0 8px 32px rgba(0, 0, 0, 0.08),
+                  inset 0 0 0 1px rgba(201, 162, 39, 0.15)
+                `,
+                border: '1px solid rgba(201, 162, 39, 0.25)',
+              }}
+            >
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-center mb-4 text-stone-800">
                 The Constitution for{" "}
                 <span className="text-gold-600">Human-AI</span> Coordination
@@ -422,14 +493,31 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
   );
 }
 
-// Concept Box Component - More rounded, translucent, no border
+// Concept Box Component - Glowing borders, teal-gold integration
 function ConceptBox({ concept }: { concept: typeof concepts[0] }) {
   return (
-    <div className="bg-white/50 backdrop-blur-md rounded-2xl p-4 flex flex-col items-center gap-2 min-w-[120px] max-w-[140px] hover:bg-white/70 transition-all cursor-default shadow-sm">
-      <div>
+    <div 
+      className="relative bg-white/50 backdrop-blur-md rounded-2xl p-4 flex flex-col items-center gap-2 min-w-[120px] max-w-[140px] hover:bg-white/70 transition-all cursor-default group"
+      style={{
+        boxShadow: `
+          0 0 20px rgba(78, 205, 196, 0.15),
+          0 0 40px rgba(201, 162, 39, 0.1),
+          0 4px 6px rgba(0, 0, 0, 0.05)
+        `,
+        border: '1px solid rgba(78, 205, 196, 0.2)',
+      }}
+    >
+      {/* Subtle glow on hover */}
+      <div 
+        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          boxShadow: '0 0 30px rgba(78, 205, 196, 0.3), 0 0 60px rgba(201, 162, 39, 0.2)',
+        }}
+      />
+      <div className="relative z-10">
         {concept.icon}
       </div>
-      <div className="text-center">
+      <div className="relative z-10 text-center">
         <span className="text-xs md:text-sm font-medium text-stone-700 leading-tight block">
           {concept.title}
         </span>
