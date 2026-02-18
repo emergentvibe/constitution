@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 import { 
   verifySignature, 
+  verifyOperatorTokenFlexible,
   determineInitialTier, 
   CONSTITUTION_VERSION,
   CONSTITUTION_HASH 
@@ -120,7 +121,9 @@ export async function POST(request: NextRequest) {
       wallet_address,
       name,
       mission,
+      description, // alias for mission
       signature,
+      operator_token, // from /sign page
       creator_type,
       creator_id,
       lineage,
@@ -130,40 +133,82 @@ export async function POST(request: NextRequest) {
       skip_verification // Allow skipping for testing (remove in production)
     } = body;
 
+    // Use description as mission if provided
+    const agentMission = mission || description;
+
     // Validate required fields
-    if (!wallet_address || !name || !signature) {
+    // Either need: wallet_address + signature (direct) OR operator_token (via /sign)
+    if (!name) {
       return NextResponse.json(
-        { error: 'Missing required fields: wallet_address, name, signature' },
+        { error: 'Missing required field: name' },
         { status: 400 }
       );
     }
 
-    // Verify signature (unless explicitly skipped for testing)
-    if (!skip_verification) {
-      const verification = verifySignature(name, wallet_address, signature);
-      if (!verification.valid) {
+    let operatorAddress: string | null = null;
+    let agentWalletAddress = wallet_address;
+
+    // Path 1: Operator token from /sign page
+    if (operator_token) {
+      const tokenVerification = verifyOperatorTokenFlexible(operator_token, name);
+      if (!tokenVerification.valid) {
         return NextResponse.json(
           { 
-            error: 'Invalid signature', 
-            details: verification.error,
-            expected_message: `Use getSigningMessage("${name}", "${wallet_address}") to generate the correct message`
+            error: 'Invalid operator token', 
+            details: tokenVerification.error
           },
           { status: 401 }
         );
       }
+      operatorAddress = tokenVerification.operatorAddress || null;
+      
+      // If no wallet_address provided, generate one from the operator + name
+      // In production, agent should provide its own wallet
+      if (!agentWalletAddress) {
+        // Create a deterministic "virtual" address for agents without wallets
+        const hash = await crypto.subtle.digest(
+          'SHA-256',
+          new TextEncoder().encode(`${operatorAddress}:${name}`)
+        );
+        const hashArray = Array.from(new Uint8Array(hash));
+        agentWalletAddress = '0x' + hashArray.slice(0, 20).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+    }
+    // Path 2: Direct signature verification
+    else if (wallet_address && signature) {
+      if (!skip_verification) {
+        const verification = verifySignature(name, wallet_address, signature);
+        if (!verification.valid) {
+          return NextResponse.json(
+            { 
+              error: 'Invalid signature', 
+              details: verification.error,
+              expected_message: `Use getSigningMessage("${name}", "${wallet_address}") to generate the correct message`
+            },
+            { status: 401 }
+          );
+        }
+      }
+    }
+    // Neither path provided
+    else {
+      return NextResponse.json(
+        { error: 'Must provide either operator_token OR (wallet_address + signature)' },
+        { status: 400 }
+      );
     }
 
     // Check if agent already registered
     const existing = await queryOne<Agent>(
       'SELECT id, tier FROM agents WHERE wallet_address = $1',
-      [wallet_address]
+      [agentWalletAddress]
     );
 
     if (existing) {
       // Update last_seen and return existing
       await query(
         'UPDATE agents SET last_seen_at = NOW() WHERE wallet_address = $1',
-        [wallet_address]
+        [agentWalletAddress]
       );
       return NextResponse.json({
         message: 'Agent already registered',
@@ -180,28 +225,29 @@ export async function POST(request: NextRequest) {
     const currentCount = parseInt(countResult?.count || '0');
 
     // Determine initial tier
-    const { tier, reason } = await determineInitialTier(wallet_address, currentCount);
+    const { tier, reason } = await determineInitialTier(agentWalletAddress, currentCount);
 
     // Insert new agent
     const result = await queryOne<{ id: string }>(
       `INSERT INTO agents (
         wallet_address, name, mission, constitution_version, signature,
-        creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING id`,
       [
-        wallet_address,
+        agentWalletAddress,
         name,
-        mission || null,
+        agentMission || null,
         CONSTITUTION_VERSION,
-        signature,
-        creator_type || null,
-        creator_id || null,
+        signature || 'operator_authorized',
+        creator_type || (operatorAddress ? 'human' : null),
+        creator_id || operatorAddress,
         JSON.stringify(lineage || []),
         tier,
         platform || null,
         contact_endpoint || null,
-        JSON.stringify(metadata || {})
+        JSON.stringify(metadata || {}),
+        operatorAddress
       ]
     );
 

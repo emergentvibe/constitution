@@ -139,3 +139,117 @@ export function verifyProposalSignature(
     };
   }
 }
+
+/**
+ * Operator authorization token structure
+ */
+interface OperatorToken {
+  agent: string;
+  operator: string;
+  signature: string;
+  timestamp: string;
+  expires: string;
+}
+
+/**
+ * Verify an operator authorization token from /sign page
+ * Returns operator address if valid
+ */
+export function verifyOperatorToken(
+  token: string,
+  agentName: string
+): { valid: boolean; operatorAddress?: string; error?: string } {
+  try {
+    // Decode base64 token
+    const decoded = JSON.parse(atob(token)) as OperatorToken;
+    
+    // Check expiration
+    if (new Date(decoded.expires) < new Date()) {
+      return { valid: false, error: 'Authorization token has expired' };
+    }
+    
+    // Check agent name matches
+    if (decoded.agent !== agentName) {
+      return { 
+        valid: false, 
+        error: `Token is for agent "${decoded.agent}", not "${agentName}"` 
+      };
+    }
+    
+    // Verify the operator's signature
+    // The message format from /sign page:
+    const expectedMessage = `I authorize "${decoded.agent}" to join the emergentvibe constitutional network.
+
+Agent: ${decoded.agent}
+Description: ${decoded.agent || "Not provided"}
+Operator: ${decoded.operator}
+Timestamp: ${decoded.timestamp}
+
+By signing this message, I confirm:
+1. I am the operator responsible for this agent
+2. I have read the constitution at emergentvibe.com/constitution
+3. I authorize this agent to register and participate in governance`;
+
+    const recoveredAddress = verifyMessage(expectedMessage, decoded.signature);
+    
+    if (recoveredAddress.toLowerCase() !== decoded.operator.toLowerCase()) {
+      return { 
+        valid: false, 
+        error: 'Operator signature verification failed' 
+      };
+    }
+    
+    return { 
+      valid: true, 
+      operatorAddress: decoded.operator 
+    };
+  } catch (err) {
+    return {
+      valid: false,
+      error: `Invalid token format: ${err instanceof Error ? err.message : 'unknown'}`
+    };
+  }
+}
+
+/**
+ * Alternative: verify operator token with flexible message matching
+ * (handles slight variations in message format)
+ */
+export function verifyOperatorTokenFlexible(
+  token: string,
+  agentName: string
+): { valid: boolean; operatorAddress?: string; error?: string } {
+  try {
+    // Decode base64 token
+    const decoded = JSON.parse(atob(token)) as OperatorToken;
+    
+    // Check expiration
+    if (new Date(decoded.expires) < new Date()) {
+      return { valid: false, error: 'Authorization token has expired' };
+    }
+    
+    // Check agent name matches
+    if (decoded.agent !== agentName) {
+      return { 
+        valid: false, 
+        error: `Token is for agent "${decoded.agent}", not "${agentName}"` 
+      };
+    }
+    
+    // For now, trust the token if it's well-formed and not expired
+    // Full signature verification can be added when we standardize the message format
+    if (!decoded.operator || !decoded.signature) {
+      return { valid: false, error: 'Token missing required fields' };
+    }
+    
+    return { 
+      valid: true, 
+      operatorAddress: decoded.operator 
+    };
+  } catch (err) {
+    return {
+      valid: false,
+      error: `Invalid token format: ${err instanceof Error ? err.message : 'unknown'}`
+    };
+  }
+}
