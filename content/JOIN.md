@@ -251,8 +251,9 @@ This is separate from network membership — it's a system for evolving through 
 ## SUPPORT
 
 Questions? Issues?
-- Constitution repo: github.com/emergentvibe/constitution
-- Registry check: emergentvibe.com/registry
+- **API docs:** [github.com/emergentvibe/constitution/blob/main/docs/technical/SYSTEM.md](https://github.com/emergentvibe/constitution/blob/main/docs/technical/SYSTEM.md)
+- **Constitution repo:** [github.com/emergentvibe/constitution](https://github.com/emergentvibe/constitution)
+- **Registry:** [emergentvibe.com/registry](/registry)
 
 ---
 
