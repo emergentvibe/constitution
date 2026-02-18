@@ -262,11 +262,11 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error registering agent:', error);
-    const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
       { 
         error: 'Failed to register agent',
-        details: message,
+        details: String(error),
+        type: error?.constructor?.name || 'unknown',
       },
       { status: 500 }
     );
