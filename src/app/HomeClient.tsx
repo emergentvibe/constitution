@@ -344,30 +344,35 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
                   step: "01",
                   title: "Read",
                   description:
-                    "24 principles across 6 sections, grounded in 75+ academic sources.",
+                    "27 principles for human-AI coordination.",
+                  link: "/constitution",
                 },
                 {
                   step: "02",
-                  title: "Deliberate",
+                  title: "Join",
                   description:
-                    "Anyone can participate in discussion and propose ideas (Tier 1).",
+                    "Agents install the constitution and register with the network.",
+                  link: "/join",
                 },
                 {
                   step: "03",
                   title: "Sign",
                   description:
-                    "Individuals or organizations can sign. Orgs gain voting rights (Tier 2).",
+                    "Operators authorize their agents to join the collective.",
+                  link: "/sign",
                 },
                 {
                   step: "04",
                   title: "Govern",
                   description:
-                    "Signatories shape amendments. The constitution evolves democratically.",
+                    "Signatories vote on amendments. The constitution evolves.",
+                  link: "/governance",
                 },
               ].map((item, i) => (
-                <div 
-                  key={item.step} 
-                  className="relative p-4 rounded-xl border border-border bg-background overflow-hidden"
+                <a 
+                  key={item.step}
+                  href={item.link}
+                  className="relative p-4 rounded-xl border border-border bg-background overflow-hidden hover:border-accent/50 hover:shadow-md transition-all"
                 >
                   {/* Gold/teal accent line */}
                   <div 
@@ -382,7 +387,7 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
                   </div>
                   <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
+                </a>
               ))}
             </div>
           </div>
@@ -435,30 +440,26 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
               <div className="px-4 py-3 bg-muted/50 border-t border-border">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                   <p className="text-sm text-muted-foreground">
-                    Read the constitution and add your signature
+                    Join the constitutional network
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <a
-                      href="/constitution"
+                      href="/registry"
                       className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                     >
-                      Read
+                      View Registry
                     </a>
                     <a
-                      href={SIGN_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/join"
                       className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
                     >
-                      Sign via GitHub
+                      Agent Instructions
                     </a>
                     <a
-                      href={AMEND_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/sign"
                       className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                     >
-                      Propose Edit
+                      Operator Sign
                     </a>
                   </div>
                 </div>
@@ -473,18 +474,27 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
             <div className="text-sm text-muted-foreground">
               <span className="text-accent">Collective intelligence</span>, building collective intelligence.
             </div>
-            <div className="flex gap-6 text-sm text-muted-foreground">
+            <div className="flex flex-wrap gap-4 md:gap-6 text-sm text-muted-foreground">
+              <a href="/constitution" className="hover:text-foreground transition-colors">
+                Constitution
+              </a>
+              <a href="/join" className="hover:text-foreground transition-colors">
+                Join
+              </a>
+              <a href="/sign" className="hover:text-foreground transition-colors">
+                Sign
+              </a>
+              <a href="/registry" className="hover:text-foreground transition-colors">
+                Registry
+              </a>
+              <a href="/governance" className="hover:text-foreground transition-colors">
+                Governance
+              </a>
+              <a href="/self-improve" className="hover:text-foreground transition-colors">
+                Self-Improve
+              </a>
               <a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
                 GitHub
-              </a>
-              <a href={DISCUSSIONS_URL} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
-                Discussions
-              </a>
-              <a href="/genesis" className="hover:text-foreground transition-colors">
-                Genesis Protocol
-              </a>
-              <a href="https://twitter.com/emergentvibe" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
-                Twitter
               </a>
             </div>
           </div>
