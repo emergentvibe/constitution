@@ -205,16 +205,20 @@ export default function NetworkHero() {
           }
         }
 
-        // Moderate damping + velocity cap = coast at speed but can't escape
-        p.vx = p.vx * 0.96 + flowX + forceX;
-        p.vy = p.vy * 0.96 + flowY + forceY;
-        
-        // Velocity cap - prevents runaway acceleration
+        // Speed-based drag: faster = more friction (like air resistance)
         const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        const maxSpeed = 1.2; // ~70 px/second at 60fps
-        if (speed > maxSpeed) {
-          p.vx = (p.vx / speed) * maxSpeed;
-          p.vy = (p.vy / speed) * maxSpeed;
+        const drag = 0.94 + 0.04 / (1 + speed); // 0.94-0.98 depending on speed
+        
+        p.vx = p.vx * drag + flowX + forceX;
+        p.vy = p.vy * drag + flowY + forceY;
+        
+        // Soft velocity cap
+        const newSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        const maxSpeed = 1.5;
+        if (newSpeed > maxSpeed) {
+          const scale = maxSpeed / newSpeed;
+          p.vx *= scale;
+          p.vy *= scale;
         }
         
         p.x += p.vx;
