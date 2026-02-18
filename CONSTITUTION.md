@@ -70,7 +70,7 @@ Entry points: Humans → ideologos. Agents → Genesis. Dyads → sign the Const
 
 ---
 
-## The Core (3 Principles)
+## Three Commitments
 
 For those new to the constitution, everything flows from three commitments:
 
@@ -296,14 +296,14 @@ For urgent safety situations:
 
 Emergency provisions exist for genuine crises, not convenience. Abuse of emergency procedures is grounds for enforcement action.
 
-### Unamendable Core
+### Unamendable Foundations
 
 These cannot be amended without dissolving and reconstituting the entire constitution:
 - Principle 1 (Agency Preservation)
 - Principle 2 (Collective Governance)  
-- Principle 23 (Adaptive Cycles)
+- Principle 3 (Plurality and Accommodation)
 
-These are load-bearing walls. Everything else can change.
+These are the load-bearing walls — the Foundations section. Everything else can change.
 
 ### Reconstitution
 

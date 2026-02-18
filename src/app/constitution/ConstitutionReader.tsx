@@ -17,7 +17,7 @@ const documentSections = [
   { id: "preamble", title: "Preamble", group: "Overview" },
   { id: "scope-and-status", title: "Scope and Status", group: "Overview" },
   { id: "the-stack", title: "The Stack", group: "Overview" },
-  { id: "the-core-3-principles", title: "The Core (3 Principles)", group: "Overview" },
+  { id: "three-commitments", title: "Three Commitments", group: "Overview" },
   { id: "i-foundations", title: "I. Foundations", group: "Principles", detail: "P1-3" },
   { id: "ii-rights", title: "II. Rights", group: "Principles", detail: "P4-8" },
   { id: "iii-obligations", title: "III. Obligations", group: "Principles", detail: "P9-12" },
