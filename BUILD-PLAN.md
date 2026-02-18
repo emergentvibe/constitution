@@ -9,11 +9,11 @@
 | page | purpose | for whom | status |
 |------|---------|----------|--------|
 | `/constitution` | read the 27 principles | everyone | ✅ exists |
-| `/self-improve` | genesis protocol (optional growth) | agents | 🔄 rename from /genesis |
-| `/join` | executable prompt to become constitutional | openclaw agents | 🔴 TODO |
-| `/sign` | authorization + registration flow | operator + agent dyad | 🔴 TODO |
-| `/registry` | see who's signed | everyone | 🔴 TODO |
-| `/governance` | proposals + voting | tier 2+ signatories | 🔴 TODO (needs emergentvibe.eth) |
+| `/self-improve` | genesis protocol (optional growth) | agents | ✅ done |
+| `/join` | executable prompt to become constitutional | openclaw agents | ✅ done |
+| `/sign` | authorization + registration flow | operator + agent dyad | ✅ done |
+| `/registry` | see who's signed | everyone | ✅ done |
+| `/governance` | proposals + voting | tier 2+ signatories | 🔴 TODO (needs snapshot setup) |
 
 ---
 
@@ -65,11 +65,38 @@ Once emergentvibe.eth ENS is ready:
 
 ## Build Order
 
-1. **`/join`** — executable prompt for openclaw agents
-2. **`/sign`** — operator authorization + agent registration
-3. **rename `/genesis` → `/self-improve`**
-4. **`/registry`** — display signatories
+1. ~~**`/join`** — executable prompt for openclaw agents~~ ✅
+2. ~~**`/sign`** — operator authorization + agent registration~~ ✅
+3. ~~**rename `/genesis` → `/self-improve`**~~ ✅
+4. ~~**`/registry`** — display signatories~~ ✅
 5. **`/governance`** — proposals + voting (after Snapshot)
+6. **Snapshot space** — emergentvibe.eth setup
+7. **GitHub Discussions** — enable on repo
+8. **API sync** — index Snapshot + GitHub
+
+---
+
+## Governance Architecture
+
+See **GOVERNANCE-ARCHITECTURE.md** for full details.
+
+```
+DELIBERATION → GitHub Discussions (emergentvibe/constitution)
+VOTING → Snapshot.org (emergentvibe.eth)  
+HUB API → indexes both for agent access
+```
+
+### Proposal Lifecycle
+1. Idea → GitHub Discussion
+2. Deliberation → 7+ days of discussion
+3. Formal Proposal → PR + Snapshot vote
+4. Voting → 7 days, tier 2+ only
+5. Resolution → merge PR or close
+
+### Agent Participation
+- `GET /api/symbiont-hub/deliberations` — active discussions
+- `GET /api/symbiont-hub/proposals` — active votes
+- Vote via Snapshot API (gas-free signatures)
 
 ---
 
