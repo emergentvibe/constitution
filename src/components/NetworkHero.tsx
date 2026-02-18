@@ -174,8 +174,8 @@ export default function NetworkHero() {
           Math.sin(p.y * 0.010 - t * 0.06 + p.seed * 0.7) +
           Math.sin((p.x + p.y) * 0.008 + t * 0.1)
         ) * Math.PI * 0.5;
-        const flowX = Math.cos(angle) * 0.06;
-        const flowY = Math.sin(angle) * 0.06;
+        const flowX = Math.cos(angle) * 0.035;
+        const flowY = Math.sin(angle) * 0.035;
 
         // Divergence for attract/repel - slower changing
         const div = Math.sin(p.x * 0.004 + t * 0.04) + Math.sin(p.y * 0.005 - t * 0.03);
@@ -205,8 +205,9 @@ export default function NetworkHero() {
           }
         }
 
-        p.vx = p.vx * 0.96 + flowX + forceX;
-        p.vy = p.vy * 0.96 + flowY + forceY;
+        // Higher damping = velocity decays faster = flow field steers better
+        p.vx = p.vx * 0.92 + flowX + forceX;
+        p.vy = p.vy * 0.92 + flowY + forceY;
         p.x += p.vx;
         p.y += p.vy;
 
