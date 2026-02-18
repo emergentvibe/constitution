@@ -33,6 +33,14 @@ function noise(x: number, y: number, t: number, seed: number = 0): number {
   );
 }
 
+// Divergence field - controls attraction vs repulsion
+function getDivergence(x: number, y: number, t: number): number {
+  return (
+    Math.sin(x * 0.004 + t * 0.05) * 0.5 +
+    Math.sin(y * 0.005 - t * 0.04) * 0.5
+  );
+}
+
 // Spatial grid cell size
 const CELL_SIZE = 100;
 
@@ -65,7 +73,7 @@ export default function NetworkHero() {
 
     const initParticles = (width: number, height: number) => {
       const particles: Particle[] = [];
-      const count = 120;
+      const count = 180; // More bodies!
 
       for (let i = 0; i < count; i++) {
         let x, y;
@@ -147,18 +155,55 @@ export default function NetworkHero() {
       const particles = particlesRef.current;
       const connectionDist = 120;
 
+      // Build spatial grid (needed for both physics and drawing)
+      const grid = buildGrid(particles, width, height);
+
       // Update physics (every other frame)
       if (doPhysics) {
+        const interactionDist = 60;
+        
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
           
-          // Simple flow field
+          // Flow field
           const angle = noise(p.x, p.y, t, p.seed) * Math.PI * 2;
-          const flowX = Math.cos(angle) * 0.05;
-          const flowY = Math.sin(angle) * 0.05;
+          const flowX = Math.cos(angle) * 0.06;
+          const flowY = Math.sin(angle) * 0.06;
 
-          p.vx = p.vx * 0.95 + flowX;
-          p.vy = p.vy * 0.95 + flowY;
+          // Interaction forces (using spatial grid - only check neighbors)
+          let forceX = 0;
+          let forceY = 0;
+          const div = getDivergence(p.x, p.y, t);
+          const neighbors = getNeighbors(p, grid);
+          
+          for (const j of neighbors) {
+            if (j === i) continue;
+            const other = particles[j];
+            
+            const dx = other.x - p.x;
+            const dy = other.y - p.y;
+            const distSq = dx * dx + dy * dy;
+            
+            if (distSq < interactionDist * interactionDist && distSq > 0) {
+              const dist = Math.sqrt(distSq);
+              const strength = (interactionDist - dist) / interactionDist;
+              
+              if (div < 0) {
+                // Converging zone - attract
+                const attractStrength = Math.abs(div) * 0.0015 * strength;
+                forceX += (dx / dist) * attractStrength;
+                forceY += (dy / dist) * attractStrength;
+              } else {
+                // Diverging zone - repel
+                const repelStrength = div * 0.002 * strength;
+                forceX -= (dx / dist) * repelStrength;
+                forceY -= (dy / dist) * repelStrength;
+              }
+            }
+          }
+
+          p.vx = p.vx * 0.94 + flowX + forceX;
+          p.vy = p.vy * 0.94 + flowY + forceY;
 
           p.x += p.vx;
           p.y += p.vy;
@@ -173,9 +218,6 @@ export default function NetworkHero() {
           p.colorIdx = Math.min(9, Math.floor((p.x / width) * 10));
         }
       }
-
-      // Build spatial grid
-      const grid = buildGrid(particles, width, height);
 
       // Batch lines by color index
       const lineBatches: { x1: number; y1: number; x2: number; y2: number; colorIdx: number }[] = [];
