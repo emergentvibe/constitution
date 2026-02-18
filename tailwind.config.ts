@@ -40,6 +40,18 @@ const config: Config = {
           800: "#24333D",
           900: "#161F26",
         },
+        teal: {
+          50: "#F0FDFC",
+          100: "#CCFBF6",
+          200: "#99F6EC",
+          300: "#5EEAD8",
+          400: "#4ECDC4",
+          500: "#14B8A6",
+          600: "#0D9488",
+          700: "#0F766E",
+          800: "#115E59",
+          900: "#134E4A",
+        },
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)"],

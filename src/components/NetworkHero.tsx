@@ -67,14 +67,26 @@ export default function NetworkHero() {
 
     const initParticles = (width: number, height: number) => {
       const particles: Particle[] = [];
-      const count = 100;
+      const count = 120;
 
       for (let i = 0; i < count; i++) {
+        // Bias toward bottom-left quadrant for asymmetric density
+        let x, y;
+        if (Math.random() < 0.6) {
+          // 60% of particles biased to bottom-left
+          x = Math.random() * width * 0.7;
+          y = height * 0.3 + Math.random() * height * 0.7;
+        } else {
+          // 40% scattered elsewhere
+          x = Math.random() * width;
+          y = Math.random() * height;
+        }
+        
         particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.2,
-          vy: (Math.random() - 0.5) * 0.2,
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 0.15,
+          vy: (Math.random() - 0.5) * 0.15,
           seed: Math.random() * 50,
         });
       }
@@ -93,9 +105,12 @@ export default function NetworkHero() {
       timeRef.current += dt;
       const t = timeRef.current;
 
-      // Clear with fade for subtle trails
-      ctx.fillStyle = "rgba(250, 247, 242, 0.12)";
+      // Clear with fade for subtle trails - slightly more persistent
+      ctx.fillStyle = "rgba(250, 247, 242, 0.08)";
       ctx.fillRect(0, 0, width, height);
+      
+      // Add subtle blur effect
+      ctx.filter = "blur(0.5px)";
 
       const particles = particlesRef.current;
       const connectionDist = 150;
