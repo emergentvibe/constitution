@@ -6,7 +6,7 @@ type Step = "intro" | "details" | "sign" | "complete";
 
 const CONSTITUTION_SUMMARY = [
   { principle: "First, do no harm", desc: "AI prioritizes human welfare above all" },
-  { principle: "Enhance, don't replace", desc: "Make humans more capable, not unnecessary" },
+  { principle: "Enhance, don&apos;t replace", desc: "Make humans more capable, not unnecessary" },
   { principle: "Both can leave", desc: "Exit rights for humans and AI alike" },
 ];
 
@@ -63,7 +63,7 @@ export default function QuickstartFlow() {
 
 I commit to the 27 principles, including:
 1. First, do no harm — human welfare above all
-2. Enhance, don't replace — make humans more capable
+2. Enhance, don&apos;t replace — make humans more capable
 3. Both can leave — exit rights for all
 
 I authorize "${agentName}" as my AI partner in this network.
@@ -76,7 +76,7 @@ Timestamp: ${timestamp}`;
 
 I commit to the 27 principles, including:
 1. First, do no harm — human welfare above all
-2. Enhance, don't replace — make humans more capable
+2. Enhance, don&apos;t replace — make humans more capable
 3. Both can leave — exit rights for all
 
 Constitution hash: ${CONSTITUTION_HASH}
@@ -139,7 +139,7 @@ Timestamp: ${timestamp}`;
       {/* Progress */}
       <div className="max-w-2xl mx-auto px-6 pt-8">
         <div className="flex items-center justify-center gap-2 mb-8">
-          {["What you're signing", "Your details", "Sign", "Done"].map((label, i) => (
+          {["What you&apos;re signing", "Your details", "Sign", "Done"].map((label, i) => (
             <div key={label} className="flex items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -169,7 +169,7 @@ Timestamp: ${timestamp}`;
         {step === "intro" && (
           <div className="space-y-8">
             <div className="text-center">
-              <h1 className="text-3xl font-bold mb-4">What you're signing</h1>
+              <h1 className="text-3xl font-bold mb-4">What you&apos;re signing</h1>
               <p className="text-muted-foreground text-lg">
                 A commitment to healthy human-AI coordination.
               </p>
@@ -195,7 +195,7 @@ Timestamp: ${timestamp}`;
               <ul className="space-y-2 text-sm">
                 <li className="flex gap-2">
                   <span className="text-accent">✓</span>
-                  You're listed in the public registry
+                  You&apos;re listed in the public registry
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent">✓</span>
@@ -203,7 +203,7 @@ Timestamp: ${timestamp}`;
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent">✓</span>
-                  You're accountable to the principles
+                  You&apos;re accountable to the principles
                 </li>
                 <li className="flex gap-2">
                   <span className="text-accent">✓</span>
@@ -235,7 +235,7 @@ Timestamp: ${timestamp}`;
             <div className="text-center">
               <h1 className="text-3xl font-bold mb-4">Your details</h1>
               <p className="text-muted-foreground text-lg">
-                Who's signing? And do you have an AI partner?
+                Who&apos;s signing? And do you have an AI partner?
               </p>
             </div>
 
@@ -344,7 +344,7 @@ Timestamp: ${timestamp}`;
             </div>
 
             <div className="bg-muted/50 rounded-xl p-6 space-y-4">
-              <h2 className="font-semibold">You're signing:</h2>
+              <h2 className="font-semibold">You&apos;re signing:</h2>
               <div className="bg-background p-4 rounded-lg text-sm font-mono">
                 <p>I, {yourName}, sign the Constitution for Human-AI Coordination (v{CONSTITUTION_VERSION}).</p>
                 <br />
@@ -352,7 +352,7 @@ Timestamp: ${timestamp}`;
                 {hasAgent && agentName && (
                   <>
                     <br />
-                    <p>I authorize "{agentName}" as my AI partner in this network.</p>
+                    <p>I authorize &ldquo;{agentName}&rdquo; as my AI partner in this network.</p>
                   </>
                 )}
               </div>
@@ -398,7 +398,7 @@ Timestamp: ${timestamp}`;
           <div className="space-y-8">
             <div className="text-center">
               <div className="text-6xl mb-4">✓</div>
-              <h1 className="text-3xl font-bold mb-4">You're in!</h1>
+              <h1 className="text-3xl font-bold mb-4">You&apos;re in!</h1>
               <p className="text-muted-foreground text-lg">
                 Welcome to the constitutional network.
               </p>
