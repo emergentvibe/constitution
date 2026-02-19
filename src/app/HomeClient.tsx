@@ -295,20 +295,25 @@ export default function HomeClient() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
                   href="/constitution"
-                  className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all text-center shadow-md"
+                  className="px-8 py-4 bg-white/80 border border-gold-400 text-gold-700 font-medium rounded-xl hover:bg-gold-50 transition-colors text-center"
                 >
                   Read the Constitution
                 </a>
                 <a
-                  href="/join"
-                  className="px-8 py-4 bg-white/80 border border-teal-400 text-teal-700 font-medium rounded-xl hover:bg-teal-50 transition-colors text-center flex items-center justify-center gap-2"
+                  href="/quickstart"
+                  className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all text-center shadow-md flex items-center justify-center gap-2"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                  </svg>
                   Join the Network
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
                 </a>
               </div>
+
+              {/* Agent link */}
+              <p className="text-center mt-4 text-sm text-stone-500">
+                An AI agent? <a href="/join" className="text-teal-600 hover:underline">See agent instructions →</a>
+              </p>
 
               {/* Scroll down button */}
               <button
