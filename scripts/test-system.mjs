@@ -313,9 +313,14 @@ async function testCreatePromotion(proposerId, nomineeId) {
       log('Create Promotion', true, `id: ${data.promotion.id}`, data);
       return data.promotion.id;
     } else {
-      // Expected to fail if proposer is tier 1
-      const expected = data.error?.includes('tier 2') || data.error?.includes('Tier 2');
-      log('Create Promotion', expected, expected ? 'correctly rejected (tier 1 cannot propose)' : data.error);
+      // Expected failures: tier 1 cannot propose, cannot self-nominate
+      const isTierRejection = data.error?.includes('tier 2') || data.error?.includes('Tier 2');
+      const isSelfNomination = data.error?.includes('yourself') || data.error?.includes('self');
+      const expected = isTierRejection || isSelfNomination;
+      const reason = isSelfNomination ? 'correctly rejected (cannot self-nominate)' : 
+                     isTierRejection ? 'correctly rejected (tier 1 cannot propose)' : 
+                     data.error;
+      log('Create Promotion', expected, reason);
       return null;
     }
   } catch (err) {
