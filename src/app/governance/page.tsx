@@ -108,6 +108,28 @@ export default function GovernancePage() {
           </div>
         </div>
         
+        {/* Tier Navigation */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <Link
+            href="/governance/tiers"
+            className="p-4 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-emerald-700/50 transition-colors"
+          >
+            <h3 className="text-white font-semibold mb-1">Network Tiers</h3>
+            <p className="text-zinc-400 text-sm">
+              View tier structure and member distribution
+            </p>
+          </Link>
+          <Link
+            href="/governance/promotions"
+            className="p-4 bg-zinc-900 border border-zinc-800 rounded-lg hover:border-emerald-700/50 transition-colors"
+          >
+            <h3 className="text-white font-semibold mb-1">Promotions</h3>
+            <p className="text-zinc-400 text-sm">
+              View and vote on tier advancement proposals
+            </p>
+          </Link>
+        </div>
+        
         {/* Filter Tabs */}
         <div className="flex gap-2 mb-6 border-b border-zinc-800 pb-4">
           {filterTabs.map(tab => (
