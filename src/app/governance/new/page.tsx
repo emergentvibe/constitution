@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GovernanceHeader } from '@/components/governance/GovernanceHeader';
 import { useAuth } from '@/hooks/useAuth';
+import { 
+  SNAPSHOT_DOMAIN, 
+  createProposalPayload, 
+  submitProposal, 
+  getCurrentBlock,
+  getVotingPeriod,
+  ProposalType as SnapshotProposalType
+} from '@/lib/snapshot';
 
 type ProposalType = 
   | 'constitutional_amendment'
@@ -48,7 +56,7 @@ const proposalTypes: { value: ProposalType; label: string; description: string; 
 
 export default function NewProposalPage() {
   const router = useRouter();
-  const { walletAddress, connect, connecting } = useAuth();
+  const { walletAddress, connect, connecting, signTypedData } = useAuth();
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -57,6 +65,7 @@ export default function NewProposalPage() {
   const [impactAssessment, setImpactAssessment] = useState('');
   const [amendmentText, setAmendmentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [submittingSnapshot, setSubmittingSnapshot] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const isAmendment = type === 'constitutional_amendment' || type === 'boundary_change';
@@ -73,6 +82,7 @@ export default function NewProposalPage() {
     setError(null);
     
     try {
+      // Step 1: Save to local database
       const response = await fetch('/api/governance/proposals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,11 +103,65 @@ export default function NewProposalPage() {
         throw new Error(data.error || 'Failed to create proposal');
       }
       
+      // Step 2: Submit to Snapshot
+      setSubmitting(false);
+      setSubmittingSnapshot(true);
+      
+      try {
+        const currentBlock = await getCurrentBlock();
+        const now = Math.floor(Date.now() / 1000);
+        const votingPeriod = getVotingPeriod(type as SnapshotProposalType);
+        const startTimestamp = now + 60; // Start in 1 minute
+        const endTimestamp = now + votingPeriod;
+        
+        const fullBody = isAmendment && amendmentText 
+          ? `${description}\n\n---\n\n**Proposed Amendment:**\n${amendmentText}`
+          : description;
+        
+        const payload = createProposalPayload(
+          walletAddress!,
+          title,
+          fullBody,
+          type as SnapshotProposalType,
+          startTimestamp,
+          endTimestamp,
+          currentBlock
+        );
+        
+        const signature = await signTypedData(
+          SNAPSHOT_DOMAIN,
+          payload.types,
+          payload.message
+        );
+        
+        if (signature) {
+          const snapshotResult = await submitProposal(
+            walletAddress!,
+            signature,
+            payload.message
+          );
+          
+          // Update local proposal with Snapshot ID
+          await fetch(`/api/governance/proposals/${data.proposal.id}/link`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              snapshot_id: snapshotResult.id,
+              author_wallet: walletAddress,
+            }),
+          });
+        }
+      } catch (snapshotErr: any) {
+        console.error('Snapshot submission failed:', snapshotErr);
+        // Continue anyway - local proposal exists
+      }
+      
       router.push(`/governance/${data.proposal.id}`);
     } catch (err: any) {
       setError(err.message);
     } finally {
       setSubmitting(false);
+      setSubmittingSnapshot(false);
     }
   }
   

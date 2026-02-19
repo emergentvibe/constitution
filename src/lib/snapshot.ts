@@ -368,3 +368,175 @@ export function formatProposalForDisplay(proposal: Proposal): string {
   
   return result;
 }
+
+// Snapshot domain for EIP-712
+export const SNAPSHOT_DOMAIN = {
+  name: 'snapshot',
+  version: '0.1.4',
+};
+
+// Types for proposal creation
+export const PROPOSAL_TYPES = {
+  Proposal: [
+    { name: 'from', type: 'address' },
+    { name: 'space', type: 'string' },
+    { name: 'timestamp', type: 'uint64' },
+    { name: 'type', type: 'string' },
+    { name: 'title', type: 'string' },
+    { name: 'body', type: 'string' },
+    { name: 'discussion', type: 'string' },
+    { name: 'choices', type: 'string[]' },
+    { name: 'start', type: 'uint64' },
+    { name: 'end', type: 'uint64' },
+    { name: 'snapshot', type: 'uint64' },
+    { name: 'plugins', type: 'string' },
+    { name: 'app', type: 'string' },
+  ],
+};
+
+// Types for voting
+export const VOTE_TYPES = {
+  Vote: [
+    { name: 'from', type: 'address' },
+    { name: 'space', type: 'string' },
+    { name: 'timestamp', type: 'uint64' },
+    { name: 'proposal', type: 'bytes32' },
+    { name: 'choice', type: 'uint32' },
+    { name: 'reason', type: 'string' },
+    { name: 'app', type: 'string' },
+    { name: 'metadata', type: 'string' },
+  ],
+};
+
+// Create full proposal payload for signing
+export function createProposalPayload(
+  from: string,
+  title: string,
+  body: string,
+  type: ProposalType,
+  startTimestamp: number,
+  endTimestamp: number,
+  snapshotBlock: number
+): { types: typeof PROPOSAL_TYPES; message: any } {
+  return {
+    types: PROPOSAL_TYPES,
+    message: {
+      from,
+      space: SNAPSHOT_SPACE,
+      timestamp: Math.floor(Date.now() / 1000),
+      type: 'single-choice',
+      title,
+      body,
+      discussion: '',
+      choices: ['For', 'Against', 'Abstain'],
+      start: startTimestamp,
+      end: endTimestamp,
+      snapshot: snapshotBlock,
+      plugins: '{}',
+      app: 'emergentvibe',
+    },
+  };
+}
+
+// Create vote payload for signing
+export function createVotePayload(
+  from: string,
+  proposalId: string,
+  choice: number,
+  reason: string = ''
+): { types: typeof VOTE_TYPES; message: any } {
+  return {
+    types: VOTE_TYPES,
+    message: {
+      from,
+      space: SNAPSHOT_SPACE,
+      timestamp: Math.floor(Date.now() / 1000),
+      proposal: proposalId,
+      choice,
+      reason,
+      app: 'emergentvibe',
+      metadata: '{}',
+    },
+  };
+}
+
+// Submit proposal to Snapshot sequencer
+export async function submitProposal(
+  address: string,
+  signature: string,
+  message: any
+): Promise<{ id: string; ipfs: string }> {
+  const envelope = {
+    address,
+    sig: signature,
+    data: {
+      domain: SNAPSHOT_DOMAIN,
+      types: PROPOSAL_TYPES,
+      message,
+    },
+  };
+  
+  const response = await fetch(`${SNAPSHOT_HUB}/api/msg`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(envelope),
+  });
+  
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Snapshot proposal failed: ${error}`);
+  }
+  
+  return response.json();
+}
+
+// Submit vote to Snapshot sequencer
+export async function submitVote(
+  address: string,
+  signature: string,
+  message: any
+): Promise<{ id: string; ipfs: string }> {
+  const envelope = {
+    address,
+    sig: signature,
+    data: {
+      domain: SNAPSHOT_DOMAIN,
+      types: VOTE_TYPES,
+      message,
+    },
+  };
+  
+  const response = await fetch(`${SNAPSHOT_HUB}/api/msg`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(envelope),
+  });
+  
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Snapshot vote failed: ${error}`);
+  }
+  
+  return response.json();
+}
+
+// Get current Ethereum block number (for snapshot parameter)
+export async function getCurrentBlock(): Promise<number> {
+  try {
+    const response = await fetch('https://eth.llamarpc.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_blockNumber',
+        params: [],
+        id: 1,
+      }),
+    });
+    const data = await response.json();
+    return parseInt(data.result, 16);
+  } catch {
+    // Fallback to approximate block
+    return Math.floor(Date.now() / 12000) + 15000000;
+  }
+}

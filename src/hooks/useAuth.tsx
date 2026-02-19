@@ -7,6 +7,8 @@ interface AuthContextType {
   connecting: boolean;
   connect: () => Promise<string | null>;
   disconnect: () => void;
+  signTypedData: (domain: any, types: any, message: any) => Promise<string | null>;
+  signMessage: (message: string) => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -78,8 +80,59 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setWalletAddress(null);
   }
   
+  async function signTypedData(domain: any, types: any, message: any): Promise<string | null> {
+    if (!window.ethereum || !walletAddress) {
+      console.error('No wallet connected');
+      return null;
+    }
+    
+    try {
+      // EIP-712 typed data signing
+      const msgParams = JSON.stringify({
+        domain,
+        types: {
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+          ],
+          ...types,
+        },
+        primaryType: Object.keys(types)[0],
+        message,
+      });
+      
+      const signature = await window.ethereum.request({
+        method: 'eth_signTypedData_v4',
+        params: [walletAddress, msgParams],
+      });
+      
+      return signature;
+    } catch (err: any) {
+      console.error('Signing error:', err);
+      return null;
+    }
+  }
+  
+  async function signMessage(message: string): Promise<string | null> {
+    if (!window.ethereum || !walletAddress) {
+      console.error('No wallet connected');
+      return null;
+    }
+    
+    try {
+      const signature = await window.ethereum.request({
+        method: 'personal_sign',
+        params: [message, walletAddress],
+      });
+      return signature;
+    } catch (err: any) {
+      console.error('Signing error:', err);
+      return null;
+    }
+  }
+  
   return (
-    <AuthContext.Provider value={{ walletAddress, connecting, connect, disconnect }}>
+    <AuthContext.Provider value={{ walletAddress, connecting, connect, disconnect, signTypedData, signMessage }}>
       {children}
     </AuthContext.Provider>
   );

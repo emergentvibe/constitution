@@ -2,6 +2,11 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { 
+  SNAPSHOT_DOMAIN, 
+  createVotePayload, 
+  submitVote 
+} from '@/lib/snapshot';
 
 interface VotePanelProps {
   proposalId: string;
@@ -11,7 +16,7 @@ interface VotePanelProps {
 }
 
 export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: VotePanelProps) {
-  const { walletAddress, connect } = useAuth();
+  const { walletAddress, connect, signTypedData } = useAuth();
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -53,8 +58,9 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
       
       setSuccess(true);
       
-      if (data.snapshotMessage) {
-        setSnapshotMessage(data.snapshotMessage);
+      // If this proposal is linked to Snapshot, offer to sign there too
+      if (snapshotId) {
+        setSnapshotMessage({ proposalId: snapshotId });
       }
       
       onVoteSuccess?.();
@@ -66,35 +72,33 @@ export function VotePanel({ proposalId, snapshotId, choices, onVoteSuccess }: Vo
   }
   
   async function signSnapshotVote() {
-    if (!window.ethereum || !snapshotMessage) return;
+    if (!walletAddress || !snapshotId || selectedChoice === null) return;
     
     setSubmitting(true);
     setError(null);
     
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const address = accounts[0];
+      // Create vote payload for EIP-712 signing
+      const payload = createVotePayload(
+        walletAddress,
+        snapshotId,
+        selectedChoice + 1, // 1-indexed
+        reason
+      );
       
-      const message = JSON.stringify(snapshotMessage.message);
-      const signature = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [message, address],
-      });
+      // Sign with EIP-712
+      const signature = await signTypedData(
+        SNAPSHOT_DOMAIN,
+        payload.types,
+        payload.message
+      );
       
-      const submitResponse = await fetch('https://hub.snapshot.org/api/msg', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          address,
-          sig: signature,
-          data: snapshotMessage.message,
-        }),
-      });
-      
-      if (!submitResponse.ok) {
-        const errorText = await submitResponse.text();
-        throw new Error(`Snapshot error: ${errorText}`);
+      if (!signature) {
+        throw new Error('Signature rejected');
       }
+      
+      // Submit to Snapshot
+      await submitVote(walletAddress, signature, payload.message);
       
       setSnapshotMessage(null);
       setError(null);
