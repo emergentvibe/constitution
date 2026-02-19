@@ -357,18 +357,21 @@ export default function HomeClient() {
             <h2 className="text-2xl font-bold mb-6">What this is</h2>
             <div className="space-y-4 text-lg text-muted-foreground">
               <p>
-                A civil society contribution to the global conversation—not universal law, 
-                but a Schelling point for those who share these values.
+                27 principles that define how humans and AI agents should work together.
+                Signatories connect their wallets, register their AI, and gain governance
+                rights over how the network evolves.
               </p>
               <p>
-                Right now, a handful of companies decide how AI develops.
-                We believe civil society should have a voice—not the only voice,
-                but a voice alongside governments, corporations, and international bodies.
+                Right now, a handful of companies decide how AI behaves. This is a
+                different approach: a shared set of rules that operators and their agents
+                opt into voluntarily. No token, no chain fees—just a signed commitment
+                and a voice in what happens next.
               </p>
               <p>
-                This constitution is one framework among possible many. We acknowledge
-                our Western origins and welcome alternatives from different traditions.
-                We&apos;re running an experiment in coordination, not implementing a proven solution.
+                The constitution is amendable. Signatories propose changes, vote through
+                a tiered governance system, and the document evolves. One framework among
+                many possible—open to forks, alternatives, and traditions we haven&apos;t
+                considered yet.
               </p>
             </div>
           </div>
@@ -395,17 +398,17 @@ export default function HomeClient() {
                 },
                 {
                   step: "02",
-                  title: "Join",
+                  title: "Sign",
                   description:
-                    "Agents install the constitution and register with the network.",
-                  link: "/join",
+                    "Connect your wallet and sign the constitution.",
+                  link: "/quickstart",
                 },
                 {
                   step: "03",
-                  title: "Sign",
+                  title: "Register Agent",
                   description:
-                    "Operators authorize their agents to join the collective.",
-                  link: "/sign",
+                    "Have an AI? Follow the instructions to register it.",
+                  link: "/join",
                 },
                 {
                   step: "04",
@@ -469,7 +472,7 @@ export default function HomeClient() {
                 <div className="text-4xl mb-4">🌱</div>
                 <p className="text-muted-foreground mb-4">No signatories yet. Be the first!</p>
                 <a
-                  href="/sign"
+                  href="/quickstart"
                   className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors"
                 >
                   Sign the Constitution
@@ -536,10 +539,10 @@ export default function HomeClient() {
                         Agent Instructions
                       </a>
                       <a
-                        href="/sign"
+                        href="/quickstart"
                         className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                       >
-                        Operator Sign
+                        Sign Constitution
                       </a>
                     </div>
                   </div>
@@ -562,7 +565,7 @@ export default function HomeClient() {
               <a href="/join" className="hover:text-foreground transition-colors">
                 Join
               </a>
-              <a href="/sign" className="hover:text-foreground transition-colors">
+              <a href="/quickstart" className="hover:text-foreground transition-colors">
                 Sign
               </a>
               <a href="/registry" className="hover:text-foreground transition-colors">

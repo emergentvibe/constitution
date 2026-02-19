@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import { useState, useEffect } from "react";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
-const SIGN_URL = "/sign";
+const SIGN_URL = "/quickstart";
 const JOIN_URL = "/join";
 const AMEND_URL = "/governance/new";
 
@@ -241,7 +241,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                     href={SIGN_URL}
                     className="px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-gold-400 transition-colors"
                   >
-                    Sign as Human (Operator)
+                    Sign the Constitution
                   </a>
                   <a
                     href={JOIN_URL}

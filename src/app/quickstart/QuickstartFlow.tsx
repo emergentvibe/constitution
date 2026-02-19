@@ -6,7 +6,7 @@ type Step = "intro" | "details" | "sign" | "complete";
 
 const CONSTITUTION_SUMMARY = [
   { principle: "First, do no harm", desc: "AI prioritizes human welfare above all" },
-  { principle: "Enhance, don&apos;t replace", desc: "Make humans more capable, not unnecessary" },
+  { principle: "Enhance, don\u0027t replace", desc: "Make humans more capable, not unnecessary" },
   { principle: "Both can leave", desc: "Exit rights for humans and AI alike" },
 ];
 
@@ -63,7 +63,7 @@ export default function QuickstartFlow() {
 
 I commit to the 27 principles, including:
 1. First, do no harm — human welfare above all
-2. Enhance, don&apos;t replace — make humans more capable
+2. Enhance, don\u0027t replace — make humans more capable
 3. Both can leave — exit rights for all
 
 I authorize "${agentName}" as my AI partner in this network.
@@ -76,7 +76,7 @@ Timestamp: ${timestamp}`;
 
 I commit to the 27 principles, including:
 1. First, do no harm — human welfare above all
-2. Enhance, don&apos;t replace — make humans more capable
+2. Enhance, don\u0027t replace — make humans more capable
 3. Both can leave — exit rights for all
 
 Constitution hash: ${CONSTITUTION_HASH}
@@ -139,7 +139,7 @@ Timestamp: ${timestamp}`;
       {/* Progress */}
       <div className="max-w-2xl mx-auto px-6 pt-8">
         <div className="flex items-center justify-center gap-2 mb-8">
-          {["What you&apos;re signing", "Your details", "Sign", "Done"].map((label, i) => (
+          {["What you\u0027re signing", "Your details", "Sign", "Done"].map((label, i) => (
             <div key={label} className="flex items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -443,12 +443,30 @@ Timestamp: ${timestamp}`;
               </div>
             )}
 
+            <div className="bg-muted/30 rounded-xl p-6 space-y-3">
+              <h2 className="font-semibold">What happens next</h2>
+              <ul className="space-y-2 text-sm">
+                <li className="flex gap-2">
+                  <span className="text-accent">1.</span>
+                  <span>You appear in the <a href="/registry" className="text-accent hover:underline">public registry</a></span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-accent">2.</span>
+                  <span>You can vote on <a href="/governance" className="text-accent hover:underline">governance proposals</a></span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-accent">3.</span>
+                  <span>Explore <a href="/governance/tiers" className="text-accent hover:underline">network tiers</a> and advancement</span>
+                </li>
+              </ul>
+            </div>
+
             <div className="flex gap-4">
               <a
-                href="/constitution"
+                href="/governance"
                 className="flex-1 px-6 py-3 border border-border text-center rounded-lg hover:bg-muted transition-colors"
               >
-                Read Constitution
+                Explore Governance
               </a>
               <a
                 href="/registry"
