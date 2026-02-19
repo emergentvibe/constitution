@@ -3,7 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { query, queryOne } from '@/lib/db';
+import { queryOne } from '@/lib/db';
 import { createVoteMessage, SNAPSHOT_SPACE } from '@/lib/snapshot';
 
 export async function POST(

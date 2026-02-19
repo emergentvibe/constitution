@@ -49,7 +49,7 @@ function NewPromotionForm() {
       const res = await fetch("/api/tiers");
       const data = await res.json();
       setTiers(data.tiers.filter((t: Tier) => t.member_count > 0));
-    } catch (err) {
+    } catch {
       setError("Failed to load tiers");
     } finally {
       setLoading(false);
@@ -62,7 +62,7 @@ function NewPromotionForm() {
       const data = await res.json();
       setMembers(data.members);
       setSelectedNominees([]);
-    } catch (err) {
+    } catch {
       setError("Failed to load members");
     }
   }

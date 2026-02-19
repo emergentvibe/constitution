@@ -251,7 +251,6 @@ export function checkProposalOutcome(proposal: Proposal, metadata?: ProposalMeta
   
   // Assuming binary choice: [For, Against]
   const forVotes = proposal.scores?.[0] || 0;
-  const againstVotes = proposal.scores?.[1] || 0;
   const totalVotes = proposal.scores_total || 0;
   
   // TODO: Get total voting power from space for quorum calculation

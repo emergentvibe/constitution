@@ -31,6 +31,7 @@ export default function TierDetailPage() {
 
   useEffect(() => {
     fetchTier();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   async function fetchTier() {

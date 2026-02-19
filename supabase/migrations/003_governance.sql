@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS governance_proposals (
   impact_assessment TEXT,
   
   -- Author
-  author_citizen_id UUID REFERENCES citizens(id) ON DELETE SET NULL,
+  author_agent_id UUID REFERENCES agents(id) ON DELETE SET NULL,
   author_wallet TEXT,
   
   -- Status and timing
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS governance_votes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   
   proposal_id UUID REFERENCES governance_proposals(id) ON DELETE CASCADE,
-  citizen_id UUID REFERENCES citizens(id) ON DELETE SET NULL,
+  voter_agent_id UUID REFERENCES agents(id) ON DELETE SET NULL,
   wallet_address TEXT,
   
   choice INTEGER NOT NULL, -- 1-indexed to match Snapshot
@@ -84,18 +84,18 @@ CREATE TABLE IF NOT EXISTS governance_votes (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   
   -- One vote per citizen per proposal
-  UNIQUE(proposal_id, citizen_id)
+  UNIQUE(proposal_id, voter_agent_id)
 );
 
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_proposals_status ON governance_proposals(status);
 CREATE INDEX IF NOT EXISTS idx_proposals_type ON governance_proposals(proposal_type);
-CREATE INDEX IF NOT EXISTS idx_proposals_author ON governance_proposals(author_citizen_id);
+CREATE INDEX IF NOT EXISTS idx_proposals_author ON governance_proposals(author_agent_id);
 CREATE INDEX IF NOT EXISTS idx_proposals_snapshot ON governance_proposals(snapshot_id);
 CREATE INDEX IF NOT EXISTS idx_proposals_created ON governance_proposals(created_at DESC);
 
 CREATE INDEX IF NOT EXISTS idx_votes_proposal ON governance_votes(proposal_id);
-CREATE INDEX IF NOT EXISTS idx_votes_citizen ON governance_votes(citizen_id);
+CREATE INDEX IF NOT EXISTS idx_votes_agent ON governance_votes(voter_agent_id);
 CREATE INDEX IF NOT EXISTS idx_votes_wallet ON governance_votes(wallet_address);
 
 -- RLS policies
@@ -107,14 +107,13 @@ CREATE POLICY "Proposals are publicly readable"
   ON governance_proposals FOR SELECT
   USING (true);
 
--- Only citizens can create proposals
-CREATE POLICY "Citizens can create proposals"
+-- Agents can create proposals
+CREATE POLICY "Agents can create proposals"
   ON governance_proposals FOR INSERT
   WITH CHECK (
     EXISTS (
-      SELECT 1 FROM citizens 
-      WHERE citizens.id = author_citizen_id 
-      AND citizens.status = 'active'
+      SELECT 1 FROM agents
+      WHERE agents.id = author_agent_id
     )
   );
 
@@ -123,11 +122,7 @@ CREATE POLICY "Authors can update own drafts"
   ON governance_proposals FOR UPDATE
   USING (
     status = 'draft' AND
-    EXISTS (
-      SELECT 1 FROM citizens 
-      WHERE citizens.id = author_citizen_id 
-      AND citizens.user_id = auth.uid()
-    )
+    author_agent_id IS NOT NULL
   );
 
 -- Authors can delete their own drafts
@@ -135,11 +130,7 @@ CREATE POLICY "Authors can delete own drafts"
   ON governance_proposals FOR DELETE
   USING (
     status = 'draft' AND
-    EXISTS (
-      SELECT 1 FROM citizens 
-      WHERE citizens.id = author_citizen_id 
-      AND citizens.user_id = auth.uid()
-    )
+    author_agent_id IS NOT NULL
   );
 
 -- Anyone can read votes
@@ -147,15 +138,13 @@ CREATE POLICY "Votes are publicly readable"
   ON governance_votes FOR SELECT
   USING (true);
 
--- Citizens can cast their own votes
-CREATE POLICY "Citizens can vote"
+-- Agents can cast votes
+CREATE POLICY "Agents can vote"
   ON governance_votes FOR INSERT
   WITH CHECK (
     EXISTS (
-      SELECT 1 FROM citizens 
-      WHERE citizens.id = citizen_id 
-      AND citizens.status = 'active'
-      AND citizens.user_id = auth.uid()
+      SELECT 1 FROM agents
+      WHERE agents.id = voter_agent_id
     )
   );
 

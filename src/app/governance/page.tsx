@@ -39,6 +39,7 @@ export default function GovernancePage() {
   
   useEffect(() => {
     fetchProposals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
   
   async function fetchProposals() {

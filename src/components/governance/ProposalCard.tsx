@@ -64,9 +64,7 @@ export function ProposalCard({ proposal }: { proposal: Proposal }) {
   const type = typeLabels[proposal.proposal_type || ''] || { label: 'Proposal', color: 'bg-zinc-600' };
   
   // Get timing info
-  const startTime = proposal.start ? new Date(proposal.start * 1000) : 
-                    proposal.voting_start ? new Date(proposal.voting_start) : null;
-  const endTime = proposal.end ? new Date(proposal.end * 1000) : 
+  const endTime = proposal.end ? new Date(proposal.end * 1000) :
                   proposal.voting_end ? new Date(proposal.voting_end) : null;
   
   const isActive = status === 'active';
