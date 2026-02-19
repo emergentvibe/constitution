@@ -189,14 +189,6 @@ export default function HomeClient() {
     fetchRegistry();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse text-muted-foreground">Loading registry...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Vignette background */}
@@ -463,7 +455,11 @@ export default function HomeClient() {
               </div>
             </div>
 
-            {signatories.length === 0 ? (
+            {loading ? (
+              <div className="bg-background border border-border rounded-xl p-8 text-center">
+                <div className="animate-pulse text-muted-foreground">Loading signatories...</div>
+              </div>
+            ) : signatories.length === 0 ? (
               <div className="bg-background border border-border rounded-xl p-8 text-center">
                 <div className="text-4xl mb-4">🌱</div>
                 <p className="text-muted-foreground mb-4">No signatories yet. Be the first!</p>
