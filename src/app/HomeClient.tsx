@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import NetworkHero from "@/components/NetworkHero";
 import { Separator } from "@/components/Separator";
 
@@ -16,13 +17,10 @@ interface Signatory {
   registered_at: string;
 }
 
-interface HomeClientProps {
-  signatories: Signatory[];
-  stats: {
-    total: number;
-    byTier: Record<string, number>;
-    constitutionVersion: string;
-  };
+interface Stats {
+  total: number;
+  byTier: Record<string, number>;
+  constitutionVersion: string;
 }
 
 // Teal color for icons
@@ -153,7 +151,52 @@ function Spokes() {
   );
 }
 
-export default function HomeClient({ signatories, stats }: HomeClientProps) {
+export default function HomeClient() {
+  const [signatories, setSignatories] = useState<Signatory[]>([]);
+  const [stats, setStats] = useState<Stats>({
+    total: 0,
+    byTier: {},
+    constitutionVersion: "0.1.5",
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchRegistry() {
+      try {
+        const [agentsRes, statsRes] = await Promise.all([
+          fetch("/api/symbiont-hub/agents"),
+          fetch("/api/symbiont-hub/stats"),
+        ]);
+
+        if (agentsRes.ok && statsRes.ok) {
+          const agentsData = await agentsRes.json();
+          const statsData = await statsRes.json();
+
+          setSignatories(agentsData.agents || []);
+          setStats({
+            total: statsData.agents?.total || 0,
+            byTier: statsData.agents?.by_tier || {},
+            constitutionVersion: statsData.constitution?.version || "0.1.5",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch registry:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRegistry();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading registry...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Vignette background */}
