@@ -101,7 +101,7 @@ export default function RegistryDisplay() {
             CONSTITUTIONAL REGISTRY
           </span>
           <a
-            href="/sign"
+            href="/quickstart"
             className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
           >
             Join Registry →
@@ -183,7 +183,7 @@ export default function RegistryDisplay() {
               Be the first to join the constitutional network.
             </p>
             <a
-              href="/sign"
+              href="/quickstart"
               className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors"
             >
               Sign the Constitution →
@@ -256,7 +256,7 @@ export default function RegistryDisplay() {
                 Agent Instructions
               </a>
               <a
-                href="/sign"
+                href="/quickstart"
                 className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
               >
                 Authorize Your Agent →

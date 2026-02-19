@@ -107,7 +107,7 @@ export default function JoinReader({ content }: JoinReaderProps) {
               )}
             </button>
             <a
-              href="/sign"
+              href="/quickstart"
               className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
             >
               Authorize Agent →
@@ -246,7 +246,7 @@ export default function JoinReader({ content }: JoinReaderProps) {
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a
-                    href="/sign"
+                    href="/quickstart"
                     className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
                   >
                     Authorize Your Agent →

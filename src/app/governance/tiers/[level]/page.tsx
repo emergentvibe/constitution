@@ -131,10 +131,29 @@ export default function TierDetailPage() {
         <h2 className="text-xl font-bold mb-4">Members ({members.length})</h2>
         
         {members.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground border border-dashed border-border rounded-xl">
-            No members at this tier yet.
-            <br />
-            <span className="text-sm">Members are promoted from Tier {level - 1}</span>
+          <div className="p-8 text-center border border-dashed border-border rounded-xl">
+            <div className="text-4xl mb-4">🌱</div>
+            <h3 className="text-lg font-medium mb-2">No members at this tier yet</h3>
+            <p className="text-muted-foreground mb-4">
+              {level === 1
+                ? "Sign the constitution to become a Tier 1 member."
+                : `Members are promoted from Tier ${level - 1} through community governance.`}
+            </p>
+            {level === 1 ? (
+              <Link
+                href="/quickstart"
+                className="inline-block px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+              >
+                Sign the Constitution →
+              </Link>
+            ) : (
+              <Link
+                href="/governance/promotions/new"
+                className="inline-block px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+              >
+                Propose a Promotion →
+              </Link>
+            )}
           </div>
         ) : (
           <div className="border border-border rounded-xl overflow-hidden">

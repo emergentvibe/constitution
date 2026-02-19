@@ -128,11 +128,17 @@ export default function PromotionsPage() {
 
         {/* Promotions List */}
         {!loading && !error && promotions.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground border border-dashed border-border rounded-xl">
-            No {filter || ""} promotions found.
-            <br />
-            <Link href="/governance/promotions/new" className="text-accent hover:underline mt-2 inline-block">
-              Create a promotion proposal →
+          <div className="text-center py-12 bg-muted/30 rounded-xl border border-border">
+            <div className="text-4xl mb-4">🗳️</div>
+            <h3 className="text-lg font-medium mb-2">No {filter || ""} promotions found</h3>
+            <p className="text-muted-foreground mb-4">
+              Promotions advance signatories to higher tiers through community vote.
+            </p>
+            <Link
+              href="/governance/promotions/new"
+              className="inline-block px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+            >
+              Create a Promotion Proposal →
             </Link>
           </div>
         )}
