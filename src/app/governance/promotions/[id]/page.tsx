@@ -310,7 +310,7 @@ export default function PromotionDetailPage() {
                     </div>
                     {vote.reason && (
                       <div className="text-sm text-muted-foreground mt-1 ml-5">
-                        "{vote.reason}"
+                        &ldquo;{vote.reason}&rdquo;
                       </div>
                     )}
                   </div>

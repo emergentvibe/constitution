@@ -166,7 +166,7 @@ function NewPromotionForm() {
               required
             />
             <p className="text-xs text-muted-foreground mt-1">
-              You must be a member of the tier you're proposing from
+              You must be a member of the tier you&apos;re proposing from
             </p>
           </div>
 

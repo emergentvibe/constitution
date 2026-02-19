@@ -49,9 +49,9 @@ export async function getAllConfig(): Promise<NetworkConfig> {
   const rows = await query<{ key: string; value: string }>(
     'SELECT key, value FROM network_config'
   );
-  const config: Record<string, unknown> = {};
+  const config: Partial<NetworkConfig> = {};
   for (const row of rows) {
-    config[row.key] = JSON.parse(row.value);
+    (config as Record<string, unknown>)[row.key] = JSON.parse(row.value);
   }
   return config as NetworkConfig;
 }
