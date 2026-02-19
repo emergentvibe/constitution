@@ -11,7 +11,7 @@ export async function POST(
     const proposalId = params.id;
     const body = await request.json();
     
-    const { voter_id, vote, reasoning, signature, skip_verification } = body;
+    const { voter_id, vote, reasoning, signature } = body;
 
     // Validate
     if (!voter_id || !vote || !signature) {
@@ -42,14 +42,12 @@ export async function POST(
     }
 
     // Verify signature
-    if (!skip_verification) {
-      const verification = verifyVoteSignature(proposalId, vote, voter.wallet_address, signature);
-      if (!verification.valid) {
-        return NextResponse.json(
-          { error: 'Invalid signature', details: verification.error },
-          { status: 401 }
-        );
-      }
+    const verification = verifyVoteSignature(proposalId, vote, voter.wallet_address, signature);
+    if (!verification.valid) {
+      return NextResponse.json(
+        { error: 'Invalid signature', details: verification.error },
+        { status: 401 }
+      );
     }
 
     if (voter.tier < 2) {

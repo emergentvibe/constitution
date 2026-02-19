@@ -36,7 +36,7 @@ export async function GET(
   } catch (error) {
     console.error('Error fetching tier:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch tier', details: String(error) },
+      { error: 'Failed to fetch tier' },
       { status: 500 }
     );
   }

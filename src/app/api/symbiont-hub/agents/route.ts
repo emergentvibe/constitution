@@ -130,7 +130,6 @@ export async function POST(request: NextRequest) {
       platform,
       contact_endpoint,
       metadata,
-      skip_verification // Allow skipping for testing (remove in production)
     } = body;
 
     // Use description as mission if provided
@@ -176,18 +175,16 @@ export async function POST(request: NextRequest) {
     }
     // Path 2: Direct signature verification
     else if (wallet_address && signature) {
-      if (!skip_verification) {
-        const verification = verifySignature(name, wallet_address, signature);
-        if (!verification.valid) {
-          return NextResponse.json(
-            { 
-              error: 'Invalid signature', 
-              details: verification.error,
-              expected_message: `Use getSigningMessage("${name}", "${wallet_address}") to generate the correct message`
-            },
-            { status: 401 }
-          );
-        }
+      const verification = verifySignature(name, wallet_address, signature);
+      if (!verification.valid) {
+        return NextResponse.json(
+          {
+            error: 'Invalid signature',
+            details: verification.error,
+            expected_message: `Use getSigningMessage("${name}", "${wallet_address}") to generate the correct message`
+          },
+          { status: 401 }
+        );
       }
     }
     // Neither path provided
@@ -268,11 +265,7 @@ export async function POST(request: NextRequest) {
     } catch (dbError) {
       console.error('DB error at step:', step, dbError);
       return NextResponse.json(
-        { 
-          error: 'Database operation failed',
-          step,
-          details: String(dbError),
-        },
+        { error: 'Database operation failed' },
         { status: 500 }
       );
     }
@@ -280,10 +273,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error registering agent:', error);
     return NextResponse.json(
-      { 
-        error: 'Failed to register agent',
-        details: String(error),
-      },
+      { error: 'Failed to register agent' },
       { status: 500 }
     );
   }

@@ -73,6 +73,6 @@ export async function POST(
     });
   } catch (error: any) {
     console.error('Error linking proposal:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to link proposal' }, { status: 500 });
   }
 }

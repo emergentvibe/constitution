@@ -88,7 +88,7 @@ export async function GET(
     return NextResponse.json(result);
   } catch (error: any) {
     console.error('Error fetching proposal:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch proposal' }, { status: 500 });
   }
 }
 
@@ -156,7 +156,7 @@ export async function PUT(
     return NextResponse.json({ proposal: updated });
   } catch (error: any) {
     console.error('Error updating proposal:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update proposal' }, { status: 500 });
   }
 }
 
@@ -201,6 +201,6 @@ export async function DELETE(
     return NextResponse.json({ success: true, deleted: id });
   } catch (error: any) {
     console.error('Error deleting proposal:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to delete proposal' }, { status: 500 });
   }
 }

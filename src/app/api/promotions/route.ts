@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error listing promotions:', error);
     return NextResponse.json(
-      { error: 'Failed to list promotions', details: String(error) },
+      { error: 'Failed to list promotions' },
       { status: 500 }
     );
   }

@@ -24,11 +24,11 @@ export function GovernanceHeader() {
             >
               Governance
             </Link>
-            <Link 
-              href="/citizens" 
+            <Link
+              href="/registry"
               className="text-sm text-zinc-400 hover:text-white transition-colors"
             >
-              Citizens
+              Registry
             </Link>
           </nav>
         </div>

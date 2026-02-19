@@ -112,7 +112,6 @@ export default function NetworkHero() {
       // Initialize or rescale particles
       if (particlesRef.current.length === 0) {
         initParticles(width, height);
-        console.log(`Initialized ${particlesRef.current.length} particles in ${width}x${height}`);
       } else if (oldWidth > 0 && oldHeight > 0) {
         // Rescale existing particles
         const scaleX = width / oldWidth;

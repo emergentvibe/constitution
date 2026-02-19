@@ -112,10 +112,12 @@ export async function createPromotion(
     }
   }
   
-  // Calculate quorum (50% of tier members, minimum 1)
+  // Calculate quorum (50% of eligible voters, minimum 1)
+  // Eligible voters = tier members minus nominees (who can't vote on their own promotion)
   const tierMemberCount = await countTierMembers(fromTier);
+  const eligibleVoters = tierMemberCount - nomineeIds.length;
   const quorumPercent = await getConfig('default_quorum_percent');
-  const quorumRequired = Math.max(1, Math.ceil(tierMemberCount * quorumPercent));
+  const quorumRequired = Math.max(1, Math.ceil(eligibleVoters * quorumPercent));
   
   // Calculate voting end date
   const votingDays = await getConfig('promotion_voting_days');

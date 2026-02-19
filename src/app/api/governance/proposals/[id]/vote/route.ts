@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { query, queryOne } from '@/lib/db';
 import { createVoteMessage, SNAPSHOT_SPACE } from '@/lib/snapshot';
 
 export async function POST(
@@ -17,7 +18,24 @@ export async function POST(
     if (!wallet_address) {
       return NextResponse.json({ error: 'wallet_address is required' }, { status: 401 });
     }
-    
+
+    // Check voter exists and has sufficient tier
+    const voter = await queryOne<{ tier: number }>(
+      'SELECT tier FROM agents WHERE wallet_address = $1',
+      [wallet_address.toLowerCase()]
+    );
+
+    if (!voter) {
+      return NextResponse.json({ error: 'Not a registered agent' }, { status: 403 });
+    }
+
+    if (voter.tier < 2) {
+      return NextResponse.json(
+        { error: 'Only Tier 2+ agents can vote on governance proposals', your_tier: voter.tier },
+        { status: 403 }
+      );
+    }
+
     // Validate choice
     if (typeof choice !== 'number' || choice < 1) {
       return NextResponse.json({ 
@@ -37,7 +55,7 @@ export async function POST(
     }
     
     // Check proposal is active
-    if (proposal.status !== 'active' && proposal.status !== 'draft') {
+    if (proposal.status !== 'active') {
       return NextResponse.json({ 
         error: 'Can only vote on active proposals' 
       }, { status: 400 });
@@ -102,7 +120,7 @@ export async function POST(
     });
   } catch (error: any) {
     console.error('Error recording vote:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to record vote' }, { status: 500 });
   }
 }
 
@@ -139,6 +157,6 @@ export async function GET(
     });
   } catch (error: any) {
     console.error('Error fetching votes:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch votes' }, { status: 500 });
   }
 }

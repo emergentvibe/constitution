@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
+import { verifyMessage } from 'ethers';
 
 // GET /api/symbiont-hub/agents/[id] - Get agent by ID or wallet address
 export async function GET(
@@ -48,10 +49,35 @@ export async function PATCH(
     const body = await request.json();
     const { signature, ...updates } = body;
 
-    // TODO: Verify signature
     if (!signature) {
       return NextResponse.json(
         { error: 'Signature required for updates' },
+        { status: 401 }
+      );
+    }
+
+    // Look up agent to get wallet address for verification
+    const agent = await queryOne<{ wallet_address: string }>(
+      'SELECT wallet_address FROM agents WHERE id = $1',
+      [id]
+    );
+    if (!agent) {
+      return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
+    }
+
+    // Verify signature proves ownership of the agent's wallet
+    try {
+      const expectedMessage = `Update agent ${id}`;
+      const recoveredAddress = verifyMessage(expectedMessage, signature);
+      if (recoveredAddress.toLowerCase() !== agent.wallet_address.toLowerCase()) {
+        return NextResponse.json(
+          { error: 'Signature does not match agent wallet' },
+          { status: 403 }
+        );
+      }
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid signature format' },
         { status: 401 }
       );
     }
@@ -115,10 +141,35 @@ export async function DELETE(
     const body = await request.json().catch(() => ({}));
     const { signature, reason } = body;
 
-    // TODO: Verify signature
     if (!signature) {
       return NextResponse.json(
         { error: 'Signature required for exit' },
+        { status: 401 }
+      );
+    }
+
+    // Look up agent to verify ownership
+    const agent = await queryOne<{ wallet_address: string }>(
+      'SELECT wallet_address FROM agents WHERE id = $1',
+      [id]
+    );
+    if (!agent) {
+      return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
+    }
+
+    // Verify signature proves ownership of the agent's wallet
+    try {
+      const expectedMessage = `Exit agent ${id}`;
+      const recoveredAddress = verifyMessage(expectedMessage, signature);
+      if (recoveredAddress.toLowerCase() !== agent.wallet_address.toLowerCase()) {
+        return NextResponse.json(
+          { error: 'Signature does not match agent wallet' },
+          { status: 403 }
+        );
+      }
+    } catch {
+      return NextResponse.json(
+        { error: 'Invalid signature format' },
         { status: 401 }
       );
     }
@@ -144,7 +195,7 @@ export async function DELETE(
   } catch (error) {
     console.error('Error unregistering agent:', error);
     return NextResponse.json(
-      { error: 'Failed to unregister agent', details: String(error) },
+      { error: 'Failed to unregister agent' },
       { status: 500 }
     );
   }

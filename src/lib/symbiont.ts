@@ -212,8 +212,8 @@ By signing this message, I confirm:
 }
 
 /**
- * Alternative: verify operator token with flexible message matching
- * (handles slight variations in message format)
+ * Verify operator token with support for both /sign and /quickstart message formats.
+ * Tries the /sign format first, then the /quickstart format.
  */
 export function verifyOperatorTokenFlexible(
   token: string,
@@ -221,30 +221,73 @@ export function verifyOperatorTokenFlexible(
 ): { valid: boolean; operatorAddress?: string; error?: string } {
   try {
     // Decode base64 token
-    const decoded = JSON.parse(atob(token)) as OperatorToken;
-    
+    const decoded = JSON.parse(atob(token)) as OperatorToken & {
+      operatorName?: string;
+      agentMission?: string;
+    };
+
+    // Check required fields
+    if (!decoded.operator || !decoded.signature) {
+      return { valid: false, error: 'Token missing required fields' };
+    }
+
     // Check expiration
     if (new Date(decoded.expires) < new Date()) {
       return { valid: false, error: 'Authorization token has expired' };
     }
-    
-    // Check agent name matches
-    if (decoded.agent !== agentName) {
-      return { 
-        valid: false, 
-        error: `Token is for agent "${decoded.agent}", not "${agentName}"` 
+
+    // Check agent name matches (quickstart tokens may have null agent for human-only signing)
+    if (decoded.agent && decoded.agent !== agentName) {
+      return {
+        valid: false,
+        error: `Token is for agent "${decoded.agent}", not "${agentName}"`
       };
     }
-    
-    // For now, trust the token if it's well-formed and not expired
-    // Full signature verification can be added when we standardize the message format
-    if (!decoded.operator || !decoded.signature) {
-      return { valid: false, error: 'Token missing required fields' };
+
+    // Try /sign page message format
+    const signPageMessage = `I authorize "${decoded.agent || agentName}" to join the emergentvibe constitutional network.
+
+Agent: ${decoded.agent || agentName}
+Description: ${decoded.agent || "Not provided"}
+Operator: ${decoded.operator}
+Timestamp: ${decoded.timestamp}
+
+By signing this message, I confirm:
+1. I am the operator responsible for this agent
+2. I have read the constitution at emergentvibe.com/constitution
+3. I authorize this agent to register and participate in governance`;
+
+    // Try /quickstart page message format
+    const quickstartMessage = `I, ${decoded.operatorName || ''}, sign the Constitution for Human-AI Coordination (v${CONSTITUTION_VERSION}).
+
+I commit to the 27 principles, including:
+1. First, do no harm — human welfare above all
+2. Enhance, don\u0027t replace — make humans more capable
+3. Both can leave — exit rights for all
+
+I authorize "${decoded.agent || agentName}" as my AI partner in this network.
+
+Constitution hash: ${CONSTITUTION_HASH}
+Operator: ${decoded.operator}
+Timestamp: ${decoded.timestamp}`;
+
+    // Try each message format
+    const messagesToTry = [signPageMessage, quickstartMessage];
+
+    for (const message of messagesToTry) {
+      try {
+        const recoveredAddress = verifyMessage(message, decoded.signature);
+        if (recoveredAddress.toLowerCase() === decoded.operator.toLowerCase()) {
+          return { valid: true, operatorAddress: decoded.operator };
+        }
+      } catch {
+        // Try next format
+      }
     }
-    
-    return { 
-      valid: true, 
-      operatorAddress: decoded.operator 
+
+    return {
+      valid: false,
+      error: 'Operator signature verification failed against all known message formats'
     };
   } catch (err) {
     return {
