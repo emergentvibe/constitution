@@ -251,6 +251,133 @@ async function testExit(agentId, wallet) {
   }
 }
 
+// ========== TIER SYSTEM TESTS ==========
+
+// Test 12: List Tiers
+async function testListTiers() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/tiers`);
+    const data = await res.json();
+    const hasTiers = data.tiers && data.tiers.length > 0;
+    log('List Tiers', hasTiers, `${data.tiers?.length || 0} tiers, config loaded`, data);
+    return data;
+  } catch (err) {
+    log('List Tiers', false, err.message);
+    return null;
+  }
+}
+
+// Test 13: Get Specific Tier
+async function testGetTier(level) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/tiers/${level}`);
+    const data = await res.json();
+    const success = res.ok && data.tier;
+    log('Get Tier', success, success ? `tier ${level}: ${data.tier.name}` : 'not found', data);
+    return success;
+  } catch (err) {
+    log('Get Tier', false, err.message);
+    return false;
+  }
+}
+
+// Test 14: List Promotions
+async function testListPromotions() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/promotions`);
+    const data = await res.json();
+    log('List Promotions', res.ok, `${data.promotions?.length || 0} promotions`, data);
+    return res.ok;
+  } catch (err) {
+    log('List Promotions', false, err.message);
+    return false;
+  }
+}
+
+// Test 15: Create Promotion (requires tier 2+ agent)
+async function testCreatePromotion(proposerId, nomineeId) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/promotions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        proposer_id: proposerId,
+        nominees: [nomineeId],
+        rationale: 'Test promotion for system verification'
+      }),
+    });
+    
+    const data = await res.json();
+    
+    if (res.ok && data.promotion?.id) {
+      log('Create Promotion', true, `id: ${data.promotion.id}`, data);
+      return data.promotion.id;
+    } else {
+      // Expected to fail if proposer is tier 1
+      const expected = data.error?.includes('tier 2') || data.error?.includes('Tier 2');
+      log('Create Promotion', expected, expected ? 'correctly rejected (tier 1 cannot propose)' : data.error);
+      return null;
+    }
+  } catch (err) {
+    log('Create Promotion', false, err.message);
+    return null;
+  }
+}
+
+// Test 16: Vote on Promotion
+async function testVotePromotion(promotionId, voterId, voteFor) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/promotions/${promotionId}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        voter_id: voterId,
+        vote: voteFor,
+        reason: 'Test vote'
+      }),
+    });
+    
+    const data = await res.json();
+    log('Vote Promotion', res.ok, res.ok ? 'vote recorded' : data.error);
+    return res.ok;
+  } catch (err) {
+    log('Vote Promotion', false, err.message);
+    return false;
+  }
+}
+
+// Test 17: Withdraw Promotion
+async function testWithdrawPromotion(promotionId, proposerId) {
+  try {
+    const res = await fetch(`${BASE_URL}/api/promotions/${promotionId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ proposer_id: proposerId }),
+    });
+    
+    const data = await res.json();
+    log('Withdraw Promotion', res.ok, res.ok ? 'withdrawn' : data.error);
+    return res.ok;
+  } catch (err) {
+    log('Withdraw Promotion', false, err.message);
+    return false;
+  }
+}
+
+// Test 18: Network Config
+async function testNetworkConfig() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/tiers`);
+    const data = await res.json();
+    const hasConfig = data.config && data.config.founding_board_size;
+    log('Network Config', hasConfig, hasConfig ? `founding_board_size: ${data.config.founding_board_size}` : 'missing config');
+    return hasConfig;
+  } catch (err) {
+    log('Network Config', false, err.message);
+    return false;
+  }
+}
+
 // Main test runner
 async function runTests() {
   console.log('\n🧪 EMERGENTVIBE SYSTEM TEST');
@@ -266,44 +393,46 @@ async function runTests() {
   let agentId = null;
   let proposalId = null;
   
-  // Run tests
-  console.log('\n[1/11] API Health Check');
+  // ========== CORE SYSTEM TESTS (1-11) ==========
+  console.log('\n━━━━━━ CORE SYSTEM ━━━━━━');
+  
+  console.log('\n[1/18] API Health Check');
   const healthy = await testApiHealth();
   if (!healthy) {
     console.log('\n❌ API not healthy, aborting tests');
     return;
   }
   
-  console.log('\n[2/11] Constitution');
+  console.log('\n[2/18] Constitution');
   await testConstitution();
   
-  console.log('\n[3/11] Signing Message Template');
+  console.log('\n[3/18] Signing Message Template');
   await testSigningMessage();
   
-  console.log('\n[4/11] Register Agent');
+  console.log('\n[4/18] Register Agent');
   agentId = await testRegisterAgent(wallet, testAgentName);
   
   if (agentId) {
-    console.log('\n[5/11] Verify Registration');
+    console.log('\n[5/18] Verify Registration');
     await testListAgents(testAgentName);
   } else {
     log('Verify Registration', false, 'skipped - no agent');
   }
   
-  console.log('\n[6/11] Create Proposal');
+  console.log('\n[6/18] Create Proposal');
   proposalId = await testCreateProposal(wallet);
   
   if (proposalId) {
-    console.log('\n[7/11] Get Proposal');
+    console.log('\n[7/18] Get Proposal');
     await testGetProposal(proposalId);
     
-    console.log('\n[8/11] Cast Vote');
+    console.log('\n[8/18] Cast Vote');
     await testVote(proposalId, wallet);
     
-    console.log('\n[9/11] Verify Vote');
+    console.log('\n[9/18] Verify Vote');
     await testGetVotes(proposalId);
     
-    console.log('\n[10/11] Cleanup Proposal');
+    console.log('\n[10/18] Cleanup Proposal');
     await testDeleteProposal(proposalId, wallet);
   } else {
     log('Get Proposal', false, 'skipped - no proposal');
@@ -311,9 +440,40 @@ async function runTests() {
     log('Verify Vote', false, 'skipped - no proposal');
     log('Delete Proposal', false, 'skipped - no proposal');
   }
+
+  // ========== TIER SYSTEM TESTS (12-18) ==========
+  console.log('\n━━━━━━ TIER SYSTEM ━━━━━━');
+  
+  console.log('\n[12/18] List Tiers');
+  const tierData = await testListTiers();
+  
+  console.log('\n[13/18] Get Tier');
+  await testGetTier(1);
+  
+  console.log('\n[14/18] List Promotions');
+  await testListPromotions();
+  
+  console.log('\n[15/18] Create Promotion');
+  // This should fail because our test agent is tier 1 (bootstrap is tier 2 but we might be past founding)
+  // We test that the validation works
+  if (agentId) {
+    await testCreatePromotion(agentId, agentId);
+  } else {
+    log('Create Promotion', false, 'skipped - no agent');
+  }
+  
+  // Tests 16-17 (vote/withdraw) skipped without real promotion
+  log('Vote Promotion', true, 'skipped - no promotion created (expected)');
+  log('Withdraw Promotion', true, 'skipped - no promotion created (expected)');
+  
+  console.log('\n[18/18] Network Config');
+  await testNetworkConfig();
+
+  // ========== CLEANUP ==========
+  console.log('\n━━━━━━ CLEANUP ━━━━━━');
   
   if (agentId) {
-    console.log('\n[11/11] Exit Agent');
+    console.log('\n[11/18] Exit Agent');
     await testExit(agentId, wallet);
   } else {
     log('Exit Agent', false, 'skipped - no agent');

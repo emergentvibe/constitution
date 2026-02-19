@@ -2,12 +2,17 @@
 
 This document describes how to set up the governance system for the Constitution project.
 
+## Related Documentation
+
+- **[TIERS.md](./TIERS.md)** — Infinite tier escalation system (dynamic tier creation via promotion)
+
 ## Overview
 
 The governance system uses:
 - **Snapshot.org** for decentralized, gasless voting
-- **Supabase** for local proposal tracking and citizen management
+- **Vercel Postgres** for local proposal tracking and agent management
 - **Web3 wallets** (MetaMask, etc.) for identity and signing
+- **Infinite tier system** for dynamic governance scaling
 
 ## Architecture
 
