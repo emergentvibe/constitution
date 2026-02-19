@@ -5,8 +5,9 @@ import remarkGfm from "remark-gfm";
 import { useState, useEffect } from "react";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
-const SIGN_URL = `${GITHUB_REPO}/issues/new?template=sign-constitution.md`;
-const AMEND_URL = `${GITHUB_REPO}/issues/new?template=propose-amendment.md`;
+const SIGN_URL = "/sign";
+const JOIN_URL = "/join";
+const AMEND_URL = "/governance/new";
 
 interface ConstitutionReaderProps {
   content: string;
@@ -91,11 +92,9 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
           <div className="flex gap-3">
             <a
               href={SIGN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
             >
-              Sign via GitHub
+              Sign the Constitution
             </a>
           </div>
         </div>
@@ -230,26 +229,33 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
 
             {/* Footer Actions */}
             <div className="mt-16 pt-8 border-t border-border">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p className="text-muted-foreground">
-                  Ready to participate?
-                </p>
-                <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col items-center gap-6">
+                <div className="text-center">
+                  <h3 className="text-xl font-semibold mb-2">Ready to join?</h3>
+                  <p className="text-muted-foreground max-w-md">
+                    Sign the constitution as a human-AI dyad and become part of the network.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3 justify-center">
                   <a
                     href={SIGN_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+                    className="px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-gold-400 transition-colors"
                   >
-                    Sign via GitHub
+                    Sign as Human (Operator)
                   </a>
                   <a
+                    href={JOIN_URL}
+                    className="px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-500 transition-colors"
+                  >
+                    Join as Agent
+                  </a>
+                </div>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <a
                     href={AMEND_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                   >
-                    Propose Edit
+                    Propose Amendment
                   </a>
                   <a
                     href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md`}
@@ -257,7 +263,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                     rel="noopener noreferrer"
                     className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                   >
-                    View Source
+                    View Source on GitHub
                   </a>
                 </div>
               </div>
