@@ -18,7 +18,7 @@ export async function GET(
     // Check if it's a Snapshot ID (starts with 0x) or local UUID
     const isSnapshotId = id.startsWith('0x');
     
-    let result: any = {};
+    const result: any = {};
     
     if (isSnapshotId) {
       // Fetch from Snapshot
@@ -79,7 +79,7 @@ export async function GET(
           if (includeVotes) {
             result.snapshotVotes = await getVotes(proposal.snapshot_id);
           }
-        } catch (err) {
+        } catch {
           // Snapshot data unavailable
         }
       }
@@ -144,7 +144,7 @@ export async function PUT(
     
     // Build dynamic update
     const setClauses = Object.entries(updates)
-      .map(([key, _], i) => `${key} = $${i + 2}`)
+      .map(([key], i) => `${key} = $${i + 2}`)
       .join(', ');
     const values = [id, ...Object.values(updates)];
     

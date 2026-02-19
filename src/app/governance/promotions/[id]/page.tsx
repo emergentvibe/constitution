@@ -48,6 +48,7 @@ export default function PromotionDetailPage() {
 
   useEffect(() => {
     fetchPromotion();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function fetchPromotion() {

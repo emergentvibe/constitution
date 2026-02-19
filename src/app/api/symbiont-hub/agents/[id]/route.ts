@@ -139,7 +139,7 @@ export async function DELETE(
   try {
     const { id } = params;
     const body = await request.json().catch(() => ({}));
-    const { signature, reason } = body;
+    const { signature } = body;
 
     if (!signature) {
       return NextResponse.json(

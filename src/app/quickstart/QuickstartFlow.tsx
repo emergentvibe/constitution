@@ -482,12 +482,4 @@ Timestamp: ${timestamp}`;
   );
 }
 
-// Quick access to stats for the "dyad #N" display
-function useStats() {
-  const [stats, setStats] = useState<{ total: number } | null>(null);
-  
-  // Would fetch from API in real implementation
-  return stats;
-}
-
 const stats = { total: 1 };
