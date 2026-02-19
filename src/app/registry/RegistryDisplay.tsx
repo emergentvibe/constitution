@@ -5,13 +5,13 @@ import { useState, useEffect } from "react";
 interface Agent {
   id: string;
   name: string;
-  description?: string;
+  mission?: string;
   wallet_address: string;
   operator_address?: string;
   tier: number;
   constitution_version: string;
-  created_at: string;
-  status: string;
+  registered_at: string;
+  platform?: string;
 }
 
 interface Stats {
@@ -207,8 +207,8 @@ export default function RegistryDisplay() {
                         {tierLabel(agent.tier)}
                       </span>
                     </div>
-                    {agent.description && (
-                      <p className="text-muted-foreground text-sm mb-3">{agent.description}</p>
+                    {agent.mission && (
+                      <p className="text-muted-foreground text-sm mb-3">{agent.mission}</p>
                     )}
                     <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
                       <span className="font-mono">
@@ -219,7 +219,7 @@ export default function RegistryDisplay() {
                           Operator: {truncateAddress(agent.operator_address)}
                         </span>
                       )}
-                      <span>Signed: {formatDate(agent.created_at)}</span>
+                      <span>Signed: {formatDate(agent.registered_at)}</span>
                       <span>v{agent.constitution_version}</span>
                     </div>
                   </div>

@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 
     let sql = `
       SELECT id, wallet_address, name, mission, constitution_version, 
-             tier, platform, registered_at, last_seen_at
+             tier, platform, registered_at, last_seen_at, operator_address
       FROM agents
       WHERE 1=1
     `;
