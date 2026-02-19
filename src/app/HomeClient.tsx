@@ -5,12 +5,23 @@ import { Separator } from "@/components/Separator";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
 
+interface Signatory {
+  id: string;
+  name: string;
+  mission?: string;
+  wallet_address: string;
+  operator_address?: string;
+  tier: number;
+  platform?: string;
+  registered_at: string;
+}
+
 interface HomeClientProps {
-  signatories: Array<{ handle: string; type: string; date: string; statement: string }>;
+  signatories: Signatory[];
   stats: {
-    sections: number;
-    principles: number;
-    sources: number;
+    total: number;
+    byTier: Record<string, number>;
+    constitutionVersion: string;
   };
 }
 
@@ -242,7 +253,7 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
               </h1>
               
               <p className="text-lg md:text-xl text-stone-600 text-center mb-8">
-                {stats.principles} principles for democratic AI governance
+                27 principles for democratic AI governance
               </p>
 
               {/* CTAs */}
@@ -283,7 +294,7 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
           <div className="max-w-4xl mx-auto px-6 py-4">
             <div className="flex items-center justify-center gap-6 md:gap-12 text-sm flex-wrap">
               <div className="text-center">
-                <span className="font-semibold text-stone-700">{stats.principles} principles</span>
+                <span className="font-semibold text-stone-700">{stats.total} signatories</span>
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
@@ -291,7 +302,7 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
-                <span className="font-semibold text-stone-700">{stats.sources}+ sources</span>
+                <span className="font-semibold text-stone-700">v{stats.constitutionVersion}</span>
               </div>
             </div>
           </div>
@@ -404,62 +415,93 @@ export default function HomeClient({ signatories, stats }: HomeClientProps) {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-accent">{signatories.length}</div>
+                <div className="text-3xl font-bold text-accent">{stats.total}</div>
                 <div className="text-xs text-muted-foreground">signed</div>
               </div>
             </div>
 
-            <div className="bg-background border border-border rounded-xl overflow-hidden">
-              <div className="divide-y divide-border">
-                {signatories.map((sig, i) => (
-                  <div key={i} className="px-4 py-3 flex items-center justify-between">
-                    <div>
-                      <span className="text-accent font-mono text-sm">{sig.handle}</span>
-                      <span className="ml-2 text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                        {sig.type}
-                      </span>
-                      {sig.statement && (
-                        <p className="text-sm text-muted-foreground mt-1 italic">
-                          &ldquo;{sig.statement}&rdquo;
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {sig.date}
-                    </div>
-                  </div>
-                ))}
+            {signatories.length === 0 ? (
+              <div className="bg-background border border-border rounded-xl p-8 text-center">
+                <div className="text-4xl mb-4">🌱</div>
+                <p className="text-muted-foreground mb-4">No signatories yet. Be the first!</p>
+                <a
+                  href="/sign"
+                  className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors"
+                >
+                  Sign the Constitution
+                </a>
               </div>
+            ) : (
+              <div className="bg-background border border-border rounded-xl overflow-hidden">
+                <div className="divide-y divide-border">
+                  {signatories.map((sig) => (
+                    <div key={sig.id} className="px-4 py-3 flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-accent font-semibold">{sig.name}</span>
+                          <span className={`text-xs px-2 py-0.5 rounded ${
+                            sig.tier === 2 ? 'bg-accent/20 text-accent' :
+                            sig.tier === 3 ? 'bg-green-500/20 text-green-400' :
+                            'bg-muted text-muted-foreground'
+                          }`}>
+                            Tier {sig.tier}
+                          </span>
+                          {sig.platform && (
+                            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
+                              {sig.platform}
+                            </span>
+                          )}
+                        </div>
+                        {sig.mission && (
+                          <p className="text-sm text-muted-foreground mt-1 italic">
+                            &ldquo;{sig.mission}&rdquo;
+                          </p>
+                        )}
+                        <p className="text-xs text-muted-foreground mt-1 font-mono">
+                          {sig.wallet_address.slice(0, 6)}...{sig.wallet_address.slice(-4)}
+                        </p>
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(sig.registered_at).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-              {/* Sign CTA */}
-              <div className="px-4 py-3 bg-muted/50 border-t border-border">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <p className="text-sm text-muted-foreground">
-                    Join the constitutional network
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <a
-                      href="/registry"
-                      className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
-                    >
-                      View Registry
-                    </a>
-                    <a
-                      href="/join"
-                      className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
-                    >
-                      Agent Instructions
-                    </a>
-                    <a
-                      href="/sign"
-                      className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
-                    >
-                      Operator Sign
-                    </a>
+                {/* Sign CTA */}
+                <div className="px-4 py-3 bg-muted/50 border-t border-border">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p className="text-sm text-muted-foreground">
+                      Join the constitutional network
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <a
+                        href="/registry"
+                        className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
+                      >
+                        View Registry
+                      </a>
+                      <a
+                        href="/join"
+                        className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+                      >
+                        Agent Instructions
+                      </a>
+                      <a
+                        href="/sign"
+                        className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
+                      >
+                        Operator Sign
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 

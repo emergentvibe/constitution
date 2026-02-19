@@ -1,64 +1,48 @@
-import { promises as fs } from "fs";
-import path from "path";
 import HomeClient from "./HomeClient";
 
-// Load constitution at build time
-async function getConstitutionData() {
-  // Load the full constitution from root
-  const constitutionPath = path.join(process.cwd(), "CONSTITUTION.md");
-  const constitutionContent = await fs.readFile(constitutionPath, "utf-8");
+// Fetch live data from registry API
+async function getRegistryData() {
+  try {
+    // Fetch from our own API endpoint
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : 'http://localhost:3000';
+    
+    const [agentsRes, statsRes] = await Promise.all([
+      fetch(`${baseUrl}/api/symbiont-hub/agents`, { 
+        cache: 'no-store' // Always fresh
+      }),
+      fetch(`${baseUrl}/api/symbiont-hub/stats`, { 
+        cache: 'no-store' 
+      }),
+    ]);
 
-  // Parse signatories from constitution
-  const signatories = parseSignatories(constitutionContent);
+    const agentsData = await agentsRes.json();
+    const statsData = await statsRes.json();
 
-  return {
-    signatories,
-    stats: {
-      sections: 6,
-      principles: 24,
-      sources: 75,
-    },
-  };
-}
-
-function parseSignatories(content: string): Array<{ handle: string; type: string; date: string; statement: string }> {
-  const lines = content.split("\n");
-  const signatories: Array<{ handle: string; type: string; date: string; statement: string }> = [];
-
-  let inTable = false;
-  for (const line of lines) {
-    if (line.startsWith("| #")) {
-      inTable = true;
-      continue;
-    }
-    if (line.startsWith("|---")) continue;
-    if (inTable && line.startsWith("|") && !line.startsWith("| #")) {
-      const parts = line.split("|").map(p => p.trim()).filter(Boolean);
-      if (parts.length >= 5 && parts[0].match(/^\d+$/)) {
-        // New format: # | Identity | Type | Signed | Statement
-        signatories.push({
-          handle: parts[1],
-          type: parts[2],
-          date: parts[3],
-          statement: parts[4].replace(/^\*"/, "").replace(/"\*$/, ""),
-        });
-      } else if (parts.length >= 4 && parts[0].match(/^\d+$/)) {
-        // Old format: # | Identity | Signed | Statement
-        signatories.push({
-          handle: parts[1],
-          type: "Individual",
-          date: parts[2],
-          statement: parts[3].replace(/^\*"/, "").replace(/"\*$/, ""),
-        });
-      }
-    }
-    if (inTable && line.startsWith("---")) break;
+    return {
+      signatories: agentsData.agents || [],
+      stats: {
+        total: statsData.agents?.total || 0,
+        byTier: statsData.agents?.by_tier || {},
+        constitutionVersion: statsData.constitution?.version || "0.1.5",
+      },
+    };
+  } catch (error) {
+    console.error('Failed to fetch registry data:', error);
+    // Return empty state on error
+    return {
+      signatories: [],
+      stats: {
+        total: 0,
+        byTier: {},
+        constitutionVersion: "0.1.5",
+      },
+    };
   }
-
-  return signatories;
 }
 
 export default async function Home() {
-  const data = await getConstitutionData();
+  const data = await getRegistryData();
   return <HomeClient {...data} />;
 }

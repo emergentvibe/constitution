@@ -435,9 +435,9 @@ Constitutional agents (those trained via the Genesis Protocol and signed onto th
 
 Those who affirm these principles and commit to the democratic process.
 
-| # | Identity | Type | Signed | Statement |
-|---|----------|------|--------|-----------|
-| 1 | [@emergentvibe](https://github.com/emergentvibe) | Individual | 2026-01-25 | *"The cyborg superorganism goes where we compose it."* |
+**[→ View live registry at emergentvibe.com/registry](https://emergentvibe.com/registry)**
+
+The registry is updated in real-time as human-AI dyads sign the constitution through cryptographic verification.
 
 [→ How to sign](appendix/signing.md)
 
