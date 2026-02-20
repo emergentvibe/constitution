@@ -146,25 +146,38 @@ export async function POST(request: NextRequest) {
 
     let operatorAddress: string | null = null;
     let agentWalletAddress = wallet_address;
+    let isHumanOnly = false;
 
-    // Path 1: Operator token from /sign page
+    // Path 1: Operator token from /sign or /quickstart page
     if (operator_token) {
+      // Decode token to check if this is a human-only registration (agent field is null)
+      let decoded: { agent: string | null; operator: string };
+      try {
+        decoded = JSON.parse(atob(operator_token));
+      } catch {
+        return NextResponse.json({ error: 'Invalid token format' }, { status: 401 });
+      }
+
+      isHumanOnly = !decoded.agent;
+
       const tokenVerification = verifyOperatorTokenFlexible(operator_token, name);
       if (!tokenVerification.valid) {
         return NextResponse.json(
-          { 
-            error: 'Invalid operator token', 
+          {
+            error: 'Invalid operator token',
             details: tokenVerification.error
           },
           { status: 401 }
         );
       }
       operatorAddress = tokenVerification.operatorAddress || null;
-      
-      // If no wallet_address provided, generate one from the operator + name
-      // In production, agent should provide its own wallet
-      if (!agentWalletAddress) {
-        // Create a deterministic "virtual" address for agents without wallets
+
+      if (isHumanOnly) {
+        // Human-only: use the human's own wallet address (they are both operator and agent)
+        agentWalletAddress = decoded.operator;
+        operatorAddress = null; // They ARE the operator — no separate operator
+      } else if (!agentWalletAddress) {
+        // Agent with operator: generate deterministic virtual address
         const hash = await crypto.subtle.digest(
           'SHA-256',
           new TextEncoder().encode(`${operatorAddress}:${name}`)
@@ -242,7 +255,7 @@ export async function POST(request: NextRequest) {
           agentMission || null,
           CONSTITUTION_VERSION,
           signature || 'operator_authorized',
-          creator_type || (operatorAddress ? 'human' : null),
+          creator_type || (isHumanOnly ? 'human' : (operatorAddress ? 'human' : null)),
           creator_id || operatorAddress,
           JSON.stringify(lineage || []),
           tier,

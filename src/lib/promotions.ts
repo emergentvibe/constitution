@@ -269,8 +269,8 @@ export async function voteOnPromotion(
   }
   
   // Get voter
-  const voter = await queryOne<{ tier: number; name: string }>(
-    'SELECT tier, name FROM agents WHERE id = $1',
+  const voter = await queryOne<{ tier: number; name: string; operator_address: string | null }>(
+    'SELECT tier, name, operator_address FROM agents WHERE id = $1',
     [voterId]
   );
   if (!voter) {
@@ -287,12 +287,28 @@ export async function voteOnPromotion(
     throw new Error('Nominees cannot vote on their own promotion');
   }
   
-  // Check if already voted
+  // Check operator-level dedup: block if same operator already voted via a different agent
+  if (voter.operator_address) {
+    const operatorVote = await queryOne<{ voter_id: string }>(
+      `SELECT pv.voter_id FROM promotion_votes pv
+       JOIN agents a ON a.id = pv.voter_id
+       WHERE pv.promotion_id = $1
+         AND a.operator_address = $2
+         AND a.operator_address IS NOT NULL
+         AND pv.voter_id != $3`,
+      [promotionId, voter.operator_address, voterId]
+    );
+    if (operatorVote) {
+      throw new Error('Your operator has already voted on this promotion via another agent');
+    }
+  }
+
+  // Check if already voted (same agent — allow vote change)
   const existingVote = await queryOne<{ id: string }>(
     'SELECT id FROM promotion_votes WHERE promotion_id = $1 AND voter_id = $2',
     [promotionId, voterId]
   );
-  
+
   if (existingVote) {
     // Update existing vote
     await query(

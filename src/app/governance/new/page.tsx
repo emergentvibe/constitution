@@ -65,6 +65,7 @@ export default function NewProposalPage() {
   const [impactAssessment, setImpactAssessment] = useState('');
   const [amendmentText, setAmendmentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [submittingSnapshot, setSubmittingSnapshot] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const isAmendment = type === 'constitutional_amendment' || type === 'boundary_change';

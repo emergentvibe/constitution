@@ -274,6 +274,21 @@ Timestamp: ${decoded.timestamp}`;
     // Try each message format
     const messagesToTry = [signPageMessage, quickstartMessage];
 
+    // Also try human-only quickstart format (no agent, uses "Wallet:" instead of "Operator:")
+    if (!decoded.agent) {
+      const humanOnlyMessage = `I, ${decoded.operatorName || ''}, sign the Constitution for Human-AI Coordination (v${CONSTITUTION_VERSION}).
+
+I commit to the 27 principles, including:
+1. First, do no harm — human welfare above all
+2. Enhance, don\u0027t replace — make humans more capable
+3. Both can leave — exit rights for all
+
+Constitution hash: ${CONSTITUTION_HASH}
+Wallet: ${decoded.operator}
+Timestamp: ${decoded.timestamp}`;
+      messagesToTry.push(humanOnlyMessage);
+    }
+
     for (const message of messagesToTry) {
       try {
         const recoveredAddress = verifyMessage(message, decoded.signature);

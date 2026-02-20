@@ -20,8 +20,8 @@ export async function POST(
     }
 
     // Check voter exists and has sufficient tier
-    const voter = await queryOne<{ tier: number }>(
-      'SELECT tier FROM agents WHERE wallet_address = $1',
+    const voter = await queryOne<{ id: string; tier: number; operator_address: string | null }>(
+      'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1',
       [wallet_address.toLowerCase()]
     );
 
@@ -76,23 +76,44 @@ export async function POST(
     `;
     
     if (existingVote) {
-      return NextResponse.json({ 
-        error: 'You have already voted on this proposal' 
+      return NextResponse.json({
+        error: 'You have already voted on this proposal'
       }, { status: 400 });
     }
-    
+
+    // Check operator-level dedup: if this agent has an operator, check if any
+    // other agent with the same operator has already voted on this proposal
+    if (voter.operator_address) {
+      const [operatorVote] = await db`
+        SELECT gv.id FROM governance_votes gv
+        JOIN agents a ON a.wallet_address = gv.wallet_address
+        WHERE gv.proposal_id = ${id}::uuid
+          AND a.operator_address = ${voter.operator_address.toLowerCase()}
+          AND a.operator_address IS NOT NULL
+      `;
+      if (operatorVote) {
+        return NextResponse.json({
+          error: 'Your operator has already voted on this proposal via another agent'
+        }, { status: 400 });
+      }
+    }
+
     // Record vote
     const [vote] = await db`
       INSERT INTO governance_votes (
         proposal_id,
         wallet_address,
+        voter_agent_id,
         choice,
-        reason
+        reason,
+        voting_power
       ) VALUES (
         ${id}::uuid,
         ${wallet_address.toLowerCase()},
+        ${voter.id}::uuid,
         ${choice},
-        ${reason || null}
+        ${reason || null},
+        ${voter.tier}
       )
       RETURNING *
     `;

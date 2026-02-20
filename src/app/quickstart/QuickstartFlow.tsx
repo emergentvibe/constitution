@@ -101,6 +101,24 @@ Timestamp: ${timestamp}`;
       }));
 
       setAuthToken(token);
+
+      // Register human-only signatory directly in the agents table
+      if (!hasAgent) {
+        try {
+          await fetch('/api/symbiont-hub/agents', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              operator_token: token,
+              name: yourName,
+              creator_type: 'human',
+            }),
+          });
+        } catch {
+          // Non-blocking: signing succeeded, registration is best-effort
+        }
+      }
+
       setStep("complete");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to sign";
