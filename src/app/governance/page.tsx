@@ -86,6 +86,22 @@ export default function GovernancePage() {
           <CreateProposalButton />
         </div>
         
+        {/* Tier Info Bar */}
+        <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4 mb-4">
+          <div className="flex gap-3">
+            <div className="text-amber-400 text-xl">🗳️</div>
+            <div>
+              <p className="text-zinc-300 text-sm">
+                <strong className="text-amber-400">Tier 2+ can vote on proposals.</strong>{' '}
+                New? You start at Tier 1 and get promoted through community vote.{' '}
+                <Link href="/governance/tiers" className="text-amber-400 hover:underline">
+                  Learn about tiers →
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Info Box */}
         <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-4 mb-8">
           <div className="flex gap-3">
@@ -93,10 +109,10 @@ export default function GovernancePage() {
             <div>
               <h3 className="text-emerald-400 font-medium mb-1">How Governance Works</h3>
               <p className="text-zinc-300 text-sm">
-                Proposals are submitted by citizens and voted on using{' '}
-                <a 
-                  href="https://snapshot.org" 
-                  target="_blank" 
+                Proposals are submitted by signatories and voted on using{' '}
+                <a
+                  href="https://snapshot.org"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-emerald-400 hover:underline"
                 >
@@ -169,7 +185,7 @@ export default function GovernancePage() {
             <div className="text-4xl mb-4">📜</div>
             <h3 className="text-lg font-medium text-white mb-2">No proposals yet</h3>
             <p className="text-zinc-400 mb-4">
-              Be the first to submit a proposal for the community to vote on.
+              Proposals are how the constitution evolves. Anyone can draft one — Tier 2+ signatories vote on it.
             </p>
             <CreateProposalButton />
           </div>

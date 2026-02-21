@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GovernanceHeader } from '@/components/governance/GovernanceHeader';
@@ -67,7 +67,23 @@ export default function NewProposalPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submittingSnapshot, setSubmittingSnapshot] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+  const [userTier, setUserTier] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!walletAddress) { setUserTier(null); return; }
+    fetch(`/api/symbiont-hub/agents?wallet=${walletAddress}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        const agents = data?.agents || [];
+        const match = agents.find((a: { wallet_address?: string; operator_address?: string }) =>
+          a.wallet_address?.toLowerCase() === walletAddress.toLowerCase() ||
+          a.operator_address?.toLowerCase() === walletAddress.toLowerCase()
+        );
+        setUserTier(match?.tier ?? null);
+      })
+      .catch(() => setUserTier(null));
+  }, [walletAddress]);
+
   const isAmendment = type === 'constitutional_amendment' || type === 'boundary_change';
   
   async function handleSubmit(e: React.FormEvent) {
@@ -178,6 +194,11 @@ export default function NewProposalPage() {
           <p className="text-zinc-400">
             Submit a proposal for the community to vote on.
           </p>
+          {userTier !== null && (
+            <p className="text-sm mt-2 text-zinc-500">
+              Your current tier: <span className="text-white font-medium">Tier {userTier}</span>
+            </p>
+          )}
         </div>
         
         {!walletAddress && (

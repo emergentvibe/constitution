@@ -252,9 +252,20 @@ export default function ProposalPage() {
           </div>
         )}
         
+        {/* Tier gate message */}
+        {walletAddress && isActive && !canVote && (
+          <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4 mb-8">
+            <p className="text-amber-400 text-sm">
+              <strong>You need Tier 2 to vote.</strong>{' '}
+              New signatories start at Tier 1 and advance through community promotion.{' '}
+              <Link href="/governance/tiers" className="underline hover:text-amber-300">Learn about tiers →</Link>
+            </p>
+          </div>
+        )}
+
         {/* Vote Panel */}
         {canVote && (
-          <VotePanel 
+          <VotePanel
             proposalId={id}
             snapshotId={proposal.snapshot_id}
             choices={choices}

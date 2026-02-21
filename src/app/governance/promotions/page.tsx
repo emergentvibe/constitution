@@ -132,8 +132,11 @@ export default function PromotionsPage() {
           <div className="text-center py-12 bg-muted/30 rounded-xl border border-border">
             <div className="text-4xl mb-4">🗳️</div>
             <h3 className="text-lg font-medium mb-2">No {filter || ""} promotions found</h3>
-            <p className="text-muted-foreground mb-4">
+            <p className="text-muted-foreground mb-2">
               Promotions advance signatories to higher tiers through community vote.
+            </p>
+            <p className="text-sm mb-4">
+              <a href="/governance/tiers" className="text-accent hover:underline">How promotions work →</a>
             </p>
             <Link
               href="/governance/promotions/new"
