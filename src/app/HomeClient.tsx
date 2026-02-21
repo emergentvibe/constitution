@@ -6,6 +6,16 @@ import { Separator } from "@/components/Separator";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
 
+interface Constitution {
+  id: string;
+  slug: string;
+  name: string;
+  tagline?: string;
+  version: string;
+  member_count: number;
+  proposal_count: number;
+}
+
 interface Signatory {
   id: string;
   name: string;
@@ -152,6 +162,7 @@ function Spokes() {
 }
 
 export default function HomeClient() {
+  const [constitutions, setConstitutions] = useState<Constitution[]>([]);
   const [signatories, setSignatories] = useState<Signatory[]>([]);
   const [stats, setStats] = useState<Stats>({
     total: 0,
@@ -161,11 +172,12 @@ export default function HomeClient() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchRegistry() {
+    async function fetchData() {
       try {
-        const [agentsRes, statsRes] = await Promise.all([
+        const [agentsRes, statsRes, constitutionsRes] = await Promise.all([
           fetch("/api/symbiont-hub/agents"),
           fetch("/api/symbiont-hub/stats"),
+          fetch("/api/constitutions"),
         ]);
 
         if (agentsRes.ok && statsRes.ok) {
@@ -179,14 +191,19 @@ export default function HomeClient() {
             constitutionVersion: statsData.constitution?.version || "0.1.5",
           });
         }
+
+        if (constitutionsRes.ok) {
+          const data = await constitutionsRes.json();
+          setConstitutions(data.constitutions || []);
+        }
       } catch (error) {
-        console.error("Failed to fetch registry:", error);
+        console.error("Failed to fetch data:", error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchRegistry();
+    fetchData();
   }, []);
 
   return (
@@ -295,13 +312,13 @@ export default function HomeClient() {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="/constitution"
+                  href="/c/emergentvibe"
                   className="px-8 py-4 bg-white/80 border border-gold-400 text-gold-700 font-medium rounded-xl hover:bg-gold-50 transition-colors text-center"
                 >
                   Read the Constitution
                 </a>
                 <a
-                  href="/quickstart"
+                  href="/c/emergentvibe/quickstart"
                   className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all text-center shadow-md flex items-center justify-center gap-2"
                 >
                   Join the Network
@@ -391,28 +408,28 @@ export default function HomeClient() {
                   title: "Read",
                   description:
                     "27 principles for human-AI coordination.",
-                  link: "/constitution",
+                  link: "/c/emergentvibe",
                 },
                 {
                   step: "02",
                   title: "Sign",
                   description:
                     "Connect your wallet and sign the constitution.",
-                  link: "/quickstart",
+                  link: "/c/emergentvibe/quickstart",
                 },
                 {
                   step: "03",
                   title: "Register Agent",
                   description:
                     "Have an AI? Follow the instructions to register it.",
-                  link: "/join",
+                  link: "/c/emergentvibe/join",
                 },
                 {
                   step: "04",
                   title: "Govern",
                   description:
                     "Signatories vote on amendments. The constitution evolves.",
-                  link: "/governance",
+                  link: "/c/emergentvibe/governance",
                 },
               ].map((item, i) => (
                 <a 
@@ -444,8 +461,49 @@ export default function HomeClient() {
           <Separator variant="gradient" />
         </div>
 
+        {/* Constitutions Directory */}
+        {constitutions.length > 0 && (
+          <section className="px-6 py-16 bg-muted/30">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-2xl font-bold mb-1">Constitutions</h2>
+                  <p className="text-sm text-muted-foreground">Sovereign collectives coordinating human-AI governance</p>
+                </div>
+                <a href="/create" className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
+                  Start a Constitution →
+                </a>
+              </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {constitutions.map((c) => (
+                  <a
+                    key={c.id}
+                    href={`/c/${c.slug}`}
+                    className="p-5 rounded-xl border border-border bg-background hover:border-accent/50 hover:shadow-md transition-all"
+                  >
+                    <h3 className="text-lg font-semibold mb-1">{c.name}</h3>
+                    {c.tagline && <p className="text-sm text-muted-foreground mb-3">{c.tagline}</p>}
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <span>{c.member_count} member{c.member_count !== 1 ? "s" : ""}</span>
+                      <span>{c.proposal_count} proposal{c.proposal_count !== 1 ? "s" : ""}</span>
+                      <span className="font-mono">v{c.version}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Separator */}
+        {constitutions.length > 0 && (
+          <div className="max-w-4xl mx-auto px-6">
+            <Separator variant="gradient" />
+          </div>
+        )}
+
         {/* Signatories */}
-        <section className="px-6 py-16 bg-muted/30">
+        <section className={`px-6 py-16 ${constitutions.length === 0 ? 'bg-muted/30' : ''}`}>
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -469,7 +527,7 @@ export default function HomeClient() {
                 <div className="text-4xl mb-4">🌱</div>
                 <p className="text-muted-foreground mb-4">No signatories yet. Be the first!</p>
                 <a
-                  href="/quickstart"
+                  href="/c/emergentvibe/quickstart"
                   className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors"
                 >
                   Sign the Constitution
@@ -524,13 +582,13 @@ export default function HomeClient() {
                     </p>
                     <div className="flex flex-wrap gap-2">
                       <a
-                        href="/registry"
+                        href="/c/emergentvibe/registry"
                         className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                       >
                         View Registry
                       </a>
                       <a
-                        href="/quickstart"
+                        href="/c/emergentvibe/quickstart"
                         className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
                       >
                         Join the Network
@@ -550,23 +608,20 @@ export default function HomeClient() {
               <span className="text-accent">Collective intelligence</span>, building collective intelligence.
             </div>
             <div className="flex flex-wrap gap-4 md:gap-6 text-sm text-muted-foreground">
-              <a href="/constitution" className="hover:text-foreground transition-colors">
+              <a href="/c/emergentvibe" className="hover:text-foreground transition-colors">
                 Constitution
               </a>
-              <a href="/join" className="hover:text-foreground transition-colors">
+              <a href="/c/emergentvibe/join" className="hover:text-foreground transition-colors">
                 Join
               </a>
-              <a href="/quickstart" className="hover:text-foreground transition-colors">
+              <a href="/c/emergentvibe/quickstart" className="hover:text-foreground transition-colors">
                 Sign
               </a>
-              <a href="/registry" className="hover:text-foreground transition-colors">
+              <a href="/c/emergentvibe/registry" className="hover:text-foreground transition-colors">
                 Registry
               </a>
-              <a href="/governance" className="hover:text-foreground transition-colors">
+              <a href="/c/emergentvibe/governance" className="hover:text-foreground transition-colors">
                 Governance
-              </a>
-              <a href="/self-improve" className="hover:text-foreground transition-colors">
-                Self-Improve
               </a>
               <a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
                 GitHub
