@@ -4,7 +4,7 @@
 const SNAPSHOT_HUB = 'https://hub.snapshot.org';
 const SNAPSHOT_GRAPHQL = 'https://hub.snapshot.org/graphql';
 
-// Space configuration - will be created on Snapshot.org
+/** @deprecated Use getDefaultConstitution().snapshot_space from '@/lib/constitution' */
 export const SNAPSHOT_SPACE = 'emergentvibe.eth';
 
 // Proposal types matching our governance model

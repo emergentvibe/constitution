@@ -5,15 +5,15 @@
 
 import { verifyMessage } from 'ethers';
 
-// Constitution v0.1.5 SHA-256 hash
+/** @deprecated Use getDefaultConstitution() from '@/lib/constitution' */
 export const CONSTITUTION_HASH = '18db508cbce2cc5dd4c39496b69b628707efa1a1cf9b582b3d16a48b03e076b5';
+/** @deprecated Use getDefaultConstitution() from '@/lib/constitution' */
 export const CONSTITUTION_VERSION = '0.1.5';
 
-// Founder address (emergentvibe) - gets Tier 3
-// Set this to your wallet address after first registration
+/** @deprecated Use getDefaultConstitution().founder_address from '@/lib/constitution' */
 export const FOUNDER_ADDRESS: string | null = null;
 
-// Bootstrap: first N agents get Tier 2 automatically
+/** @deprecated Use getDefaultConstitution().bootstrap_tier2_limit from '@/lib/constitution' */
 export const BOOTSTRAP_TIER2_LIMIT = 10;
 
 /**
