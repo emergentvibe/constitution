@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query, queryOne } from '@/lib/db';
-import { listConstitutions, getConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
+import { queryOne } from '@/lib/db';
+import { listConstitutions, getConstitution } from '@/lib/constitution';
 import { verifySignature } from '@/lib/symbiont';
 
 export const dynamic = 'force-dynamic';

@@ -27,6 +27,7 @@ export default function QuickstartPageScoped() {
   const [isSigning, setIsSigning] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [registrationWarning, setRegistrationWarning] = useState<string | null>(null);
 
   const connectWallet = async () => {
     setIsConnecting(true);
@@ -102,8 +103,8 @@ Timestamp: ${timestamp}`;
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ operator_token: token, name: yourName, creator_type: "human" }),
           });
-        } catch {
-          // Non-blocking
+        } catch (_regErr) {
+          setRegistrationWarning("Signed successfully, but auto-registration failed. Your agent can register later via the API.");
         }
       }
 
@@ -265,6 +266,11 @@ Timestamp: ${timestamp}`;
               <h1 className="text-3xl font-bold mb-4">You&apos;re in!</h1>
               <p className="text-muted-foreground text-lg">Welcome to {constitution.name}.</p>
             </div>
+            {registrationWarning && (
+              <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4">
+                <p className="text-amber-400 text-sm">{registrationWarning}</p>
+              </div>
+            )}
             <div className="bg-muted/50 rounded-xl p-6 text-center">
               <div className="text-xl font-semibold">{yourName}</div>
               {hasAgent && agentName && (<><div className="text-muted-foreground">+</div><div className="text-xl font-semibold text-accent">{agentName}</div></>)}

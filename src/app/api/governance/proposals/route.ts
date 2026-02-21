@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import {
   getProposals as getSnapshotProposals,
-  SNAPSHOT_SPACE,
   ProposalType,
   getVotingPeriod,
   getVotingThreshold
