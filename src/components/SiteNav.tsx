@@ -2,30 +2,54 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
-const navLinks = [
-  { href: "/constitution", label: "Constitution" },
-  { href: "/registry", label: "Registry" },
-  { href: "/governance", label: "Governance" },
-];
+function useConstitutionSlug(): string | null {
+  const pathname = usePathname();
+  const match = pathname.match(/^\/c\/([^/]+)/);
+  return match ? match[1] : null;
+}
 
 export default function SiteNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { walletAddress, connect, connecting, disconnect } = useAuth();
+  const slug = useConstitutionSlug();
 
   const truncatedWallet = walletAddress
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
     : null;
+
+  // If inside a constitution, scope nav links; otherwise show network-level links
+  const navLinks = slug
+    ? [
+        { href: `/c/${slug}`, label: "Constitution" },
+        { href: `/c/${slug}/registry`, label: "Registry" },
+        { href: `/c/${slug}/governance`, label: "Governance" },
+      ]
+    : [
+        { href: "/constitution", label: "Constitution" },
+        { href: "/registry", label: "Registry" },
+        { href: "/governance", label: "Governance" },
+      ];
+
+  const dashboardHref = slug ? `/c/${slug}/dashboard` : "/dashboard";
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14">
           {/* Logo */}
-          <Link href="/" className="text-lg font-semibold hover:text-accent transition-colors">
-            emergentvibe
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/" className="text-lg font-semibold hover:text-accent transition-colors">
+              emergentvibe
+            </Link>
+            {slug && (
+              <Link href="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                All Constitutions
+              </Link>
+            )}
+          </div>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-6">
@@ -40,7 +64,7 @@ export default function SiteNav() {
             ))}
             {walletAddress && (
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 className="text-sm text-accent hover:text-foreground transition-colors"
               >
                 Dashboard
@@ -101,11 +125,20 @@ export default function SiteNav() {
             ))}
             {walletAddress && (
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2 text-sm text-accent hover:bg-muted rounded-lg transition-colors"
               >
                 Dashboard
+              </Link>
+            )}
+            {slug && (
+              <Link
+                href="/"
+                onClick={() => setMenuOpen(false)}
+                className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+              >
+                All Constitutions
               </Link>
             )}
             <div className="px-3 pt-2 border-t border-border">
