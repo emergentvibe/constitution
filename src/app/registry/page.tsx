@@ -1,7 +1,12 @@
+import { Suspense } from "react";
 import RegistryDisplay from "./RegistryDisplay";
 
 export default function RegistryPage() {
-  return <RegistryDisplay />;
+  return (
+    <Suspense>
+      <RegistryDisplay />
+    </Suspense>
+  );
 }
 
 export const metadata = {

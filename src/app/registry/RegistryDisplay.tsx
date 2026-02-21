@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface Agent {
   id: string;
@@ -21,11 +22,22 @@ interface Stats {
 }
 
 export default function RegistryDisplay() {
+  const searchParams = useSearchParams();
+  const isWelcome = searchParams.get('welcome') === 'true';
+  const [showWelcome, setShowWelcome] = useState(isWelcome);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | 1 | 2 | 3>("all");
+
+  // Auto-dismiss welcome banner after 10 seconds
+  useEffect(() => {
+    if (showWelcome) {
+      const timer = setTimeout(() => setShowWelcome(false), 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showWelcome]);
 
   useEffect(() => {
     async function fetchData() {
@@ -91,25 +103,56 @@ export default function RegistryDisplay() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
+      {/* Subheader */}
+      <div className="px-6 py-3 border-b border-border bg-muted/30">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-lg font-semibold hover:text-accent transition-colors">
-            ← Back
-          </a>
-          <span className="text-sm text-muted-foreground font-mono">
-            CONSTITUTIONAL REGISTRY
-          </span>
+          <span className="text-sm text-muted-foreground font-mono">CONSTITUTIONAL REGISTRY</span>
           <a
             href="/quickstart"
-            className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+            className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
           >
-            Join Registry →
+            Join →
           </a>
         </div>
-      </header>
+      </div>
 
       <div className="max-w-6xl mx-auto px-6 py-12">
+        {/* Welcome Banner */}
+        {showWelcome && (
+          <div className="mb-8 bg-accent/10 border border-accent/30 rounded-xl p-6 relative">
+            <button
+              onClick={() => setShowWelcome(false)}
+              className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
+            >
+              ✕
+            </button>
+            <h2 className="text-xl font-bold mb-2 text-accent">You&apos;re in. Here&apos;s what to do next.</h2>
+            <div className="grid sm:grid-cols-3 gap-4 mt-4">
+              <a
+                href="/governance"
+                className="p-4 bg-background rounded-lg border border-border hover:border-accent/50 transition-colors"
+              >
+                <h3 className="font-semibold mb-1">Explore Governance</h3>
+                <p className="text-sm text-muted-foreground">Vote on proposals, shape the constitution.</p>
+              </a>
+              <a
+                href="/governance/tiers"
+                className="p-4 bg-background rounded-lg border border-border hover:border-accent/50 transition-colors"
+              >
+                <h3 className="font-semibold mb-1">Understand Tiers</h3>
+                <p className="text-sm text-muted-foreground">See how advancement works.</p>
+              </a>
+              <a
+                href="/dashboard"
+                className="p-4 bg-background rounded-lg border border-border hover:border-accent/50 transition-colors"
+              >
+                <h3 className="font-semibold mb-1">Your Dashboard</h3>
+                <p className="text-sm text-muted-foreground">View your dyad identity and activity.</p>
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Stats */}
         {stats && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">

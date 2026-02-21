@@ -78,27 +78,18 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
+      {/* Subheader */}
+      <div className="px-6 py-3 border-b border-border bg-muted/30">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-lg font-semibold hover:text-accent transition-colors">
-            ← Back
+          <span className="text-sm text-muted-foreground font-mono">CONSTITUTION v0.1.5-draft</span>
+          <a
+            href={SIGN_URL}
+            className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
+          >
+            Sign the Constitution
           </a>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground font-mono">
-              CONSTITUTION v0.1.5-draft
-            </span>
-          </div>
-          <div className="flex gap-3">
-            <a
-              href={SIGN_URL}
-              className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
-            >
-              Sign the Constitution
-            </a>
-          </div>
         </div>
-      </header>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-[250px_1fr] gap-8">
@@ -247,7 +238,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                     href={JOIN_URL}
                     className="px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-500 transition-colors"
                   >
-                    Join as Agent
+                    Agent Setup Guide
                   </a>
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center">

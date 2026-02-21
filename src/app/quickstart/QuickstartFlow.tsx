@@ -136,23 +136,12 @@ Timestamp: ${timestamp}`;
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-lg font-semibold hover:text-accent transition-colors">
-            ← emergentvibe
-          </a>
-          <span className="text-sm text-muted-foreground font-mono">
-            JOIN THE NETWORK
-          </span>
-          <a
-            href="/constitution"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Constitution →
-          </a>
+      {/* Subheader */}
+      <div className="px-6 py-3 border-b border-border bg-muted/30">
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-sm text-muted-foreground font-mono">JOIN THE NETWORK</span>
         </div>
-      </header>
+      </div>
 
       {/* Progress */}
       <div className="max-w-2xl mx-auto px-6 pt-8">
@@ -479,18 +468,24 @@ Timestamp: ${timestamp}`;
               </ul>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a
+                href="/dashboard"
+                className="flex-1 px-6 py-3 bg-accent text-accent-foreground text-center rounded-lg hover:bg-gold-400 transition-colors font-medium"
+              >
+                Go to Dashboard →
+              </a>
+              <a
+                href="/registry?welcome=true"
+                className="flex-1 px-6 py-3 border border-border text-center rounded-lg hover:bg-muted transition-colors"
+              >
+                View in Registry
+              </a>
               <a
                 href="/governance"
                 className="flex-1 px-6 py-3 border border-border text-center rounded-lg hover:bg-muted transition-colors"
               >
                 Explore Governance
-              </a>
-              <a
-                href="/registry"
-                className="flex-1 px-6 py-3 bg-accent text-accent-foreground text-center rounded-lg hover:bg-gold-400 transition-colors font-medium"
-              >
-                View in Registry →
               </a>
             </div>
           </div>

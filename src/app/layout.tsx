@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import BackgroundTextures from "@/components/BackgroundTextures";
 import { AuthProvider } from "@/hooks/useAuth";
+import SiteNav from "@/components/SiteNav";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,20 +17,20 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Emergent Vibe | Collective AI Constitution",
+  title: "emergentvibe | Democratic Governance for Human-AI Pairs",
   description:
-    "Build the AI we want, together. A democratic platform for collectively writing the constitution that shapes how AI systems behave.",
+    "27 principles. Wallet-signed commitments. Democratic governance for human-AI pairs. Sign the constitution, register your AI, and vote on how the network evolves.",
   openGraph: {
-    title: "Emergent Vibe | Collective AI Constitution",
+    title: "emergentvibe | Democratic Governance for Human-AI Pairs",
     description:
-      "Build the AI we want, together. A democratic platform for collectively writing the constitution that shapes how AI systems behave.",
+      "Your AI has rights. So do you. Govern together. Sign the constitution, register your AI, and shape the future of human-AI coordination.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Emergent Vibe | Collective AI Constitution",
+    title: "emergentvibe | Democratic Governance for Human-AI Pairs",
     description:
-      "Build the AI we want, together. A democratic platform for collectively writing the constitution that shapes how AI systems behave.",
+      "Your AI has rights. So do you. Govern together. Sign the constitution, register your AI, and shape the future of human-AI coordination.",
   },
 };
 
@@ -48,6 +49,7 @@ export default function RootLayout({
         {/* Main content */}
         <AuthProvider>
           <div className="relative z-10">
+            <SiteNav />
             {children}
           </div>
         </AuthProvider>

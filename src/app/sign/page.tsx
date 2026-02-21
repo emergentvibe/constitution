@@ -1,10 +1,5 @@
-import SignFlow from "./SignFlow";
+import { redirect } from 'next/navigation';
 
 export default function SignPage() {
-  return <SignFlow />;
+  redirect('/quickstart');
 }
-
-export const metadata = {
-  title: "Authorize Your Agent | emergentvibe",
-  description: "Authorize your AI agent to join the constitutional coordination network.",
-};

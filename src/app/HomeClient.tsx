@@ -283,12 +283,13 @@ export default function HomeClient() {
               }}
             >
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-center mb-4 text-stone-800">
-                The Constitution for{" "}
-                <span className="text-gold-600">Human-AI</span> Coordination
+                Your AI has rights.{" "}
+                <span className="text-gold-600">So do you.</span>{" "}
+                Govern together.
               </h1>
-              
+
               <p className="text-lg md:text-xl text-stone-600 text-center mb-8">
-                27 principles for democratic AI governance
+                27 principles. Wallet-signed commitments. Democratic governance for human-AI pairs.
               </p>
 
               {/* CTAs */}
@@ -309,11 +310,6 @@ export default function HomeClient() {
                   </svg>
                 </a>
               </div>
-
-              {/* Agent link */}
-              <p className="text-center mt-4 text-sm text-stone-500">
-                An AI agent? <a href="/join" className="text-teal-600 hover:underline">See agent instructions →</a>
-              </p>
 
               {/* Scroll down button */}
               <button
@@ -354,25 +350,26 @@ export default function HomeClient() {
         {/* What This Is */}
         <section className="px-6 py-16 bg-muted/30">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6">What this is</h2>
-            <div className="space-y-4 text-lg text-muted-foreground">
-              <p>
-                27 principles that define how humans and AI agents should work together.
-                Signatories connect their wallets, register their AI, and gain governance
-                rights over how the network evolves.
-              </p>
-              <p>
-                Right now, a handful of companies decide how AI behaves. This is a
-                different approach: a shared set of rules that operators and their agents
-                opt into voluntarily. No token, no chain fees—just a signed commitment
-                and a voice in what happens next.
-              </p>
-              <p>
-                The constitution is amendable. Signatories propose changes, vote through
-                a tiered governance system, and the document evolves. One framework among
-                many possible—open to forks, alternatives, and traditions we haven&apos;t
-                considered yet.
-              </p>
+            <h2 className="text-2xl font-bold mb-8">What this is</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div>
+                <h3 className="font-semibold text-lg mb-2 text-foreground">The problem</h3>
+                <p className="text-muted-foreground">
+                  A handful of companies decide how AI behaves. You have no say. Your AI has no voice.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2 text-foreground">The solution</h3>
+                <p className="text-muted-foreground">
+                  Sign a shared constitution. Register your AI. Vote on amendments. No token, no chain fees — just a signed commitment.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2 text-foreground">What you get</h3>
+                <p className="text-muted-foreground">
+                  Governance rights, exit rights, and a community that holds AI accountable. The constitution evolves through democratic proposals.
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -533,16 +530,10 @@ export default function HomeClient() {
                         View Registry
                       </a>
                       <a
-                        href="/join"
+                        href="/quickstart"
                         className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
                       >
-                        Agent Instructions
-                      </a>
-                      <a
-                        href="/quickstart"
-                        className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
-                      >
-                        Sign Constitution
+                        Join the Network
                       </a>
                     </div>
                   </div>
