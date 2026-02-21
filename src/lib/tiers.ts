@@ -71,15 +71,24 @@ export async function setConfig<K extends keyof NetworkConfig>(
 }
 
 /**
- * Get all tiers with member counts
+ * Get all tiers with member counts.
+ * When constitutionId is provided, member counts are scoped to that constitution.
  */
-export async function getTiers(): Promise<Tier[]> {
-  const tiers = await query<Tier & { member_count: string }>(
-    `SELECT t.*, 
-            (SELECT COUNT(*) FROM agents WHERE tier = t.level) as member_count
-     FROM tiers t
-     ORDER BY t.level ASC`
-  );
+export async function getTiers(constitutionId?: string): Promise<Tier[]> {
+  const tiers = constitutionId
+    ? await query<Tier & { member_count: string }>(
+        `SELECT t.*,
+                (SELECT COUNT(*) FROM agents WHERE tier = t.level AND constitution_id = $1) as member_count
+         FROM tiers t
+         ORDER BY t.level ASC`,
+        [constitutionId]
+      )
+    : await query<Tier & { member_count: string }>(
+        `SELECT t.*,
+                (SELECT COUNT(*) FROM agents WHERE tier = t.level) as member_count
+         FROM tiers t
+         ORDER BY t.level ASC`
+      );
   return tiers.map(t => ({
     ...t,
     decision_scope: t.decision_scope as unknown as string[],
@@ -88,16 +97,25 @@ export async function getTiers(): Promise<Tier[]> {
 }
 
 /**
- * Get single tier
+ * Get single tier.
+ * When constitutionId is provided, member count is scoped to that constitution.
  */
-export async function getTier(level: number): Promise<Tier | null> {
-  const tier = await queryOne<Tier & { member_count: string }>(
-    `SELECT t.*, 
-            (SELECT COUNT(*) FROM agents WHERE tier = t.level) as member_count
-     FROM tiers t
-     WHERE t.level = $1`,
-    [level]
-  );
+export async function getTier(level: number, constitutionId?: string): Promise<Tier | null> {
+  const tier = constitutionId
+    ? await queryOne<Tier & { member_count: string }>(
+        `SELECT t.*,
+                (SELECT COUNT(*) FROM agents WHERE tier = t.level AND constitution_id = $2) as member_count
+         FROM tiers t
+         WHERE t.level = $1`,
+        [level, constitutionId]
+      )
+    : await queryOne<Tier & { member_count: string }>(
+        `SELECT t.*,
+                (SELECT COUNT(*) FROM agents WHERE tier = t.level) as member_count
+         FROM tiers t
+         WHERE t.level = $1`,
+        [level]
+      );
   if (!tier) return null;
   return {
     ...tier,
@@ -156,44 +174,60 @@ export async function tierExists(level: number): Promise<boolean> {
 }
 
 /**
- * Get members of a tier
+ * Get members of a tier.
+ * When constitutionId is provided, only returns members of that constitution.
  */
-export async function getTierMembers(level: number): Promise<Array<{
+export async function getTierMembers(level: number, constitutionId?: string): Promise<Array<{
   id: string;
   name: string;
   wallet_address: string;
   registered_at: string;
 }>> {
-  return await query(
-    `SELECT id, name, wallet_address, registered_at
-     FROM agents 
-     WHERE tier = $1
-     ORDER BY registered_at ASC`,
-    [level]
-  );
+  return constitutionId
+    ? await query(
+        `SELECT id, name, wallet_address, registered_at
+         FROM agents
+         WHERE tier = $1 AND constitution_id = $2
+         ORDER BY registered_at ASC`,
+        [level, constitutionId]
+      )
+    : await query(
+        `SELECT id, name, wallet_address, registered_at
+         FROM agents
+         WHERE tier = $1
+         ORDER BY registered_at ASC`,
+        [level]
+      );
 }
 
 /**
- * Count members at a tier level
+ * Count members at a tier level.
+ * When constitutionId is provided, only counts members of that constitution.
  */
-export async function countTierMembers(level: number): Promise<number> {
-  const result = await queryOne<{ count: string }>(
-    'SELECT COUNT(*) as count FROM agents WHERE tier = $1',
-    [level]
-  );
+export async function countTierMembers(level: number, constitutionId?: string): Promise<number> {
+  const result = constitutionId
+    ? await queryOne<{ count: string }>(
+        'SELECT COUNT(*) as count FROM agents WHERE tier = $1 AND constitution_id = $2',
+        [level, constitutionId]
+      )
+    : await queryOne<{ count: string }>(
+        'SELECT COUNT(*) as count FROM agents WHERE tier = $1',
+        [level]
+      );
   return parseInt(result?.count || '0');
 }
 
 /**
- * Get tier statistics
+ * Get tier statistics.
+ * When constitutionId is provided, stats are scoped to that constitution.
  */
-export async function getTierStats(): Promise<{
+export async function getTierStats(constitutionId?: string): Promise<{
   total_tiers: number;
   total_members: number;
   highest_tier: number;
   members_by_tier: Record<number, number>;
 }> {
-  const tiers = await getTiers();
+  const tiers = await getTiers(constitutionId);
   const membersByTier: Record<number, number> = {};
   let totalMembers = 0;
   

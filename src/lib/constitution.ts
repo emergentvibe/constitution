@@ -5,7 +5,7 @@
  * all functions return hardcoded emergentvibe values.
  */
 
-import { queryOne } from './db';
+import { query, queryOne } from './db';
 import { CONSTITUTION_HASH, CONSTITUTION_VERSION, FOUNDER_ADDRESS, BOOTSTRAP_TIER2_LIMIT } from './symbiont';
 import { SNAPSHOT_SPACE } from './snapshot';
 
@@ -131,11 +131,60 @@ export async function getDefaultConstitution(): Promise<ConstitutionConfig> {
 }
 
 /**
+ * Resolve a constitution slug or UUID to config.
+ * If null/undefined, returns the default constitution.
+ * Used by all API routes to scope queries.
+ */
+export async function resolveConstitution(slugOrId?: string | null): Promise<ConstitutionConfig> {
+  if (!slugOrId) return getDefaultConstitution();
+  const config = await getConstitution(slugOrId);
+  if (!config) throw new ConstitutionNotFoundError(slugOrId);
+  return config;
+}
+
+export class ConstitutionNotFoundError extends Error {
+  constructor(slugOrId: string) {
+    super(`Constitution not found: ${slugOrId}`);
+    this.name = 'ConstitutionNotFoundError';
+  }
+}
+
+/**
  * Look up a constitution by UUID.
  * Convenience alias for getConstitution() when you know you have a UUID.
  */
 export async function getConstitutionById(id: string): Promise<ConstitutionConfig | null> {
   return getConstitution(id);
+}
+
+/**
+ * List all active constitutions with member/proposal counts.
+ */
+export async function listConstitutions(): Promise<(ConstitutionConfig & { member_count: number; proposal_count: number })[]> {
+  try {
+    const rows = await query<Constitution & { member_count: string; proposal_count: string }>(
+      `SELECT c.*,
+              (SELECT COUNT(*) FROM agents WHERE constitution_id = c.id) as member_count,
+              (SELECT COUNT(*) FROM governance_proposals WHERE constitution_id = c.id) as proposal_count
+       FROM constitutions c
+       WHERE c.is_active = true
+       ORDER BY c.is_default DESC, c.created_at ASC`
+    );
+    return rows.map(row => ({
+      ...rowToConfig(row),
+      member_count: parseInt(row.member_count || '0'),
+      proposal_count: parseInt(row.proposal_count || '0'),
+    }));
+  } catch (err) {
+    if (isTableMissing(err)) {
+      return [{
+        ...FALLBACK_CONFIG,
+        member_count: 0,
+        proposal_count: 0,
+      }];
+    }
+    throw err;
+  }
 }
 
 /**

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { listPromotions, createPromotion, getPromotionWithDetails } from '@/lib/promotions';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,16 +13,27 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
+    let constitution;
+    try {
+      constitution = await resolveConstitution(searchParams.get('constitution'));
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     const promotions = await listPromotions({
       status,
       from_tier: fromTier ? parseInt(fromTier) : undefined,
       limit,
-      offset
+      offset,
+      constitutionId: constitution.id,
     });
 
-    // Get details for each
+    // Get details for each (scoped to constitution)
     const promotionsWithDetails = await Promise.all(
-      promotions.map(p => getPromotionWithDetails(p.id))
+      promotions.map(p => getPromotionWithDetails(p.id, constitution.id))
     );
 
     return NextResponse.json({
@@ -42,7 +54,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { proposer_id, nominees, rationale } = body;
+    const { proposer_id, nominees, rationale, constitution: constitutionSlug } = body;
 
     if (!proposer_id) {
       return NextResponse.json(
@@ -58,8 +70,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const promotion = await createPromotion(proposer_id, nominees, rationale);
-    const details = await getPromotionWithDetails(promotion.id);
+    let constitution;
+    try {
+      constitution = await resolveConstitution(constitutionSlug);
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
+    const promotion = await createPromotion(proposer_id, nominees, rationale, constitution.id);
+    const details = await getPromotionWithDetails(promotion.id, constitution.id);
 
     return NextResponse.json({
       message: 'Promotion proposal created',

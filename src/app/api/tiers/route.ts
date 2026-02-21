@@ -1,14 +1,25 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getTiers, getTierStats, getAllConfig } from '@/lib/tiers';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/tiers - List all tiers with stats
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    let constitution;
+    try {
+      constitution = await resolveConstitution(request.nextUrl.searchParams.get('constitution'));
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     const [tiers, stats, config] = await Promise.all([
-      getTiers(),
-      getTierStats(),
+      getTiers(constitution.id),
+      getTierStats(constitution.id),
       getAllConfig()
     ]);
 

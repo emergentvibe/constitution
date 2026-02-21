@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,9 +11,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'wallet parameter required' }, { status: 400 });
     }
 
+    let constitution;
+    try {
+      constitution = await resolveConstitution(request.nextUrl.searchParams.get('constitution'));
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     const walletLower = wallet.toLowerCase();
 
-    // Find agent by wallet_address or operator_address
+    // Find agent by wallet_address or operator_address (scoped to constitution)
     const agent = await queryOne<{
       id: string;
       name: string;
@@ -24,9 +35,9 @@ export async function GET(request: NextRequest) {
     }>(
       `SELECT id, name, wallet_address, operator_address, tier, registered_at, mission
        FROM agents
-       WHERE wallet_address = $1 OR operator_address = $1
+       WHERE (wallet_address = $1 OR operator_address = $1) AND constitution_id = $2
        LIMIT 1`,
-      [walletLower]
+      [walletLower, constitution.id]
     );
 
     if (!agent) {
@@ -45,10 +56,10 @@ export async function GET(request: NextRequest) {
       [agent.id]
     );
 
-    // Activity: proposals created
+    // Activity: proposals created (scoped to constitution)
     const proposalCount = await queryOne<{ count: string }>(
-      'SELECT COUNT(*) as count FROM governance_proposals WHERE author_wallet = $1',
-      [agent.wallet_address]
+      'SELECT COUNT(*) as count FROM governance_proposals WHERE author_wallet = $1 AND constitution_id = $2',
+      [agent.wallet_address, constitution.id]
     );
 
     // Recent governance votes (last 10)
@@ -78,10 +89,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Progression: tier members count
+    // Progression: tier members count (scoped to constitution)
     const tierMemberCount = await queryOne<{ count: string }>(
-      'SELECT COUNT(*) as count FROM agents WHERE tier = $1',
-      [agent.tier]
+      'SELECT COUNT(*) as count FROM agents WHERE tier = $1 AND constitution_id = $2',
+      [agent.tier, constitution.id]
     );
 
     // Progression: pending promotions user can vote on

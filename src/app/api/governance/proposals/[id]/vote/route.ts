@@ -4,7 +4,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { queryOne } from '@/lib/db';
-import { createVoteMessage, SNAPSHOT_SPACE } from '@/lib/snapshot';
+import { createVoteMessage } from '@/lib/snapshot';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export async function POST(
   request: NextRequest,
@@ -13,16 +14,26 @@ export async function POST(
   try {
     const { id } = params;
     const body = await request.json();
-    const { choice, reason, snapshot_id, wallet_address } = body;
-    
+    const { choice, reason, snapshot_id, wallet_address, constitution: constitutionSlug } = body;
+
     if (!wallet_address) {
       return NextResponse.json({ error: 'wallet_address is required' }, { status: 401 });
     }
 
-    // Check voter exists and has sufficient tier
+    let constitution;
+    try {
+      constitution = await resolveConstitution(constitutionSlug);
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
+    // Check voter exists and has sufficient tier (scoped to constitution)
     const voter = await queryOne<{ id: string; tier: number; operator_address: string | null }>(
-      'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1',
-      [wallet_address.toLowerCase()]
+      'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
+      [wallet_address.toLowerCase(), constitution.id]
     );
 
     if (!voter) {
@@ -124,7 +135,7 @@ export async function POST(
     
     if (snapshotProposalId) {
       snapshotMessage = createVoteMessage(
-        SNAPSHOT_SPACE,
+        constitution.snapshot_space,
         snapshotProposalId,
         choice,
         reason

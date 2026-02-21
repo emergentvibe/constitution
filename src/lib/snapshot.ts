@@ -415,13 +415,14 @@ export function createProposalPayload(
   type: ProposalType,
   startTimestamp: number,
   endTimestamp: number,
-  snapshotBlock: number
+  snapshotBlock: number,
+  space: string = SNAPSHOT_SPACE
 ): { types: typeof PROPOSAL_TYPES; message: any } {
   return {
     types: PROPOSAL_TYPES,
     message: {
       from,
-      space: SNAPSHOT_SPACE,
+      space,
       timestamp: Math.floor(Date.now() / 1000),
       type: 'single-choice',
       title,
@@ -442,13 +443,14 @@ export function createVotePayload(
   from: string,
   proposalId: string,
   choice: number,
-  reason: string = ''
+  reason: string = '',
+  space: string = SNAPSHOT_SPACE
 ): { types: typeof VOTE_TYPES; message: any } {
   return {
     types: VOTE_TYPES,
     message: {
       from,
-      space: SNAPSHOT_SPACE,
+      space,
       timestamp: Math.floor(Date.now() / 1000),
       proposal: proposalId,
       choice,

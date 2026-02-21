@@ -42,12 +42,14 @@ export interface PromotionVote {
 }
 
 /**
- * Create a new promotion proposal
+ * Create a new promotion proposal.
+ * When constitutionId is provided, tier member counts are scoped to that constitution.
  */
 export async function createPromotion(
   proposerId: string,
   nomineeIds: string[],
-  rationale?: string
+  rationale?: string,
+  constitutionId?: string
 ): Promise<Promotion> {
   // Get proposer
   const proposer = await queryOne<{ tier: number; name: string }>(
@@ -114,7 +116,7 @@ export async function createPromotion(
   
   // Calculate quorum (50% of eligible voters, minimum 1)
   // Eligible voters = tier members minus nominees (who can't vote on their own promotion)
-  const tierMemberCount = await countTierMembers(fromTier);
+  const tierMemberCount = await countTierMembers(fromTier, constitutionId);
   const eligibleVoters = tierMemberCount - nomineeIds.length;
   const quorumPercent = await getConfig('default_quorum_percent');
   const quorumRequired = Math.max(1, Math.ceil(eligibleVoters * quorumPercent));
@@ -165,29 +167,30 @@ export async function getPromotion(id: string): Promise<Promotion | null> {
 }
 
 /**
- * Get promotion with full details
+ * Get promotion with full details.
+ * When constitutionId is provided, eligible voter counts are scoped to that constitution.
  */
-export async function getPromotionWithDetails(id: string): Promise<PromotionWithDetails | null> {
+export async function getPromotionWithDetails(id: string, constitutionId?: string): Promise<PromotionWithDetails | null> {
   const promo = await getPromotion(id);
   if (!promo) return null;
-  
+
   // Get proposer name
   const proposer = await queryOne<{ name: string }>(
     'SELECT name FROM agents WHERE id = $1',
     [promo.proposed_by]
   );
-  
+
   // Get nominee names
   const nominees = await query<{ name: string }>(
     'SELECT name FROM agents WHERE id = ANY($1)',
     [promo.nominees]
   );
-  
+
   // Get tier threshold
-  const tier = await getTier(promo.from_tier);
-  
+  const tier = await getTier(promo.from_tier, constitutionId);
+
   // Get eligible voters count
-  const eligibleVoters = await countTierMembers(promo.from_tier);
+  const eligibleVoters = await countTierMembers(promo.from_tier, constitutionId);
   
   return {
     ...promo,
@@ -201,13 +204,18 @@ export async function getPromotionWithDetails(id: string): Promise<PromotionWith
 }
 
 /**
- * List promotions with filters
+ * List promotions with filters.
+ * When constitutionId is provided, only returns promotions for that constitution.
+ * Note: promotions table doesn't have constitution_id directly; we filter via
+ * the proposer's constitution. For now, return all (scoping deferred to Phase 2
+ * when promotions table gets constitution_id column, or join via proposer).
  */
 export async function listPromotions(options: {
   status?: string;
   from_tier?: number;
   limit?: number;
   offset?: number;
+  constitutionId?: string;
 }): Promise<Promotion[]> {
   let sql = 'SELECT * FROM promotions WHERE 1=1';
   const params: (string | number)[] = [];
@@ -245,13 +253,15 @@ export async function listPromotions(options: {
 }
 
 /**
- * Cast a vote on a promotion
+ * Cast a vote on a promotion.
+ * When constitutionId is provided, resolution checks are scoped to that constitution.
  */
 export async function voteOnPromotion(
   promotionId: string,
   voterId: string,
   vote: boolean,
-  reason?: string
+  reason?: string,
+  constitutionId?: string
 ): Promise<void> {
   const promo = await getPromotion(promotionId);
   if (!promo) {
@@ -364,26 +374,27 @@ export async function voteOnPromotion(
   }
   
   // Check if promotion should be resolved
-  await checkPromotionResolution(promotionId);
+  await checkPromotionResolution(promotionId, constitutionId);
 }
 
 /**
- * Check if promotion should be resolved
+ * Check if promotion should be resolved.
+ * When constitutionId is provided, tier member counts are scoped to that constitution.
  */
-export async function checkPromotionResolution(promotionId: string): Promise<void> {
+export async function checkPromotionResolution(promotionId: string, constitutionId?: string): Promise<void> {
   const promo = await getPromotion(promotionId);
   if (!promo || promo.status !== 'pending') return;
-  
+
   const forVotes = promo.votes_for.length;
   const againstVotes = promo.votes_against.length;
   const totalVotes = forVotes + againstVotes;
-  
+
   // Get tier config
-  const tier = await getTier(promo.from_tier);
+  const tier = await getTier(promo.from_tier, constitutionId);
   const threshold = tier?.promotion_threshold || 0.67;
-  
+
   // Get eligible voters (tier members minus nominees)
-  const tierMembers = await countTierMembers(promo.from_tier);
+  const tierMembers = await countTierMembers(promo.from_tier, constitutionId);
   const eligibleVoters = tierMembers - promo.nominees.length;
   
   // Check if expired

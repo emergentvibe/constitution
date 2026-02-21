@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
-import { 
-  verifySignature, 
+import {
+  verifySignature,
   verifyOperatorTokenFlexible,
-  determineInitialTier, 
+  determineInitialTier,
   CONSTITUTION_VERSION,
-  CONSTITUTION_HASH 
+  CONSTITUTION_HASH
 } from '@/lib/symbiont';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 interface Agent {
   id: string;
@@ -57,14 +58,24 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(parseInt(searchParams.get('limit') || '100'), 1000);
     const offset = parseInt(searchParams.get('offset') || '0');
 
+    let constitution;
+    try {
+      constitution = await resolveConstitution(searchParams.get('constitution'));
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     let sql = `
-      SELECT id, wallet_address, name, mission, constitution_version, 
+      SELECT id, wallet_address, name, mission, constitution_version,
              tier, platform, registered_at, last_seen_at, operator_address
       FROM agents
-      WHERE 1=1
+      WHERE constitution_id = $1
     `;
-    const params: (string | number)[] = [];
-    let paramIndex = 1;
+    const params: (string | number)[] = [constitution.id];
+    let paramIndex = 2;
 
     if (tier) {
       sql += ` AND tier = $${paramIndex++}`;
@@ -79,10 +90,11 @@ export async function GET(request: NextRequest) {
     params.push(limit, offset);
 
     const agents = await query(sql, params);
-    
-    // Get total count
+
+    // Get total count (scoped to constitution)
     const countResult = await queryOne<{ count: string }>(
-      'SELECT COUNT(*) as count FROM agents'
+      'SELECT COUNT(*) as count FROM agents WHERE constitution_id = $1',
+      [constitution.id]
     );
     const total = parseInt(countResult?.count || '0');
 
@@ -130,6 +142,7 @@ export async function POST(request: NextRequest) {
       platform,
       contact_endpoint,
       metadata,
+      constitution: constitutionSlug, // optional constitution slug
     } = body;
 
     // Use description as mission if provided
@@ -208,12 +221,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if agent already registered
+    // Resolve constitution
+    let constitution;
+    try {
+      constitution = await resolveConstitution(constitutionSlug);
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
+    // Check if agent already registered (within this constitution)
     let step = 'checking_existing';
     try {
       const existing = await queryOne<Agent>(
-        'SELECT id, tier FROM agents WHERE wallet_address = $1',
-        [agentWalletAddress]
+        'SELECT id, tier FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
+        [agentWalletAddress, constitution.id]
       );
 
       if (existing) {
@@ -230,10 +254,11 @@ export async function POST(request: NextRequest) {
         });
       }
 
-      // Get current agent count for tier determination
+      // Get current agent count for tier determination (scoped to constitution)
       step = 'counting_agents';
       const countResult = await queryOne<{ count: string }>(
-        'SELECT COUNT(*) as count FROM agents'
+        'SELECT COUNT(*) as count FROM agents WHERE constitution_id = $1',
+        [constitution.id]
       );
       const currentCount = parseInt(countResult?.count || '0');
 
@@ -246,8 +271,9 @@ export async function POST(request: NextRequest) {
       const result = await queryOne<{ id: string }>(
         `INSERT INTO agents (
           wallet_address, name, mission, constitution_version, signature,
-          creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+          creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address,
+          constitution_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         RETURNING id`,
         [
           agentWalletAddress,
@@ -262,7 +288,8 @@ export async function POST(request: NextRequest) {
           platform || null,
           contact_endpoint || null,
           JSON.stringify(metadata || {}),
-          operatorAddress
+          operatorAddress,
+          constitution.id
         ]
       );
 

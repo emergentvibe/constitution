@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { voteOnPromotion, getPromotionWithDetails } from '@/lib/promotions';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export async function POST(
 ) {
   try {
     const body = await request.json();
-    const { voter_id, vote, reason } = body;
+    const { voter_id, vote, reason, constitution: constitutionSlug } = body;
 
     if (!voter_id) {
       return NextResponse.json(
@@ -26,10 +27,20 @@ export async function POST(
       );
     }
 
-    await voteOnPromotion(params.id, voter_id, vote, reason);
-    
+    let constitution;
+    try {
+      constitution = await resolveConstitution(constitutionSlug);
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
+    await voteOnPromotion(params.id, voter_id, vote, reason, constitution.id);
+
     // Return updated promotion
-    const promotion = await getPromotionWithDetails(params.id);
+    const promotion = await getPromotionWithDetails(params.id, constitution.id);
 
     return NextResponse.json({
       message: vote ? 'Voted for promotion' : 'Voted against promotion',

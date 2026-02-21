@@ -2,9 +2,9 @@
  * Tests for constitution lookup with fallback safety.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mockQueryOne, resetDbMocks } from '../mocks/db';
+import { mockQuery, mockQueryOne, resetDbMocks } from '../mocks/db';
 
-import { getDefaultConstitution, getConstitution } from '@/lib/constitution';
+import { getDefaultConstitution, getConstitution, resolveConstitution, listConstitutions, ConstitutionNotFoundError } from '@/lib/constitution';
 
 describe('getDefaultConstitution', () => {
   beforeEach(() => {
@@ -127,5 +127,110 @@ describe('getConstitution', () => {
 
     const result = await getConstitution('other-project');
     expect(result).toBeNull();
+  });
+});
+
+describe('resolveConstitution', () => {
+  beforeEach(() => {
+    resetDbMocks();
+  });
+
+  it('returns default when no slug provided', async () => {
+    mockQueryOne.mockResolvedValueOnce({
+      id: 'default-id',
+      slug: 'emergentvibe',
+      name: 'Test',
+      content_hash: 'hash',
+      version: '1.0',
+      snapshot_space: 'test.eth',
+      metadata: {},
+      is_default: true,
+      is_active: true,
+    });
+
+    const result = await resolveConstitution();
+    expect(result.slug).toBe('emergentvibe');
+  });
+
+  it('returns default when null slug provided', async () => {
+    mockQueryOne.mockResolvedValueOnce({
+      id: 'default-id',
+      slug: 'emergentvibe',
+      name: 'Test',
+      content_hash: 'hash',
+      version: '1.0',
+      snapshot_space: 'test.eth',
+      metadata: {},
+      is_default: true,
+      is_active: true,
+    });
+
+    const result = await resolveConstitution(null);
+    expect(result.slug).toBe('emergentvibe');
+  });
+
+  it('resolves specific slug', async () => {
+    mockQueryOne.mockResolvedValueOnce({
+      id: 'other-id',
+      slug: 'other-project',
+      name: 'Other',
+      content_hash: 'hash2',
+      version: '2.0',
+      snapshot_space: 'other.eth',
+      metadata: {},
+      is_default: false,
+      is_active: true,
+    });
+
+    const result = await resolveConstitution('other-project');
+    expect(result.slug).toBe('other-project');
+    expect(result.id).toBe('other-id');
+  });
+
+  it('throws ConstitutionNotFoundError for unknown slug', async () => {
+    mockQueryOne.mockResolvedValueOnce(null);
+
+    await expect(resolveConstitution('nonexistent')).rejects.toThrow(ConstitutionNotFoundError);
+  });
+});
+
+describe('listConstitutions', () => {
+  beforeEach(() => {
+    resetDbMocks();
+  });
+
+  it('returns constitutions with counts', async () => {
+    mockQuery.mockResolvedValueOnce([
+      {
+        id: 'abc-123',
+        slug: 'emergentvibe',
+        name: 'Test',
+        content_hash: 'hash',
+        version: '1.0',
+        snapshot_space: 'test.eth',
+        metadata: {},
+        is_default: true,
+        is_active: true,
+        member_count: '42',
+        proposal_count: '5',
+      },
+    ]);
+
+    const result = await listConstitutions();
+    expect(result).toHaveLength(1);
+    expect(result[0].slug).toBe('emergentvibe');
+    expect(result[0].member_count).toBe(42);
+    expect(result[0].proposal_count).toBe(5);
+  });
+
+  it('returns fallback when table missing', async () => {
+    mockQuery.mockRejectedValueOnce(
+      new Error('relation "constitutions" does not exist')
+    );
+
+    const result = await listConstitutions();
+    expect(result).toHaveLength(1);
+    expect(result[0].slug).toBe('emergentvibe');
+    expect(result[0].member_count).toBe(0);
   });
 });

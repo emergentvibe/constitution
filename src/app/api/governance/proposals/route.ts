@@ -3,13 +3,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { 
-  getProposals as getSnapshotProposals, 
+import {
+  getProposals as getSnapshotProposals,
   SNAPSHOT_SPACE,
   ProposalType,
   getVotingPeriod,
-  getVotingThreshold 
+  getVotingThreshold
 } from '@/lib/snapshot';
+import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,16 +19,26 @@ export async function GET(request: NextRequest) {
     const source = searchParams.get('source') || 'all';
     const first = parseInt(searchParams.get('first') || '20');
     const skip = parseInt(searchParams.get('skip') || '0');
-    
+
+    let constitution;
+    try {
+      constitution = await resolveConstitution(searchParams.get('constitution'));
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     const results: any = { proposals: [], source };
-    
-    // Fetch from Snapshot if requested
+
+    // Fetch from Snapshot if requested (use constitution's snapshot_space)
     if (source === 'snapshot' || source === 'all') {
       try {
         const snapshotProposals = await getSnapshotProposals(
-          SNAPSHOT_SPACE, 
-          state as any || undefined, 
-          first, 
+          constitution.snapshot_space,
+          state as any || undefined,
+          first,
           skip
         );
         results.snapshot = snapshotProposals;
@@ -36,28 +47,29 @@ export async function GET(request: NextRequest) {
         results.snapshotError = err.message;
       }
     }
-    
-    // Fetch from local DB if requested
+
+    // Fetch from local DB if requested (scoped to constitution)
     if (source === 'local' || source === 'all') {
       try {
         const db = getDb();
-        
+
         let localProposals;
         if (state) {
           localProposals = await db`
-            SELECT * FROM governance_proposals 
-            WHERE status = ${state}
+            SELECT * FROM governance_proposals
+            WHERE status = ${state} AND constitution_id = ${constitution.id}
             ORDER BY created_at DESC
             LIMIT ${first} OFFSET ${skip}
           `;
         } else {
           localProposals = await db`
-            SELECT * FROM governance_proposals 
+            SELECT * FROM governance_proposals
+            WHERE constitution_id = ${constitution.id}
             ORDER BY created_at DESC
             LIMIT ${first} OFFSET ${skip}
           `;
         }
-        
+
         results.local = localProposals;
         results.proposals.push(...localProposals.map(p => ({ ...p, source: 'local' })));
       } catch (err: any) {
@@ -82,18 +94,19 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { 
-      title, 
-      description, 
+    const {
+      title,
+      description,
       type = 'policy_proposal' as ProposalType,
       category,
       choices = ['For', 'Against', 'Abstain'],
       related_articles,
       amendment_text,
       impact_assessment,
-      author_wallet // Required for now
+      author_wallet, // Required for now
+      constitution: constitutionSlug,
     } = body;
-    
+
     // Validation
     if (!title || title.length < 10) {
       return NextResponse.json({ error: 'Title must be at least 10 characters' }, { status: 400 });
@@ -104,13 +117,23 @@ export async function POST(request: NextRequest) {
     if (!author_wallet) {
       return NextResponse.json({ error: 'author_wallet is required' }, { status: 400 });
     }
-    
+
+    let constitution;
+    try {
+      constitution = await resolveConstitution(constitutionSlug);
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     // Calculate voting period and thresholds
     const votingPeriod = getVotingPeriod(type);
     const threshold = getVotingThreshold(type);
-    
+
     const db = getDb();
-    
+
     const [proposal] = await db`
       INSERT INTO governance_proposals (
         title,
@@ -126,7 +149,8 @@ export async function POST(request: NextRequest) {
         voting_period_seconds,
         quorum_threshold,
         approval_threshold,
-        metadata
+        metadata,
+        constitution_id
       ) VALUES (
         ${title},
         ${description},
@@ -141,11 +165,12 @@ export async function POST(request: NextRequest) {
         ${votingPeriod},
         ${threshold.quorum},
         ${threshold.approval},
-        ${JSON.stringify({ type, category, related_articles, impact_assessment })}
+        ${JSON.stringify({ type, category, related_articles, impact_assessment })},
+        ${constitution.id}
       )
       RETURNING *
     `;
-    
+
     return NextResponse.json({
       proposal,
       nextSteps: {
@@ -158,7 +183,7 @@ export async function POST(request: NextRequest) {
         ]
       },
       snapshotMessage: {
-        space: SNAPSHOT_SPACE,
+        space: constitution.snapshot_space,
         title,
         body: description,
         choices,

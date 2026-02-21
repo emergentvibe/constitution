@@ -15,16 +15,23 @@ interface VoterInfo {
 /**
  * Check if a wallet can vote on a governance proposal.
  * Returns voter info if eligible, or an error message.
+ * When constitutionId is provided, voter must belong to that constitution.
  */
 export async function canVoteOnProposal(
   walletAddress: string,
-  proposalId: string
+  proposalId: string,
+  constitutionId?: string
 ): Promise<{ eligible: true; voter: VoterInfo } | { eligible: false; error: string; status: number }> {
   // Check voter exists and has sufficient tier
-  const voter = await queryOne<VoterInfo>(
-    'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1',
-    [walletAddress.toLowerCase()]
-  );
+  const voter = constitutionId
+    ? await queryOne<VoterInfo>(
+        'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
+        [walletAddress.toLowerCase(), constitutionId]
+      )
+    : await queryOne<VoterInfo>(
+        'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1',
+        [walletAddress.toLowerCase()]
+      );
 
   if (!voter) {
     return { eligible: false, error: 'Not a registered agent', status: 403 };
@@ -65,17 +72,24 @@ export async function canVoteOnProposal(
 /**
  * Check if an agent can vote on a promotion.
  * Returns voter info if eligible, or an error message.
+ * When constitutionId is provided, voter must belong to that constitution.
  */
 export async function canVoteOnPromotion(
   voterId: string,
   promotionId: string,
   promotionFromTier: number,
-  nominees: string[]
+  nominees: string[],
+  constitutionId?: string
 ): Promise<{ eligible: true; voter: { tier: number; name: string; operator_address: string | null } } | { eligible: false; error: string }> {
-  const voter = await queryOne<{ tier: number; name: string; operator_address: string | null }>(
-    'SELECT tier, name, operator_address FROM agents WHERE id = $1',
-    [voterId]
-  );
+  const voter = constitutionId
+    ? await queryOne<{ tier: number; name: string; operator_address: string | null }>(
+        'SELECT tier, name, operator_address FROM agents WHERE id = $1 AND constitution_id = $2',
+        [voterId, constitutionId]
+      )
+    : await queryOne<{ tier: number; name: string; operator_address: string | null }>(
+        'SELECT tier, name, operator_address FROM agents WHERE id = $1',
+        [voterId]
+      );
 
   if (!voter) {
     return { eligible: false, error: 'Voter not found' };
