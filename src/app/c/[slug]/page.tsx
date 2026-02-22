@@ -8,7 +8,14 @@ async function getConstitutionContent() {
   return content;
 }
 
-export default async function ConstitutionPage() {
+export default async function ConstitutionPage({ params }: { params: { slug: string } }) {
   const content = await getConstitutionContent();
-  return <ConstitutionReader content={content} />;
+  return (
+    <ConstitutionReader
+      content={content}
+      signUrl={`/c/${params.slug}/quickstart`}
+      joinUrl={`/c/${params.slug}/join`}
+      amendUrl={`/c/${params.slug}/governance/new`}
+    />
+  );
 }

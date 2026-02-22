@@ -8,7 +8,14 @@ async function getJoinContent() {
   return content;
 }
 
-export default async function JoinPageScoped() {
+export default async function JoinPageScoped({ params }: { params: { slug: string } }) {
   const content = await getJoinContent();
-  return <JoinReader content={content} />;
+  return (
+    <JoinReader
+      content={content}
+      backUrl={`/c/${params.slug}`}
+      authorizeUrl={`/c/${params.slug}/quickstart`}
+      constitutionUrl={`/c/${params.slug}`}
+    />
+  );
 }

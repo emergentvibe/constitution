@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useConstitution } from '@/contexts/ConstitutionContext';
 
 interface Proposal {
   id: string;
@@ -17,10 +18,10 @@ interface SnapshotSubmitProps {
   onSuccess?: () => void;
 }
 
-const SNAPSHOT_SPACE = 'emergentvibe.eth';
-
 export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
   const { walletAddress, connect } = useAuth();
+  const constitution = useConstitution();
+  const snapshotSpace = constitution.snapshot_space;
   const [step, setStep] = useState<'ready' | 'connecting' | 'signing' | 'submitting' | 'linking' | 'done'>('ready');
   const [error, setError] = useState<string | null>(null);
   const [snapshotId, setSnapshotId] = useState<string | null>(null);
@@ -76,7 +77,7 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
       
       const message = {
         from: address,
-        space: SNAPSHOT_SPACE,
+        space: snapshotSpace,
         timestamp: now,
         type: 'single-choice',
         title: proposal.title,
@@ -149,7 +150,7 @@ export function SnapshotSubmit({ proposal, onSuccess }: SnapshotSubmitProps) {
         </p>
         {snapshotId && (
           <a
-            href={`https://snapshot.org/#/${SNAPSHOT_SPACE}/proposal/${snapshotId}`}
+            href={`https://snapshot.org/#/${snapshotSpace}/proposal/${snapshotId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-emerald-400 hover:underline text-sm"

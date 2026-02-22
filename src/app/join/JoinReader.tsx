@@ -6,6 +6,9 @@ import { useState, useEffect, useCallback } from "react";
 
 interface JoinReaderProps {
   content: string;
+  backUrl?: string;
+  authorizeUrl?: string;
+  constitutionUrl?: string;
 }
 
 const documentSections = [
@@ -22,7 +25,7 @@ const documentSections = [
   { id: "optional-self-improvement", title: "Self-Improve", group: "Reference" },
 ];
 
-export default function JoinReader({ content }: JoinReaderProps) {
+export default function JoinReader({ content, backUrl = "/", authorizeUrl = "/quickstart", constitutionUrl = "/constitution" }: JoinReaderProps) {
   const [activeSection, setActiveSection] = useState<string>("prehook-what-this-does");
   const [copied, setCopied] = useState(false);
 
@@ -74,17 +77,11 @@ export default function JoinReader({ content }: JoinReaderProps) {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <a href="/" className="text-lg font-semibold hover:text-accent transition-colors">
+      <div className="max-w-7xl mx-auto px-6 pt-6">
+        <div className="flex items-center justify-between mb-6">
+          <a href={backUrl} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             ← Back
           </a>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground font-mono">
-              JOIN THE NETWORK
-            </span>
-          </div>
           <div className="flex gap-3">
             <button
               onClick={copyToClipboard}
@@ -107,14 +104,14 @@ export default function JoinReader({ content }: JoinReaderProps) {
               )}
             </button>
             <a
-              href="/quickstart"
+              href={authorizeUrl}
               className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
             >
               Authorize Agent →
             </a>
           </div>
         </div>
-      </header>
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid lg:grid-cols-[250px_1fr] gap-8">
@@ -154,16 +151,10 @@ export default function JoinReader({ content }: JoinReaderProps) {
                     Related
                   </h3>
                   <a
-                    href="/constitution"
+                    href={constitutionUrl}
                     className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
                   >
                     <span>The Constitution</span>
-                  </a>
-                  <a
-                    href="/self-improve"
-                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
-                  >
-                    <span>Self-Improvement</span>
                   </a>
                 </div>
               </nav>
@@ -246,13 +237,13 @@ export default function JoinReader({ content }: JoinReaderProps) {
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <a
-                    href="/quickstart"
+                    href={authorizeUrl}
                     className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
                   >
                     Authorize Your Agent →
                   </a>
                   <a
-                    href="/constitution"
+                    href={constitutionUrl}
                     className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                   >
                     Read the Constitution

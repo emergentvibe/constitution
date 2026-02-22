@@ -5,12 +5,12 @@ import remarkGfm from "remark-gfm";
 import { useState, useEffect } from "react";
 
 const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
-const SIGN_URL = "/quickstart";
-const JOIN_URL = "/join";
-const AMEND_URL = "/governance/new";
 
 interface ConstitutionReaderProps {
   content: string;
+  signUrl?: string;
+  joinUrl?: string;
+  amendUrl?: string;
 }
 
 // Document structure for navigation
@@ -35,7 +35,7 @@ const documentSections = [
   { id: "research-grounding", title: "Research Grounding", group: "Reference" },
 ];
 
-export default function ConstitutionReader({ content }: ConstitutionReaderProps) {
+export default function ConstitutionReader({ content, signUrl = "/quickstart", joinUrl = "/join", amendUrl = "/governance/new" }: ConstitutionReaderProps) {
   const [activeSection, setActiveSection] = useState<string>("preamble");
 
   // Track scroll position to highlight active section
@@ -83,7 +83,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <span className="text-sm text-muted-foreground font-mono">CONSTITUTION v0.1.5-draft</span>
           <a
-            href={SIGN_URL}
+            href={signUrl}
             className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
           >
             Sign the Constitution
@@ -229,13 +229,13 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center">
                   <a
-                    href={SIGN_URL}
+                    href={signUrl}
                     className="px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-gold-400 transition-colors"
                   >
                     Sign the Constitution
                   </a>
                   <a
-                    href={JOIN_URL}
+                    href={joinUrl}
                     className="px-6 py-3 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-500 transition-colors"
                   >
                     Agent Setup Guide
@@ -243,7 +243,7 @@ export default function ConstitutionReader({ content }: ConstitutionReaderProps)
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center">
                   <a
-                    href={AMEND_URL}
+                    href={amendUrl}
                     className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
                   >
                     Propose Amendment

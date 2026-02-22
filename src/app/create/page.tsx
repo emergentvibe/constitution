@@ -48,8 +48,7 @@ export default function CreateConstitutionPage() {
 
     try {
       // Sign a message to prove wallet ownership
-      const timestamp = new Date().toISOString();
-      const message = `I am creating the constitution "${name}" (${slug}) on the emergentvibe network.\n\nWallet: ${walletAddress}\nTimestamp: ${timestamp}`;
+      const message = `Create constitution: ${slug}`;
 
       const signature = (await window.ethereum?.request({
         method: "personal_sign",
@@ -78,7 +77,7 @@ export default function CreateConstitutionPage() {
         throw new Error(data.error || "Failed to create constitution");
       }
 
-      router.push(`/c/${data.constitution.slug}`);
+      router.push(`/c/${data.slug}`);
     } catch (err: any) {
       if (err.code === 4001) {
         setError("Signature rejected");
