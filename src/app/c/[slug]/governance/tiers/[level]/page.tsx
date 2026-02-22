@@ -60,17 +60,16 @@ export default function TierDetailPageScoped() {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href={link("/governance/tiers")} className="text-lg font-semibold hover:text-accent transition-colors">← All Tiers</Link>
-          <span className="text-sm text-muted-foreground font-mono">TIER {level} {tier.name ? `— ${tier.name}` : ""}</span>
+      <div className="max-w-4xl mx-auto px-6 pt-6">
+        <div className="flex items-center justify-between mb-6">
+          <Link href={link("/governance/tiers")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">← All Tiers</Link>
           <Link href={link(`/governance/promotions/new?from_tier=${level}`)} className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
             Propose Promotion
           </Link>
         </div>
-      </header>
+      </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-4xl mx-auto px-6 pb-8">
         <div className="p-6 rounded-xl border border-border bg-muted/20 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>

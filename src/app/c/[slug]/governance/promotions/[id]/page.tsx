@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useConstitutionLinks } from "@/hooks/useConstitutionLinks";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Promotion {
   id: string;
@@ -40,6 +41,7 @@ export default function PromotionDetailPageScoped() {
   const params = useParams();
   const id = params.id as string;
   const { link, apiUrl } = useConstitutionLinks();
+  const { walletAddress, connect } = useAuth();
 
   const [promotion, setPromotion] = useState<Promotion | null>(null);
   const [votes, setVotes] = useState<Vote[]>([]);
@@ -47,11 +49,32 @@ export default function PromotionDetailPageScoped() {
   const [error, setError] = useState<string | null>(null);
   const [voting, setVoting] = useState(false);
   const [voteReason, setVoteReason] = useState("");
+  const [voteError, setVoteError] = useState<string | null>(null);
+  const [agentId, setAgentId] = useState<string | null>(null);
+  const [agentName, setAgentName] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPromotion();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    if (walletAddress) {
+      fetch(apiUrl(`/api/symbiont-hub/agents/${walletAddress}`))
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data) {
+            setAgentId(data.id);
+            setAgentName(data.name);
+          }
+        })
+        .catch(() => {});
+    } else {
+      setAgentId(null);
+      setAgentName(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletAddress]);
 
   async function fetchPromotion() {
     try {
@@ -68,22 +91,21 @@ export default function PromotionDetailPageScoped() {
   }
 
   async function castVote(voteFor: boolean) {
-    const voterId = prompt("Enter your agent ID to vote:");
-    if (!voterId) return;
-
+    if (!agentId) return;
     setVoting(true);
+    setVoteError(null);
     try {
       const res = await fetch(apiUrl(`/api/promotions/${id}/vote`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ voter_id: voterId, vote: voteFor, reason: voteReason || undefined }),
+        body: JSON.stringify({ voter_id: agentId, vote: voteFor, reason: voteReason || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to vote");
       await fetchPromotion();
       setVoteReason("");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to vote");
+      setVoteError(err instanceof Error ? err.message : "Failed to vote");
     } finally {
       setVoting(false);
     }
@@ -123,15 +145,14 @@ export default function PromotionDetailPageScoped() {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href={link("/governance/promotions")} className="text-lg font-semibold hover:text-accent transition-colors">← Promotions</Link>
-          <span className="text-sm text-muted-foreground font-mono">PROMOTION DETAIL</span>
+      <div className="max-w-4xl mx-auto px-6 pt-6">
+        <div className="flex items-center justify-between mb-6">
+          <Link href={link("/governance/promotions")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Promotions</Link>
           <div className={`px-3 py-1 text-sm rounded border ${getStatusColor(promotion.status)}`}>{promotion.status.toUpperCase()}</div>
         </div>
-      </header>
+      </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-4xl mx-auto px-6 pb-8">
         <div className="p-6 rounded-xl border border-border bg-muted/20 mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl font-bold">Tier {promotion.from_tier}</span>
@@ -179,18 +200,37 @@ export default function PromotionDetailPageScoped() {
         {promotion.status === "pending" && (
           <div className="p-6 rounded-xl border border-accent/30 bg-accent/5 mb-8">
             <h3 className="font-semibold mb-4">Cast Your Vote</h3>
-            <div className="mb-4">
-              <label className="text-sm text-muted-foreground block mb-1">Reason (optional)</label>
-              <textarea value={voteReason} onChange={(e) => setVoteReason(e.target.value)} placeholder="Why are you voting this way?" className="w-full p-3 rounded-lg border border-border bg-background text-sm resize-none" rows={2} />
-            </div>
-            <div className="flex gap-3">
-              <button onClick={() => castVote(true)} disabled={voting} className="flex-1 px-4 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50">
-                {voting ? "Voting..." : "Vote For ✓"}
-              </button>
-              <button onClick={() => castVote(false)} disabled={voting} className="flex-1 px-4 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50">
-                {voting ? "Voting..." : "Vote Against ✗"}
-              </button>
-            </div>
+            {!walletAddress ? (
+              <div className="text-center py-4">
+                <p className="text-muted-foreground mb-3">Connect your wallet to vote on this promotion.</p>
+                <button onClick={connect} className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
+                  Connect Wallet
+                </button>
+              </div>
+            ) : !agentId ? (
+              <div className="text-center py-4">
+                <p className="text-muted-foreground">No registered agent found for this wallet. You must be a signatory to vote.</p>
+              </div>
+            ) : (
+              <>
+                {agentName && <p className="text-sm text-muted-foreground mb-4">Voting as <span className="text-foreground font-medium">{agentName}</span></p>}
+                {voteError && (
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-600 text-sm mb-4">{voteError}</div>
+                )}
+                <div className="mb-4">
+                  <label className="text-sm text-muted-foreground block mb-1">Reason (optional)</label>
+                  <textarea value={voteReason} onChange={(e) => setVoteReason(e.target.value)} placeholder="Why are you voting this way?" className="w-full p-3 rounded-lg border border-border bg-background text-sm resize-none" rows={2} />
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => castVote(true)} disabled={voting} className="flex-1 px-4 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50">
+                    {voting ? "Voting..." : "Vote For"}
+                  </button>
+                  <button onClick={() => castVote(false)} disabled={voting} className="flex-1 px-4 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50">
+                    {voting ? "Voting..." : "Vote Against"}
+                  </button>
+                </div>
+              </>
+            )}
             <p className="text-xs text-muted-foreground mt-3">Only Tier {promotion.from_tier} members (excluding nominees) can vote.</p>
           </div>
         )}

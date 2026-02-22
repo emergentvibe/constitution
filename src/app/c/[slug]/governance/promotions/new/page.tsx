@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useConstitutionLinks } from "@/hooks/useConstitutionLinks";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Member {
   id: string;
@@ -23,6 +24,7 @@ function NewPromotionForm() {
   const searchParams = useSearchParams();
   const initialTier = searchParams.get("from_tier");
   const { link, apiUrl } = useConstitutionLinks();
+  const { walletAddress, connect } = useAuth();
 
   const [tiers, setTiers] = useState<Tier[]>([]);
   const [selectedTier, setSelectedTier] = useState<number | null>(initialTier ? parseInt(initialTier) : null);
@@ -30,6 +32,7 @@ function NewPromotionForm() {
   const [selectedNominees, setSelectedNominees] = useState<string[]>([]);
   const [rationale, setRationale] = useState("");
   const [proposerId, setProposerId] = useState("");
+  const [proposerName, setProposerName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +41,24 @@ function NewPromotionForm() {
     fetchTiers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (walletAddress) {
+      fetch(apiUrl(`/api/symbiont-hub/agents/${walletAddress}`))
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data) {
+            setProposerId(data.id);
+            setProposerName(data.name);
+          }
+        })
+        .catch(() => {});
+    } else {
+      setProposerId("");
+      setProposerName(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletAddress]);
 
   useEffect(() => {
     if (selectedTier) fetchMembers(selectedTier);
@@ -102,23 +123,35 @@ function NewPromotionForm() {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-50 px-6 py-4 bg-background/80 backdrop-blur border-b border-border">
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
-          <Link href={link("/governance/promotions")} className="text-lg font-semibold hover:text-accent transition-colors">← Cancel</Link>
-          <span className="text-sm text-muted-foreground font-mono">NEW PROMOTION</span>
-          <div />
+      <div className="max-w-2xl mx-auto px-6 pt-6">
+        <div className="flex items-center justify-between mb-6">
+          <Link href={link("/governance/promotions")} className="text-sm text-muted-foreground hover:text-foreground transition-colors">← Cancel</Link>
         </div>
-      </header>
+      </div>
 
-      <div className="max-w-2xl mx-auto px-6 py-8">
+      <div className="max-w-2xl mx-auto px-6 pb-8">
         <h1 className="text-2xl font-bold mb-2">Propose Promotion</h1>
         <p className="text-muted-foreground mb-8">Select members from your tier to promote to the tier above.</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium mb-2">Your Agent ID *</label>
-            <input type="text" value={proposerId} onChange={(e) => setProposerId(e.target.value)} placeholder="Enter your agent UUID"
-              className="w-full p-3 rounded-lg border border-border bg-background" required />
+            <label className="block text-sm font-medium mb-2">Proposer</label>
+            {!walletAddress ? (
+              <div className="p-4 rounded-lg border border-border bg-muted/20 text-center">
+                <p className="text-muted-foreground mb-2">Connect your wallet to propose a promotion.</p>
+                <button type="button" onClick={connect} className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
+                  Connect Wallet
+                </button>
+              </div>
+            ) : !proposerId ? (
+              <div className="p-4 rounded-lg border border-border bg-muted/20">
+                <p className="text-muted-foreground">No registered agent found for this wallet. You must be a signatory to propose.</p>
+              </div>
+            ) : (
+              <div className="p-3 rounded-lg border border-accent/30 bg-accent/5">
+                <span className="text-sm">Proposing as <span className="font-medium">{proposerName || proposerId}</span></span>
+              </div>
+            )}
             <p className="text-xs text-muted-foreground mt-1">You must be a member of the tier you&apos;re proposing from</p>
           </div>
 
