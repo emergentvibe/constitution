@@ -53,17 +53,6 @@ export default function RootLayout({
             {children}
           </div>
         </AuthProvider>
-        {/* Footer */}
-        <footer className="relative z-10 py-6 text-center text-sm text-neutral-500">
-          <a 
-            href="https://ideologos.com" 
-            className="hover:text-neutral-300 transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Also: ideologos.com — AI that challenges your thinking
-          </a>
-        </footer>
       </body>
     </html>
   );

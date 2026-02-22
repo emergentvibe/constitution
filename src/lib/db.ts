@@ -9,8 +9,9 @@ export function getDb() {
     if (!connectionString) {
       throw new Error('DATABASE_URL environment variable not set');
     }
+    const isLocalhost = connectionString.includes('localhost') || connectionString.includes('127.0.0.1');
     sql = postgres(connectionString, {
-      ssl: 'require',
+      ssl: isLocalhost ? false : 'require',
       max: 10,
       idle_timeout: 20,
       connect_timeout: 10,
