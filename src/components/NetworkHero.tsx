@@ -106,6 +106,10 @@ export default function NetworkHero() {
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
+
+      // Fill with background color immediately (alpha:false starts black)
+      ctx.fillStyle = "#FAF7F2";
+      ctx.fillRect(0, 0, width, height);
       
       const oldWidth = dimensionsRef.current.width;
       const oldHeight = dimensionsRef.current.height;
