@@ -97,52 +97,41 @@ const concepts = [
   },
 ];
 
-// Spokes SVG component - connects center to islands (rendered inside hero section)
+// Spokes SVG component - connects center to islands (no blur filter for scroll perf)
 function Spokes() {
   return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none">
+    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ contain: 'strict' }}>
       <defs>
-        {/* Gradient for gold-teal spokes */}
         <linearGradient id="spoke-gradient-tl" x1="50%" y1="50%" x2="0%" y2="0%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
         </linearGradient>
         <linearGradient id="spoke-gradient-tr" x1="50%" y1="50%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
         </linearGradient>
         <linearGradient id="spoke-gradient-bl" x1="50%" y1="50%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
         </linearGradient>
         <linearGradient id="spoke-gradient-br" x1="50%" y1="50%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="#C9A227" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="#4ECDC4" stopOpacity="0.3" />
         </linearGradient>
-        {/* Glow filter */}
-        <filter id="spoke-glow" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
-      
-      {/* Spokes from center to each island - matching concept box positions */}
-      {/* Top Left - concept[0]: top-[12%] left-[10%] */}
-      <line x1="50%" y1="50%" x2="14%" y2="16%" stroke="url(#spoke-gradient-tl)" strokeWidth="2.5" filter="url(#spoke-glow)" />
-      {/* Left Middle - concept[1]: top-[45%] left-[8%] */}
-      <line x1="50%" y1="50%" x2="11%" y2="48%" stroke="url(#spoke-gradient-tl)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Top Right - concept[2]: top-[15%] right-[12%] = left 88% */}
-      <line x1="50%" y1="50%" x2="86%" y2="18%" stroke="url(#spoke-gradient-tr)" strokeWidth="2.5" filter="url(#spoke-glow)" />
-      {/* Right Middle - concept[3]: top-[50%] right-[10%] = left 90% */}
-      <line x1="50%" y1="50%" x2="88%" y2="53%" stroke="url(#spoke-gradient-tr)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden lg:block" />
-      {/* Bottom Right - concept[4]: bottom-[18%] right-[18%] = top 82%, left 82% */}
-      <line x1="50%" y1="50%" x2="80%" y2="79%" stroke="url(#spoke-gradient-br)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Bottom Left - concept[5]: bottom-[22%] left-[12%] = top 78% */}
-      <line x1="50%" y1="50%" x2="15%" y2="76%" stroke="url(#spoke-gradient-bl)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden lg:block" />
+
+      {/* Top Left - concept[0] */}
+      <line x1="50%" y1="50%" x2="14%" y2="16%" stroke="url(#spoke-gradient-tl)" strokeWidth="1.5" />
+      {/* Left Middle - concept[1] */}
+      <line x1="50%" y1="50%" x2="11%" y2="48%" stroke="url(#spoke-gradient-tl)" strokeWidth="1.5" className="hidden md:block" />
+      {/* Top Right - concept[2] */}
+      <line x1="50%" y1="50%" x2="86%" y2="18%" stroke="url(#spoke-gradient-tr)" strokeWidth="1.5" />
+      {/* Right Middle - concept[3] */}
+      <line x1="50%" y1="50%" x2="88%" y2="53%" stroke="url(#spoke-gradient-tr)" strokeWidth="1.5" className="hidden lg:block" />
+      {/* Bottom Right - concept[4] */}
+      <line x1="50%" y1="50%" x2="80%" y2="79%" stroke="url(#spoke-gradient-br)" strokeWidth="1.5" className="hidden md:block" />
+      {/* Bottom Left - concept[5] */}
+      <line x1="50%" y1="50%" x2="15%" y2="76%" stroke="url(#spoke-gradient-bl)" strokeWidth="1.5" className="hidden lg:block" />
     </svg>
   );
 }
@@ -167,17 +156,17 @@ export default function HomeClient() {
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Vignette background */}
-      <div 
-        className="absolute inset-0"
+    <div className="min-h-screen relative">
+      {/* Vignette background - constrained to hero viewport */}
+      <div
+        className="absolute inset-x-0 top-0 h-screen"
         style={{
           background: "radial-gradient(ellipse at center, #FAF7F2 0%, #F5F0E8 50%, #EDE6DA 100%)"
         }}
       />
 
-      {/* Network Animation Background */}
-      <div className="absolute inset-0">
+      {/* Network Animation Background - constrained to viewport height */}
+      <div className="absolute inset-x-0 top-0 h-screen">
         <NetworkHero />
       </div>
 
@@ -228,18 +217,18 @@ export default function HomeClient() {
               className="absolute inset-0 -m-8 rounded-3xl opacity-60"
               style={{
                 background: "radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, transparent 70%)",
-                filter: "blur(20px)"
+                opacity: 0.6
               }}
             />
             
             {/* Frosted glass panel with glowing border */}
             <div 
-              className="relative bg-white/60 backdrop-blur-lg rounded-3xl p-8 md:p-12"
+              className="relative bg-white/90 rounded-3xl p-8 md:p-12"
               style={{
                 boxShadow: `
-                  0 0 40px rgba(201, 162, 39, 0.2),
-                  0 0 80px rgba(78, 205, 196, 0.1),
-                  0 8px 32px rgba(0, 0, 0, 0.08),
+                  0 0 30px rgba(201, 162, 39, 0.15),
+                  0 0 40px rgba(78, 205, 196, 0.08),
+                  0 8px 24px rgba(0, 0, 0, 0.06),
                   inset 0 0 0 1px rgba(201, 162, 39, 0.15)
                 `,
                 border: '1px solid rgba(201, 162, 39, 0.25)',
@@ -289,7 +278,7 @@ export default function HomeClient() {
         </section>
 
         {/* Stats Bar - Bottom of hero */}
-        <div className="relative z-20 bg-white/40 backdrop-blur-sm border-t border-gold-200/30">
+        <div className="relative z-20 bg-[#FAF7F2] border-t border-gold-200/30">
           <div className="max-w-4xl mx-auto px-6 py-4">
             <div className="flex items-center justify-center gap-6 md:gap-12 text-sm flex-wrap">
               <div className="text-center">
@@ -309,7 +298,7 @@ export default function HomeClient() {
       </div>
 
       {/* About Section - Below the fold */}
-      <div id="about" className="bg-background relative z-20">
+      <div id="about" className="bg-background relative z-20 below-fold-section">
         {/* What This Is */}
         <section className="px-6 py-16 bg-muted/30">
           <div className="max-w-4xl mx-auto">
@@ -460,31 +449,15 @@ export default function HomeClient() {
   );
 }
 
-// Concept Box Component - Glowing borders, teal-gold integration
+// Concept Box Component
 function ConceptBox({ concept }: { concept: typeof concepts[0] }) {
   return (
-    <div 
-      className="relative bg-white/50 backdrop-blur-md rounded-2xl p-4 flex flex-col items-center gap-2 min-w-[120px] max-w-[140px] hover:bg-white/70 transition-all cursor-default group"
-      style={{
-        boxShadow: `
-          0 0 20px rgba(78, 205, 196, 0.15),
-          0 0 40px rgba(201, 162, 39, 0.1),
-          0 4px 6px rgba(0, 0, 0, 0.05)
-        `,
-        border: '1px solid rgba(78, 205, 196, 0.2)',
-      }}
+    <div
+      className="bg-white/70 rounded-2xl p-4 flex flex-col items-center gap-2 min-w-[120px] max-w-[140px] hover:bg-white/80 transition-colors cursor-default shadow-sm"
+      style={{ border: '1px solid rgba(78, 205, 196, 0.2)' }}
     >
-      {/* Subtle glow on hover */}
-      <div 
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          boxShadow: '0 0 30px rgba(78, 205, 196, 0.3), 0 0 60px rgba(201, 162, 39, 0.2)',
-        }}
-      />
-      <div className="relative z-10">
-        {concept.icon}
-      </div>
-      <div className="relative z-10 text-center">
+      {concept.icon}
+      <div className="text-center">
         <span className="text-xs md:text-sm font-medium text-stone-700 leading-tight block">
           {concept.title}
         </span>

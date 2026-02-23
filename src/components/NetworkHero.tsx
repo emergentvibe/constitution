@@ -80,12 +80,14 @@ export default function NetworkHero() {
   const frameRef = useRef(0);
   const dimensionsRef = useRef({ width: 0, height: 0 });
   const dprRef = useRef(1);
+  const visibleRef = useRef(true);
+  const lastFrameTime = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
     if (!ctx) return;
 
     const resize = () => {
@@ -144,15 +146,29 @@ export default function NetworkHero() {
       particlesRef.current = particles;
     };
 
-    const animate = () => {
-      const { width, height } = dimensionsRef.current;
-      if (width === 0 || height === 0) {
+    const animate = (now: number) => {
+      // Skip all work when scrolled off-screen
+      if (!visibleRef.current) {
+        lastFrameTime.current = now;
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
 
+      const { width, height } = dimensionsRef.current;
+      if (width === 0 || height === 0) {
+        lastFrameTime.current = now;
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      // Real delta time — cap at 50ms to prevent jumps after tab switch
+      const dt = Math.min((now - (lastFrameTime.current || now)) / 1000, 0.05);
+      lastFrameTime.current = now;
+      // Scale factor: physics was tuned for 0.016s/frame (60fps)
+      const dtScale = dt / 0.016;
+
       frameRef.current++;
-      timeRef.current += 0.016;
+      timeRef.current += dt;
       const t = timeRef.current;
       const particles = particlesRef.current;
 
@@ -162,7 +178,9 @@ export default function NetworkHero() {
         ctx.fillStyle = "#FAF7F2";
         ctx.fillRect(0, 0, width, height);
       } else {
-        ctx.fillStyle = "rgba(250, 247, 242, 0.15)";
+        // Scale fade alpha with dtScale so trails look consistent at any framerate
+        const fadeAlpha = Math.min(1, 0.15 * dtScale);
+        ctx.fillStyle = `rgba(250, 247, 242, ${fadeAlpha})`;
         ctx.fillRect(0, 0, width, height);
       }
 
@@ -179,27 +197,27 @@ export default function NetworkHero() {
           Math.sin(p.y * 0.010 - t * 0.06 + p.seed * 0.7) +
           Math.sin((p.x + p.y) * 0.008 + t * 0.1)
         ) * Math.PI * 0.5;
-        const flowX = Math.cos(angle) * 0.06;
-        const flowY = Math.sin(angle) * 0.06;
+        const flowX = Math.cos(angle) * 0.06 * dtScale;
+        const flowY = Math.sin(angle) * 0.06 * dtScale;
 
         // Divergence for attract/repel - slower changing
         const div = Math.sin(p.x * 0.004 + t * 0.04) + Math.sin(p.y * 0.005 - t * 0.03);
-        
+
         // Neighbor interaction using spatial grid
         let forceX = 0, forceY = 0;
         const neighborIndices = getNeighborIndices(p, i, grid);
-        
+
         for (let k = 0; k < neighborIndices.length; k++) {
           const other = particles[neighborIndices[k]];
           const dx = other.x - p.x;
           const dy = other.y - p.y;
           const distSq = dx * dx + dy * dy;
-          
+
           if (distSq < 5000 && distSq > 4) { // ~70px interaction radius
             const dist = Math.sqrt(distSq);
             const strength = (70 - dist) / 70;
-            const factor = strength * 0.0015;
-            
+            const factor = strength * 0.0015 * dtScale;
+
             if (div < 0) {
               forceX += (dx / dist) * factor;
               forceY += (dy / dist) * factor;
@@ -211,12 +229,13 @@ export default function NetworkHero() {
         }
 
         // Speed-based drag: faster = more friction (like air resistance)
+        // Use pow(drag, dtScale) for framerate-independent damping
         const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        const drag = 0.94 + 0.04 / (1 + speed); // 0.94-0.98 depending on speed
-        
+        const drag = Math.pow(0.94 + 0.04 / (1 + speed), dtScale);
+
         p.vx = p.vx * drag + flowX + forceX;
         p.vy = p.vy * drag + flowY + forceY;
-        
+
         // Soft velocity cap
         const newSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
         const maxSpeed = 1.5;
@@ -225,9 +244,9 @@ export default function NetworkHero() {
           p.vx *= scale;
           p.vy *= scale;
         }
-        
-        p.x += p.vx;
-        p.y += p.vy;
+
+        p.x += p.vx * dtScale;
+        p.y += p.vy * dtScale;
 
         // Wrap
         if (p.x < 0) p.x += width;
@@ -311,11 +330,19 @@ export default function NetworkHero() {
       window.visualViewport.addEventListener("resize", visualViewportHandler);
     }
     
+    // Pause animation when canvas is scrolled off-screen
+    const observer = new IntersectionObserver(
+      ([entry]) => { visibleRef.current = entry.isIntersecting; },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
+
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       clearTimeout(retryTimeout);
       clearInterval(zoomInterval);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       if (window.visualViewport) {
         window.visualViewport.removeEventListener("resize", visualViewportHandler);

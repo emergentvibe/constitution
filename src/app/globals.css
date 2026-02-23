@@ -18,7 +18,15 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background:
+    /* Noise texture — nearly invisible but adds organic feel */
+    repeating-conic-gradient(rgba(0,0,0,0.003) 0% 25%, transparent 0% 50%),
+    /* Warm/cool gradient accents */
+    radial-gradient(ellipse at 20% 20%, rgba(201,162,39,0.015) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(123,155,173,0.015) 0%, transparent 50%),
+    var(--background);
+  background-size: 4px 4px, 100% 100%, 100% 100%, 100% 100%;
+  /* No background-attachment: fixed — causes full repaint every scroll frame in Chrome */
 }
 
 /* Background texture wrapper - needs to be added to layout */
@@ -40,6 +48,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Skip rendering for below-fold sections until they scroll into view */
+.below-fold-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
 }
 
 /* Custom scrollbar */

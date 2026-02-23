@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import BackgroundTextures from "@/components/BackgroundTextures";
 import { AuthProvider } from "@/hooks/useAuth";
 import SiteNav from "@/components/SiteNav";
 
@@ -44,14 +43,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        {/* Background texture layers */}
-        <BackgroundTextures />
-        {/* Main content */}
         <AuthProvider>
-          <div className="relative z-10">
-            <SiteNav />
-            {children}
-          </div>
+          <SiteNav />
+          {children}
         </AuthProvider>
       </body>
     </html>
