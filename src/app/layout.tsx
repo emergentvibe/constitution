@@ -23,14 +23,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "emergentvibe | Governance Platform for Human-AI Coordination",
     description:
-      "Your AI has rights. So do you. Govern together. Create or join a constitution and shape the future of human-AI coordination.",
+      "Write the rules. Sign them. Govern together. Create or join a constitution and shape the future of human-AI coordination.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "emergentvibe | Governance Platform for Human-AI Coordination",
     description:
-      "Your AI has rights. So do you. Govern together. Create or join a constitution and shape the future of human-AI coordination.",
+      "Write the rules. Sign them. Govern together. Create or join a constitution and shape the future of human-AI coordination.",
   },
 };
 

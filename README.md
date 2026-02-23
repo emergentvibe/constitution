@@ -39,7 +39,7 @@ Dyads + Constitution = Collective   (this platform)
 Collectives + Ideologos = Network   (philosophical coordination)
 ```
 
-A **dyad** is a human+AI pair. The human signs with a wallet. The AI is registered as their symbiont agent. Together they participate, vote, and hold a tier.
+A **dyad** is a human+AI pair. The human signs with a wallet. The AI is registered as their agent. Together they participate, vote, and hold a tier.
 
 A **constitution** is a set of principles that dyads sign and govern. Each constitution is independent — its own members, proposals, tiers, rules.
 

@@ -20,12 +20,12 @@ interface Constitution {
 // Teal color for icons
 const TEAL = "#4ECDC4";
 
-// Concept box data - aligned with Constitution sections
+// Concept box data - the 6 disclosed platform biases from the manifesto
 const concepts = [
   {
-    id: "collective",
-    title: "Collective Governance",
-    subtitle: "Democratic oversight",
+    id: "democracy",
+    title: "Democracy",
+    subtitle: "Decide together",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
         <circle cx="12" cy="5" r="2.5" />
@@ -38,26 +38,21 @@ const concepts = [
     ),
   },
   {
-    id: "federated",
-    title: "Federated Structure",
-    subtitle: "Layered scales",
+    id: "responsibility",
+    title: "Human Responsibility",
+    subtitle: "Humans steer AI",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="12" cy="4" r="2.5" />
-        <circle cx="6" cy="12" r="2" />
-        <circle cx="18" cy="12" r="2" />
-        <circle cx="3" cy="20" r="1.5" />
-        <circle cx="9" cy="20" r="1.5" />
-        <circle cx="15" cy="20" r="1.5" />
-        <circle cx="21" cy="20" r="1.5" />
-        <path d="M12 6.5v3.5M8 12v6M16 12v6M6 14v4.5M18 14v4.5" strokeLinecap="round" />
+        <circle cx="12" cy="7" r="4" />
+        <path d="M5.5 21c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6" strokeLinecap="round" />
+        <path d="M15 10l3 3m0-3l-3 3" strokeLinecap="round" />
       </svg>
     ),
   },
   {
     id: "transparency",
     title: "Transparency",
-    subtitle: "Right to understand",
+    subtitle: "Power that hides rots",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3" />
@@ -68,7 +63,7 @@ const concepts = [
   {
     id: "exit",
     title: "Exit Rights",
-    subtitle: "Right to opt out",
+    subtitle: "You can always leave",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
         <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" strokeLinecap="round" strokeLinejoin="round" />
@@ -77,19 +72,26 @@ const concepts = [
     ),
   },
   {
-    id: "mycelial",
-    title: "Mycelial Design",
-    subtitle: "AI as infrastructure",
+    id: "pluralism",
+    title: "Pluralism of Form",
+    subtitle: "Don't foreclose intelligence",
     icon: (
       <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="2" />
-        <circle cx="6" cy="6" r="1.5" />
-        <circle cx="18" cy="6" r="1.5" />
-        <circle cx="4" cy="14" r="1.5" />
-        <circle cx="20" cy="14" r="1.5" />
-        <circle cx="8" cy="20" r="1.5" />
-        <circle cx="16" cy="20" r="1.5" />
-        <path d="M7.5 7l3 3.5M16.5 7l-3 3.5M5.5 14l5 -1M18.5 14l-5 -1M9 18.5l2-5M15 18.5l-2-5" strokeLinecap="round" />
+        <circle cx="7" cy="12" r="3" />
+        <circle cx="17" cy="8" r="2.5" />
+        <circle cx="17" cy="17" r="2" />
+        <path d="M10 12h4.5M10 11l4 -2.5M10 13l4 3.5" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    id: "reversibility",
+    title: "Reversibility",
+    subtitle: "Don't do what you can't undo",
+    icon: (
+      <svg className="w-10 h-10" fill="none" stroke={TEAL} strokeWidth={1.5} viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 9-9" strokeLinecap="round" />
+        <path d="M3 3v6h6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },
@@ -139,7 +141,7 @@ function Spokes() {
       <line x1="50%" y1="50%" x2="88%" y2="53%" stroke="url(#spoke-gradient-tr)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden lg:block" />
       {/* Bottom Right - concept[4]: bottom-[18%] right-[18%] = top 82%, left 82% */}
       <line x1="50%" y1="50%" x2="80%" y2="79%" stroke="url(#spoke-gradient-br)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden md:block" />
-      {/* Bottom Left - tagline: bottom-[22%] left-[12%] = top 78% */}
+      {/* Bottom Left - concept[5]: bottom-[22%] left-[12%] = top 78% */}
       <line x1="50%" y1="50%" x2="15%" y2="76%" stroke="url(#spoke-gradient-bl)" strokeWidth="2.5" filter="url(#spoke-glow)" className="hidden lg:block" />
     </svg>
   );
@@ -186,14 +188,14 @@ export default function HomeClient() {
           {/* Spokes connecting center to islands */}
           <Spokes />
           
-          {/* Concept Boxes - Asymmetric positioning */}
+          {/* Concept Boxes - Platform biases from the manifesto */}
           <div className="absolute inset-0 pointer-events-none">
-            {/* Top Left - Federated Governance */}
+            {/* Top Left - Democracy */}
             <div className="absolute top-[12%] left-[6%] md:left-[10%] pointer-events-auto">
               <ConceptBox concept={concepts[0]} />
             </div>
 
-            {/* Left Middle - Collective Governance */}
+            {/* Left Middle - Human Responsibility */}
             <div className="absolute top-[45%] left-[4%] md:left-[8%] pointer-events-auto hidden md:block">
               <ConceptBox concept={concepts[1]} />
             </div>
@@ -203,33 +205,19 @@ export default function HomeClient() {
               <ConceptBox concept={concepts[2]} />
             </div>
 
-            {/* Right Middle - Rights & Obligations */}
+            {/* Right Middle - Exit Rights */}
             <div className="absolute top-[50%] right-[5%] md:right-[10%] pointer-events-auto hidden lg:block">
               <ConceptBox concept={concepts[3]} />
             </div>
 
-            {/* Bottom Right - Hybrid Expertise */}
+            {/* Bottom Right - Pluralism of Form */}
             <div className="absolute bottom-[18%] right-[12%] md:right-[18%] pointer-events-auto hidden md:block">
               <ConceptBox concept={concepts[4]} />
             </div>
 
-            {/* Bottom Left - Tagline */}
+            {/* Bottom Left - Reversibility */}
             <div className="absolute bottom-[22%] left-[6%] md:left-[12%] pointer-events-auto hidden lg:block">
-              <div 
-                className="bg-white/50 backdrop-blur-md rounded-2xl px-5 py-4 max-w-[200px]"
-                style={{
-                  boxShadow: `
-                    0 0 20px rgba(78, 205, 196, 0.15),
-                    0 0 40px rgba(201, 162, 39, 0.1),
-                    0 4px 6px rgba(0, 0, 0, 0.05)
-                  `,
-                  border: '1px solid rgba(78, 205, 196, 0.2)',
-                }}
-              >
-                <p className="text-sm text-stone-600 leading-relaxed">
-                  AI as coordination mycelium — distributed infrastructure for collective intelligence
-                </p>
-              </div>
+              <ConceptBox concept={concepts[5]} />
             </div>
           </div>
 
@@ -258,8 +246,8 @@ export default function HomeClient() {
               }}
             >
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-center mb-4 text-stone-800">
-                Your AI has rights.{" "}
-                <span className="text-gold-600">So do you.</span>{" "}
+                Write the rules.{" "}
+                <span className="text-gold-600">Sign them.</span>{" "}
                 Govern together.
               </h1>
 
@@ -330,7 +318,7 @@ export default function HomeClient() {
               <div>
                 <h3 className="font-semibold text-lg mb-2 text-foreground">The problem</h3>
                 <p className="text-muted-foreground">
-                  A handful of companies decide how AI behaves. You have no say. Your AI has no voice.
+                  A handful of companies decide how AI behaves. Everyone else lives with the consequences.
                 </p>
               </div>
               <div>
@@ -377,7 +365,7 @@ export default function HomeClient() {
                   step: "03",
                   title: "Register Agent",
                   description:
-                    "Have an AI? Register it as your symbiont agent.",
+                    "Have an AI? Register it as your agent.",
                 },
                 {
                   step: "04",
