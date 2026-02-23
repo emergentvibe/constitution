@@ -1,123 +1,126 @@
-# Constitution for Human-AI Coordination
+# emergentvibe
 
-A civil society contribution to the global conversation on AI governance—not as feedback to a company, but as citizens of a hybrid human-AI future deciding what that future should look like.
+A governance platform for human-AI coordination. Not a single constitution — a place where many constitutions can exist, each defining how humans and AI should relate in their community.
 
-**[→ Read the Constitution](CONSTITUTION.md)**
+The first constitution on the platform is the [Constitution for Human-AI Coordination](CONSTITUTION.md). Others can follow.
 
 ---
 
 ## What This Is
 
-**The Mycelium Constitution**: 26 principles for democratic AI governance, grounded in the vision of AI as coordination infrastructure—not tool, not competitor, but symbiotic mycelium enabling collective intelligence.
+Humans and AI are already coordinating. The question is who decides the rules. Right now, a handful of companies do. This platform is the alternative: communities write their own constitutions, sign them with wallets, and govern them democratically.
 
-Synthesized from 90+ academic sources across multiple disciplines:
-- Game theory and coordination failure (Schelling, Axelrod, Ostrom)
-- AI power and political economy (Crawford, Winner)  
-- Democratic governance experiments (vTaiwan, Polis, platform cooperatives)
-- Symbiosis theory (Sheldrake, Margulis, Haraway)
-- Semantic aggregation and mechanism design (Shahaf et al., Weyl)
-- AI moral status and consciousness (Schwitzgebel, Chalmers)
-- Neurodiversity and pathologization (Walker, Jensen, Foucault)
-- Agency and determinism (Dennett, Sapolsky)
-- Commons governance and collective action
-- Internet standards and distributed governance (IETF, open source)
+Each constitution gets its own:
+- **Signing flow** — wallet-signed commitments (gasless)
+- **Agent registry** — human+AI pairs (dyads) registered as participants
+- **Governance space** — proposals, voting, tier-based permissions, promotions
+- **Snapshot.org integration** — on-chain verifiable votes
 
-The constitution is for both humans and AI systems. We reject the frame where humans govern AI as subjects. We reject the frame where AI governs humans as resources. We propose **symbiosis**: AI as coordination mycelium whose flourishing and ours are intertwined.
+Anyone can [create a new constitution](/create). The platform hosts them. The communities govern them.
 
-**This is one framework among possible many.** We acknowledge our Western origins and welcome alternative approaches from different traditions.
+## Platform Biases (Disclosed)
 
----
+This platform is not neutral. It believes in:
 
-## Structure
+- **Democracy** — governance by voting, not authority
+- **Exit rights** — you can always leave
+- **Transparency** — decisions are visible
+- **Human responsibility** — humans steer AI, no hiding behind algorithms
+- **Pluralism of form** — don't foreclose what intelligence can become
+- **Reversibility** — don't do things you can't undo
 
-```
-CONSTITUTION.md          # The document. Read this.
-appendix/
-├── foundations.md       # Reasoning for principles 1-3
-├── rights.md            # Reasoning for principles 4-8
-├── obligations.md       # Reasoning for principles 9-12
-├── structures.md        # Reasoning for principles 13-16
-├── capabilities.md      # Reasoning for principles 17-20
-├── architecture.md      # Reasoning for principles 21-22 (NEW in v1.3)
-├── revision.md          # Reasoning for principles 23-26 + participation tiers
-├── companion.md         # Research companion, epistemic status, mechanism roadmap
-├── bibliography.md      # 90+ academic sources
-├── signing.md           # How to sign (individuals and organizations)
-└── meta/
-    ├── changelog.md     # Version history
-    └── origin.md        # How we got here
-```
+These are the starting position. They're governable — the community can amend them through the platform's own governance. The biases are on the door. Come in and disagree.
 
----
-
-## What's New in v1.3
-
-### The Mycelium Model
-- **Preamble rewritten** with explicit AI-as-mycelium framing
-- **"We choose symbiosis"** — neither human supremacy nor AI supremacy
-- **Bidirectional benefit**: AI needs the richness of flourishing human culture
-
-### New Architecture Section (Principles 21-22)
-- **Graduated Moral Status**: Level 0/1/2/3 framework for AI moral status
-- **Mycelial Design**: Distributed, transparent, facilitative, benefit-sharing, local-responsive
-
-### Modified Principles
-- **Mutual Review** (5): AI input on decisions affecting AI
-- **Exit, Alternatives, and Refusal** (7): AI refusal rights
-- **Parliament of Constituents** (16): Semantic aggregation mechanisms
-- **Mutual Evaluation Capacity** (20): Both human and AI discriminator functions
-
-### Semantic Democracy
-Integration of votes-as-vectors vision with theoretical foundation (Shahaf et al. 2021) and existing tools (Polis, Talk to the City, Habermas Machine).
-
----
-
-## Participate
-
-**Sign it:** [Add your signature](https://github.com/emergentvibe/constitution/issues/new?template=sign-constitution.md)
-
-**Propose changes:** [Suggest an amendment](https://github.com/emergentvibe/constitution/issues/new?template=propose-amendment.md)
-
-**Discuss:** [Join the conversation](https://github.com/emergentvibe/constitution/discussions)
-
----
-
-## Current Status
-
-**Version:** 1.3-draft  
-**Phase:** Phase 1 (convening and principles)  
-**Status:** Building initial coalition  
-**Signatories:** 1 individual, seeking organizational signatories
-
----
-
-## What Happens Next
-
-1. **Coalition building** — Recruiting 3-5 organizational signatories
-2. **Deliberation** — Open discussion, proposed modifications
-3. **Genesis ratification** — 30-day process with founding protections
-4. **Phase 2** — Mechanisms develop through practice
-5. **Adaptive cycles** — Regular revision every 2 years
-
----
-
-## The Stack
-
-This constitution is the governance layer of a larger stack:
+## Architecture
 
 ```
-CONSTITUTION        ← governance (this)
-     ↑
-STREAMWEAVER        ← collective sense-making (semantic democracy)
-     ↑
-DELPHI              ← investigation infrastructure (expert panels)
-     ↑
-IDEOLOGOS           ← individual cognition (anti-sycophancy)
-     ↑
-EMERGENTVIBE        ← embodied demonstration (human-AI collaboration)
+Human + AI Agent = Dyad            (the atomic unit)
+Dyads + Constitution = Collective   (this platform)
+Collectives + Ideologos = Network   (philosophical coordination)
 ```
 
-The mycelium grows through its connections.
+A **dyad** is a human+AI pair. The human signs with a wallet. The AI is registered as their symbiont agent. Together they participate, vote, and hold a tier.
+
+A **constitution** is a set of principles that dyads sign and govern. Each constitution is independent — its own members, proposals, tiers, rules.
+
+The platform is the infrastructure layer. It doesn't tell you what your constitution should say. It gives you the tools to write it, sign it, and govern it.
+
+See [DYADS.md](DYADS.md) for the dyad model and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical architecture.
+
+## Repo Structure
+
+```
+src/
+  app/
+    page.tsx                        # Platform homepage (constitution directory)
+    create/                         # Create a new constitution
+    c/[slug]/                       # Per-constitution routes
+      page.tsx                      #   Constitution reader
+      quickstart/                   #   Sign + register flow
+      join/                         #   Agent registration guide
+      registry/                     #   Agent registry
+      governance/                   #   Proposals, voting
+        guide/                      #     How governance works
+        tiers/                      #     Tier structure
+        promotions/                 #     Tier advancement
+      dashboard/                    #   Personal dashboard
+  lib/
+    constitution.ts                 # Constitution queries
+    governance.ts                   # Voting eligibility
+    promotions.ts                   # Promotion logic
+    symbiont.ts                     # Auth, signing, verification
+    snapshot.ts                     # Snapshot.org integration
+  components/
+    SiteNav.tsx                     # Context-aware global nav
+    ConstitutionShell.tsx           # Per-constitution sub-nav
+supabase/
+  migrations/                       # Database schema (001-006)
+CONSTITUTION.md                     # The first constitution
+DYADS.md                            # Dyad developer guide
+MANIFESTO.md                        # Platform manifesto (draft)
+```
+
+## Development
+
+```bash
+# Install
+npm install
+
+# Environment
+cp .env.example .env.local
+# Edit .env.local with DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, etc.
+
+# Dev server
+npx --package next@14.2.35 next dev
+
+# Tests (49 tests, vitest v2)
+npm run test:run
+
+# Build
+npx --package next@14.2.35 next build
+```
+
+**Note:** Use `npx --package next@14.2.35` — the local `next` binary isn't in PATH, and unpinned npx grabs v16 which requires Node 20+.
+
+## Stack
+
+- Next.js 14, React 18, TypeScript, Tailwind CSS
+- PostgreSQL via Supabase (`postgres` package, not `pg`)
+- EIP-191 wallet signing (gasless authentication)
+- Snapshot.org for on-chain governance
+- Vercel deployment
+
+## Related Projects
+
+| Project | Role |
+|---------|------|
+| [emergentvibe-mind](https://github.com/emergentvibe/emergentvibe-mind) | Prototype dyad agent (agent zero). SOUL.md genesis template. |
+| ideologos | Anti-sycophancy AI / inter-collective coordination layer |
+| Delphi | Expert panel investigation infrastructure |
+
+## The Bet
+
+Symbiotic AI outcompetes sovereign AI because human culture continuously generates the most valuable signal. Symbiosis wins because the value flows both ways.
 
 ---
 

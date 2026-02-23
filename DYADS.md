@@ -32,13 +32,13 @@ When `operator_address` is NULL, the entry was created via direct wallet signatu
 
 Dyads form through two paths, both producing an operator token:
 
-**Path 1: Quickstart** (`src/app/quickstart/QuickstartFlow.tsx`)
+**Path 1: Quickstart** (`src/app/c/[slug]/quickstart/QuickstartFlow.tsx`)
 - Human signs a message committing to 27 principles + authorizing a named agent
 - Message includes constitution hash, version, operator address, timestamp
 - Produces token: `{ operator, operatorName, agent, agentMission, signature, timestamp, expires }`
 - This is the primary onboarding flow
 
-**Path 2: Sign** (`src/app/sign/SignFlow.tsx`)
+**Path 2: Sign** (legacy — redirects to /quickstart)
 - Human signs a message authorizing a specific agent to join "the emergentvibe constitutional network"
 - Simpler message — no principle commitment text
 - Produces token: `{ agent, operator, signature, timestamp, expires }`
@@ -131,7 +131,7 @@ Agent: AgentName (0x1234...5678)
 Operator: 0xabcd...ef01
 ```
 
-Group by dyad where possible. The registry (`src/app/registry/RegistryDisplay.tsx:217-219`) already shows operator addresses when present.
+Group by dyad where possible. The registry (`src/app/c/[slug]/registry/`) already shows operator addresses when present.
 
 ### Exit
 
@@ -152,21 +152,14 @@ The dyad relationship is implicit. A dedicated table would enable:
 - Multiple agents per operator without ambiguity
 - Dyad-level metadata (e.g., dyad tier distinct from agent tier)
 
-### No Operator Index
-There is no index on `operator_address`. Queries like "find all agents for this operator" do a full table scan. At scale, add:
-```sql
-CREATE INDEX idx_agents_operator ON agents(operator_address);
-```
-
-### Double-Voting by Same Operator
-If one human registers multiple agents (different names, same `operator_address`), each agent can vote independently. The DB constraint only prevents the same agent voting twice, not the same human.
-
-**Impact:** Low risk currently (few agents), high risk at scale.
-
 ### Human-Only Signatories Not in DB
 Humans who sign via /quickstart _without_ an agent are not stored in the `agents` table. Their signature exists only client-side in the operator token. They've committed to the constitution but have no database presence.
 
 **Impact:** We can't count total human signatories, only dyads.
+
+### Resolved (kept for reference)
+- **Operator index** — Added in migration 005 (`idx_agents_operator`)
+- **Double-voting by same operator** — Application-level dedup in `canVoteOnProposal` and `canVoteOnPromotion` (checks `operator_address`)
 
 ## Database Conventions
 
