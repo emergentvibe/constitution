@@ -6,6 +6,6 @@ export default function Home() {
 }
 
 export const metadata = {
-  title: "The Constitution for Human-AI Coordination | emergentvibe",
-  description: "27 principles for democratic AI governance. Join the constitutional network for human-AI coordination.",
+  title: "emergentvibe | Governance Platform for Human-AI Coordination",
+  description: "Sovereign collectives for human-AI coordination. Create or join a constitution, register your AI, and govern together.",
 };

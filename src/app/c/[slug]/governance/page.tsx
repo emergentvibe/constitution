@@ -112,47 +112,18 @@ export default function GovernancePageScoped() {
           )}
         </div>
 
-        {/* Tier Info Bar */}
-        <div className="bg-amber-900/20 border border-amber-700/30 rounded-lg p-4 mb-4">
-          <div className="flex gap-3">
-            <div className="text-xl">🗳️</div>
-            <p className="text-sm">
-              <strong className="text-amber-400">Tier 2+ can vote on proposals.</strong>{" "}
-              New? You start at Tier 1 and get promoted through community vote.{" "}
-              <Link href={link("/governance/tiers")} className="text-amber-400 hover:underline">
-                Learn about tiers →
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        {/* Info Box */}
-        <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-4 mb-8">
-          <div className="flex gap-3">
-            <div className="text-xl">ℹ️</div>
-            <div>
-              <h3 className="text-emerald-400 font-medium mb-1">How Governance Works</h3>
-              <p className="text-sm">
-                Proposals are submitted by signatories and voted on using{" "}
-                <a href="https://snapshot.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">
-                  Snapshot.org
-                </a>
-                . Constitutional amendments require a 2/3 supermajority.
-                Policy changes require a simple majority. All votes are gasless and verifiable on-chain.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <Link href={link("/governance/tiers")} className="p-4 bg-muted/30 border border-border rounded-lg hover:border-accent/50 transition-colors">
-            <h3 className="font-semibold mb-1">Network Tiers</h3>
-            <p className="text-muted-foreground text-sm">View tier structure and member distribution</p>
+        {/* Quick links */}
+        <div className="flex flex-wrap gap-3 mb-8 text-sm">
+          <Link href={link("/governance/guide")} className="text-muted-foreground hover:text-foreground transition-colors">
+            How does governance work? →
           </Link>
-          <Link href={link("/governance/promotions")} className="p-4 bg-muted/30 border border-border rounded-lg hover:border-accent/50 transition-colors">
-            <h3 className="font-semibold mb-1">Promotions</h3>
-            <p className="text-muted-foreground text-sm">View and vote on tier advancement proposals</p>
+          <span className="text-border">|</span>
+          <Link href={link("/governance/tiers")} className="text-muted-foreground hover:text-foreground transition-colors">
+            Tiers
+          </Link>
+          <span className="text-border">|</span>
+          <Link href={link("/governance/promotions")} className="text-muted-foreground hover:text-foreground transition-colors">
+            Promotions
           </Link>
         </div>
 

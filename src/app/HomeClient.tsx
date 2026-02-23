@@ -16,22 +16,6 @@ interface Constitution {
   proposal_count: number;
 }
 
-interface Signatory {
-  id: string;
-  name: string;
-  mission?: string;
-  wallet_address: string;
-  operator_address?: string;
-  tier: number;
-  platform?: string;
-  registered_at: string;
-}
-
-interface Stats {
-  total: number;
-  byTier: Record<string, number>;
-  constitutionVersion: string;
-}
 
 // Teal color for icons
 const TEAL = "#4ECDC4";
@@ -163,43 +147,17 @@ function Spokes() {
 
 export default function HomeClient() {
   const [constitutions, setConstitutions] = useState<Constitution[]>([]);
-  const [signatories, setSignatories] = useState<Signatory[]>([]);
-  const [stats, setStats] = useState<Stats>({
-    total: 0,
-    byTier: {},
-    constitutionVersion: "0.1.5",
-  });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [agentsRes, statsRes, constitutionsRes] = await Promise.all([
-          fetch("/api/symbiont-hub/agents"),
-          fetch("/api/symbiont-hub/stats"),
-          fetch("/api/constitutions"),
-        ]);
-
-        if (agentsRes.ok && statsRes.ok) {
-          const agentsData = await agentsRes.json();
-          const statsData = await statsRes.json();
-
-          setSignatories(agentsData.agents || []);
-          setStats({
-            total: statsData.agents?.total || 0,
-            byTier: statsData.agents?.by_tier || {},
-            constitutionVersion: statsData.constitution?.version || "0.1.5",
-          });
-        }
-
-        if (constitutionsRes.ok) {
-          const data = await constitutionsRes.json();
+        const res = await fetch("/api/constitutions");
+        if (res.ok) {
+          const data = await res.json();
           setConstitutions(data.constitutions || []);
         }
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
+      } catch {
+        // silently fail — empty directory is fine
       }
     }
 
@@ -306,22 +264,22 @@ export default function HomeClient() {
               </h1>
 
               <p className="text-lg md:text-xl text-stone-600 text-center mb-8">
-                27 principles. Wallet-signed commitments. Democratic governance for human-AI pairs.
+                Sovereign collectives for human-AI coordination. Sign a constitution. Govern together.
               </p>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="/c/emergentvibe"
+                  href="#constitutions"
                   className="px-8 py-4 bg-white/80 border border-gold-400 text-gold-700 font-medium rounded-xl hover:bg-gold-50 transition-colors text-center"
                 >
-                  Read the Constitution
+                  Explore Constitutions
                 </a>
                 <a
-                  href="/c/emergentvibe/quickstart"
+                  href="/create"
                   className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-medium rounded-xl hover:from-gold-600 hover:to-gold-700 transition-all text-center shadow-md flex items-center justify-center gap-2"
                 >
-                  Join the Network
+                  Start a Constitution
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -347,15 +305,15 @@ export default function HomeClient() {
           <div className="max-w-4xl mx-auto px-6 py-4">
             <div className="flex items-center justify-center gap-6 md:gap-12 text-sm flex-wrap">
               <div className="text-center">
-                <span className="font-semibold text-stone-700">{stats.total} signatories</span>
+                <span className="font-semibold text-stone-700">{constitutions.length} constitution{constitutions.length !== 1 ? "s" : ""}</span>
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
-                <span className="text-stone-600">AI as coordination mycelium</span>
+                <span className="text-stone-600">Governance for human-AI pairs</span>
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
-                <span className="font-semibold text-stone-700">v{stats.constitutionVersion}</span>
+                <span className="font-semibold text-stone-700">Open platform</span>
               </div>
             </div>
           </div>
@@ -407,38 +365,33 @@ export default function HomeClient() {
                   step: "01",
                   title: "Read",
                   description:
-                    "27 principles for human-AI coordination.",
-                  link: "/c/emergentvibe",
+                    "Explore the principles of a constitution.",
                 },
                 {
                   step: "02",
                   title: "Sign",
                   description:
-                    "Connect your wallet and sign the constitution.",
-                  link: "/c/emergentvibe/quickstart",
+                    "Connect your wallet and sign with a gasless commitment.",
                 },
                 {
                   step: "03",
                   title: "Register Agent",
                   description:
-                    "Have an AI? Follow the instructions to register it.",
-                  link: "/c/emergentvibe/join",
+                    "Have an AI? Register it as your symbiont agent.",
                 },
                 {
                   step: "04",
                   title: "Govern",
                   description:
                     "Signatories vote on amendments. The constitution evolves.",
-                  link: "/c/emergentvibe/governance",
                 },
               ].map((item, i) => (
-                <a 
+                <div
                   key={item.step}
-                  href={item.link}
-                  className="relative p-4 rounded-xl border border-border bg-background overflow-hidden hover:border-accent/50 hover:shadow-md transition-all"
+                  className="relative p-4 rounded-xl border border-border bg-background overflow-hidden"
                 >
                   {/* Gold/teal accent line */}
-                  <div 
+                  <div
                     className="absolute left-0 top-0 bottom-0 w-0.5"
                     style={{
                       background: i % 2 === 0 ? '#C9A227' : TEAL,
@@ -450,7 +403,7 @@ export default function HomeClient() {
                   </div>
                   <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
-                </a>
+                </div>
               ))}
             </div>
           </div>
@@ -463,7 +416,7 @@ export default function HomeClient() {
 
         {/* Constitutions Directory */}
         {constitutions.length > 0 && (
-          <section className="px-6 py-16 bg-muted/30">
+          <section id="constitutions" className="px-6 py-16 bg-muted/30">
             <div className="max-w-4xl mx-auto">
               <div className="flex items-center justify-between mb-8">
                 <div>
@@ -495,112 +448,6 @@ export default function HomeClient() {
           </section>
         )}
 
-        {/* Separator */}
-        {constitutions.length > 0 && (
-          <div className="max-w-4xl mx-auto px-6">
-            <Separator variant="gradient" />
-          </div>
-        )}
-
-        {/* Signatories */}
-        <section className={`px-6 py-16 ${constitutions.length === 0 ? 'bg-muted/30' : ''}`}>
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold mb-1">Signatories</h2>
-                <p className="text-sm text-muted-foreground">
-                  Those who have signed the constitution
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold text-accent">{stats.total}</div>
-                <div className="text-xs text-muted-foreground">signed</div>
-              </div>
-            </div>
-
-            {loading ? (
-              <div className="bg-background border border-border rounded-xl p-8 text-center">
-                <div className="animate-pulse text-muted-foreground">Loading signatories...</div>
-              </div>
-            ) : signatories.length === 0 ? (
-              <div className="bg-background border border-border rounded-xl p-8 text-center">
-                <div className="text-4xl mb-4">🌱</div>
-                <p className="text-muted-foreground mb-4">No signatories yet. Be the first!</p>
-                <a
-                  href="/c/emergentvibe/quickstart"
-                  className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors"
-                >
-                  Sign the Constitution
-                </a>
-              </div>
-            ) : (
-              <div className="bg-background border border-border rounded-xl overflow-hidden">
-                <div className="divide-y divide-border">
-                  {signatories.map((sig) => (
-                    <div key={sig.id} className="px-4 py-3 flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-accent font-semibold">{sig.name}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded ${
-                            sig.tier === 2 ? 'bg-accent/20 text-accent' :
-                            sig.tier === 3 ? 'bg-green-500/20 text-green-400' :
-                            'bg-muted text-muted-foreground'
-                          }`}>
-                            Tier {sig.tier}
-                          </span>
-                          {sig.platform && (
-                            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                              {sig.platform}
-                            </span>
-                          )}
-                        </div>
-                        {sig.mission && (
-                          <p className="text-sm text-muted-foreground mt-1 italic">
-                            &ldquo;{sig.mission}&rdquo;
-                          </p>
-                        )}
-                        <p className="text-xs text-muted-foreground mt-1 font-mono">
-                          {sig.wallet_address.slice(0, 6)}...{sig.wallet_address.slice(-4)}
-                        </p>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {new Date(sig.registered_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Sign CTA */}
-                <div className="px-4 py-3 bg-muted/50 border-t border-border">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <p className="text-sm text-muted-foreground">
-                      Join the constitutional network
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <a
-                        href="/c/emergentvibe/registry"
-                        className="px-3 py-1.5 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
-                      >
-                        View Registry
-                      </a>
-                      <a
-                        href="/c/emergentvibe/quickstart"
-                        className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
-                      >
-                        Join the Network
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
         {/* Footer */}
         <footer className="px-6 py-8 border-t border-border">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -608,20 +455,11 @@ export default function HomeClient() {
               <span className="text-accent">Collective intelligence</span>, building collective intelligence.
             </div>
             <div className="flex flex-wrap gap-4 md:gap-6 text-sm text-muted-foreground">
-              <a href="/c/emergentvibe" className="hover:text-foreground transition-colors">
-                Constitution
+              <a href="/" className="hover:text-foreground transition-colors">
+                Explore
               </a>
-              <a href="/c/emergentvibe/join" className="hover:text-foreground transition-colors">
-                Join
-              </a>
-              <a href="/c/emergentvibe/quickstart" className="hover:text-foreground transition-colors">
-                Sign
-              </a>
-              <a href="/c/emergentvibe/registry" className="hover:text-foreground transition-colors">
-                Registry
-              </a>
-              <a href="/c/emergentvibe/governance" className="hover:text-foreground transition-colors">
-                Governance
+              <a href="/create" className="hover:text-foreground transition-colors">
+                Create
               </a>
               <a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
                 GitHub

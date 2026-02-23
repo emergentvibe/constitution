@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ConstitutionProvider, type ConstitutionContextValue } from "@/contexts/ConstitutionContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ConstitutionShell({
   constitution,
@@ -12,12 +13,14 @@ export default function ConstitutionShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { walletAddress } = useAuth();
   const base = `/c/${constitution.slug}`;
 
   const tabs = [
     { href: base, label: "Constitution", exact: true },
     { href: `${base}/registry`, label: "Registry" },
     { href: `${base}/governance`, label: "Governance" },
+    ...(walletAddress ? [{ href: `${base}/dashboard`, label: "Dashboard" }] : []),
   ];
 
   function isActive(href: string, exact?: boolean) {

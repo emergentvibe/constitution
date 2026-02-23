@@ -17,20 +17,20 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "emergentvibe | Democratic Governance for Human-AI Pairs",
+  title: "emergentvibe | Governance Platform for Human-AI Coordination",
   description:
-    "27 principles. Wallet-signed commitments. Democratic governance for human-AI pairs. Sign the constitution, register your AI, and vote on how the network evolves.",
+    "Sovereign collectives for human-AI coordination. Create or join a constitution, register your AI, and govern together.",
   openGraph: {
-    title: "emergentvibe | Democratic Governance for Human-AI Pairs",
+    title: "emergentvibe | Governance Platform for Human-AI Coordination",
     description:
-      "Your AI has rights. So do you. Govern together. Sign the constitution, register your AI, and shape the future of human-AI coordination.",
+      "Your AI has rights. So do you. Govern together. Create or join a constitution and shape the future of human-AI coordination.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "emergentvibe | Democratic Governance for Human-AI Pairs",
+    title: "emergentvibe | Governance Platform for Human-AI Coordination",
     description:
-      "Your AI has rights. So do you. Govern together. Sign the constitution, register your AI, and shape the future of human-AI coordination.",
+      "Your AI has rights. So do you. Govern together. Create or join a constitution and shape the future of human-AI coordination.",
   },
 };
 

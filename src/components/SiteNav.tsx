@@ -20,20 +20,11 @@ export default function SiteNav() {
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
     : null;
 
-  // If inside a constitution, scope nav links; otherwise show network-level links
-  const navLinks = slug
-    ? [
-        { href: `/c/${slug}`, label: "Constitution" },
-        { href: `/c/${slug}/registry`, label: "Registry" },
-        { href: `/c/${slug}/governance`, label: "Governance" },
-      ]
-    : [
-        { href: "/constitution", label: "Constitution" },
-        { href: "/registry", label: "Registry" },
-        { href: "/governance", label: "Governance" },
-      ];
-
-  const dashboardHref = slug ? `/c/${slug}/dashboard` : "/dashboard";
+  // Network mode: platform-level links. Constitution mode: minimal (ConstitutionShell handles nav).
+  const networkLinks = [
+    { href: "/#constitutions", label: "Explore" },
+    { href: "/create", label: "Create" },
+  ];
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur border-b border-border">
@@ -44,31 +35,27 @@ export default function SiteNav() {
             <Link href="/" className="text-lg font-semibold hover:text-accent transition-colors">
               emergentvibe
             </Link>
-            {slug && (
-              <Link href="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                All Constitutions
-              </Link>
-            )}
           </div>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
+            {slug ? (
               <Link
-                key={link.href}
-                href={link.href}
+                href="/"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                {link.label}
+                ← Network
               </Link>
-            ))}
-            {walletAddress && (
-              <Link
-                href={dashboardHref}
-                className="text-sm text-accent hover:text-foreground transition-colors"
-              >
-                Dashboard
-              </Link>
+            ) : (
+              networkLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))
             )}
           </div>
 
@@ -113,33 +100,25 @@ export default function SiteNav() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-border py-3 space-y-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-            {walletAddress && (
-              <Link
-                href={dashboardHref}
-                onClick={() => setMenuOpen(false)}
-                className="block px-3 py-2 text-sm text-accent hover:bg-muted rounded-lg transition-colors"
-              >
-                Dashboard
-              </Link>
-            )}
-            {slug && (
+            {slug ? (
               <Link
                 href="/"
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
               >
-                All Constitutions
+                ← Network
               </Link>
+            ) : (
+              networkLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))
             )}
             <div className="px-3 pt-2 border-t border-border">
               {walletAddress ? (
