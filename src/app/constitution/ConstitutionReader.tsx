@@ -4,10 +4,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useState, useEffect } from "react";
 
-const GITHUB_REPO = "https://github.com/emergentvibe/constitution";
-
 interface ConstitutionReaderProps {
   content: string;
+  version?: string;
+  githubUrl?: string;
   signUrl?: string;
   joinUrl?: string;
   amendUrl?: string;
@@ -35,7 +35,7 @@ const documentSections = [
   { id: "research-grounding", title: "Research Grounding", group: "Reference" },
 ];
 
-export default function ConstitutionReader({ content, signUrl = "/quickstart", joinUrl = "/join", amendUrl = "/governance/new" }: ConstitutionReaderProps) {
+export default function ConstitutionReader({ content, version = "0.1.0", githubUrl, signUrl = "/quickstart", joinUrl = "/join", amendUrl = "/governance/new" }: ConstitutionReaderProps) {
   const [activeSection, setActiveSection] = useState<string>("preamble");
 
   // Track scroll position to highlight active section
@@ -81,7 +81,7 @@ export default function ConstitutionReader({ content, signUrl = "/quickstart", j
       {/* Subheader */}
       <div className="px-6 py-3 border-b border-border bg-muted/30">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <span className="text-sm text-muted-foreground font-mono">CONSTITUTION v0.1.5-draft</span>
+          <span className="text-sm text-muted-foreground font-mono">CONSTITUTION v{version}</span>
           <a
             href={signUrl}
             className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors"
@@ -127,23 +127,25 @@ export default function ConstitutionReader({ content, signUrl = "/quickstart", j
                   </div>
                 ))}
 
-                {/* Appendix link */}
-                <div>
-                  <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
-                    Appendix
-                  </h3>
-                  <a
-                    href={`${GITHUB_REPO}/tree/main/appendix`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
-                  >
-                    <span>View on GitHub</span>
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </div>
+                {/* GitHub link - only if URL provided */}
+                {githubUrl && (
+                  <div>
+                    <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                      Source
+                    </h3>
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
+                    >
+                      <span>View on GitHub</span>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  </div>
+                )}
               </nav>
             </div>
           </aside>
@@ -166,12 +168,11 @@ export default function ConstitutionReader({ content, signUrl = "/quickstart", j
                   // Transform relative links to GitHub
                   a: ({ href, children, ...props }) => {
                     let finalHref = href || "";
-                    
-                    // Transform relative links to GitHub
-                    if (href && !href.startsWith("http") && !href.startsWith("#")) {
-                      // Remove leading ./ if present
+
+                    // Transform relative links to GitHub (only if githubUrl provided)
+                    if (githubUrl && href && !href.startsWith("http") && !href.startsWith("#")) {
                       const cleanPath = href.replace(/^\.\//, "");
-                      finalHref = `${GITHUB_REPO}/blob/main/${cleanPath}`;
+                      finalHref = `${githubUrl}/blob/main/${cleanPath}`;
                     }
                     
                     // External links open in new tab
@@ -248,14 +249,16 @@ export default function ConstitutionReader({ content, signUrl = "/quickstart", j
                   >
                     Propose Amendment
                   </a>
-                  <a
-                    href={`${GITHUB_REPO}/blob/main/CONSTITUTION.md`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
-                  >
-                    View Source on GitHub
-                  </a>
+                  {githubUrl && (
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 border border-border text-sm font-medium rounded-lg hover:bg-muted transition-colors"
+                    >
+                      View Source on GitHub
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

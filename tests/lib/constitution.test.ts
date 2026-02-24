@@ -223,14 +223,12 @@ describe('listConstitutions', () => {
     expect(result[0].proposal_count).toBe(5);
   });
 
-  it('returns fallback when table missing', async () => {
+  it('returns empty array when table missing', async () => {
     mockQuery.mockRejectedValueOnce(
       new Error('relation "constitutions" does not exist')
     );
 
     const result = await listConstitutions();
-    expect(result).toHaveLength(1);
-    expect(result[0].slug).toBe('emergentvibe');
-    expect(result[0].member_count).toBe(0);
+    expect(result).toHaveLength(0);
   });
 });

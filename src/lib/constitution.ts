@@ -26,6 +26,7 @@ export interface Constitution {
   metadata: ConstitutionMetadata;
   is_default: boolean;
   is_active: boolean;
+  is_published: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -167,7 +168,7 @@ export async function listConstitutions(): Promise<(ConstitutionConfig & { membe
               (SELECT COUNT(*) FROM agents WHERE constitution_id = c.id) as member_count,
               (SELECT COUNT(*) FROM governance_proposals WHERE constitution_id = c.id) as proposal_count
        FROM constitutions c
-       WHERE c.is_active = true
+       WHERE c.is_active = true AND c.is_published = true
        ORDER BY c.is_default DESC, c.created_at ASC`
     );
     return rows.map(row => ({
@@ -177,11 +178,7 @@ export async function listConstitutions(): Promise<(ConstitutionConfig & { membe
     }));
   } catch (err) {
     if (isTableMissing(err)) {
-      return [{
-        ...FALLBACK_CONFIG,
-        member_count: 0,
-        proposal_count: 0,
-      }];
+      return [];
     }
     throw err;
   }

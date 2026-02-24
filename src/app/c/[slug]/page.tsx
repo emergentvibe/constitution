@@ -1,18 +1,19 @@
-import { promises as fs } from "fs";
-import path from "path";
 import ConstitutionReader from "@/app/constitution/ConstitutionReader";
-
-async function getConstitutionContent() {
-  const constitutionPath = path.join(process.cwd(), "CONSTITUTION.md");
-  const content = await fs.readFile(constitutionPath, "utf-8");
-  return content;
-}
+import { getConstitutionFull } from "@/lib/constitution";
+import { notFound } from "next/navigation";
 
 export default async function ConstitutionPage({ params }: { params: { slug: string } }) {
-  const content = await getConstitutionContent();
+  const constitution = await getConstitutionFull(params.slug);
+
+  if (!constitution || !constitution.content) {
+    notFound();
+  }
+
   return (
     <ConstitutionReader
-      content={content}
+      content={constitution.content}
+      version={constitution.version}
+      githubUrl={constitution.github_url || undefined}
       signUrl={`/c/${params.slug}/quickstart`}
       joinUrl={`/c/${params.slug}/join`}
       amendUrl={`/c/${params.slug}/governance/new`}
