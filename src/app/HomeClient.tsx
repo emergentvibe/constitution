@@ -286,7 +286,7 @@ export default function HomeClient() {
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
-                <span className="text-stone-600">Governance for humans, through AI</span>
+                <span className="text-stone-600">Infrastructure for constitutional governance</span>
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
@@ -392,18 +392,18 @@ export default function HomeClient() {
         </div>
 
         {/* Constitutions Directory */}
-        {constitutions.length > 0 && (
-          <section id="constitutions" className="px-6 py-16 bg-muted/30">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-2xl font-bold mb-1">Constitutions</h2>
-                  <p className="text-sm text-muted-foreground">Sovereign collectives coordinating human-AI governance</p>
-                </div>
-                <a href="/create" className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
-                  Start a Constitution →
-                </a>
+        <section id="constitutions" className="px-6 py-16 bg-muted/30">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-bold mb-1">Constitutions</h2>
+                <p className="text-sm text-muted-foreground">Sovereign collectives coordinating human-AI governance</p>
               </div>
+              <a href="/create" className="px-4 py-2 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
+                Start a Constitution →
+              </a>
+            </div>
+            {constitutions.length > 0 ? (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {constitutions.map((c) => (
                   <a
@@ -421,9 +421,16 @@ export default function HomeClient() {
                   </a>
                 ))}
               </div>
-            </div>
-          </section>
-        )}
+            ) : (
+              <div className="text-center py-12 border border-dashed border-border rounded-xl bg-background">
+                <p className="text-muted-foreground mb-4">No constitutions yet. Be the first.</p>
+                <a href="/create" className="inline-block px-6 py-3 bg-accent text-accent-foreground font-medium rounded-lg hover:bg-gold-400 transition-colors">
+                  Create a Constitution
+                </a>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Footer */}
         <footer className="px-6 py-8 border-t border-border">
@@ -434,6 +441,9 @@ export default function HomeClient() {
             <div className="flex flex-wrap gap-4 md:gap-6 text-sm text-muted-foreground">
               <a href="/" className="hover:text-foreground transition-colors">
                 Explore
+              </a>
+              <a href="/manifesto" className="hover:text-foreground transition-colors">
+                Manifesto
               </a>
               <a href="/create" className="hover:text-foreground transition-colors">
                 Create
