@@ -97,7 +97,7 @@ export default function RegistryScoped() {
               </Link>
               <Link href={link("/dashboard")} className="p-4 bg-background rounded-lg border border-border hover:border-accent/50 transition-colors">
                 <h3 className="font-semibold mb-1">Your Dashboard</h3>
-                <p className="text-sm text-muted-foreground">View your dyad identity and activity.</p>
+                <p className="text-sm text-muted-foreground">View your identity and activity.</p>
               </Link>
             </div>
           </div>

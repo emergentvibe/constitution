@@ -286,7 +286,7 @@ export default function HomeClient() {
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">
-                <span className="text-stone-600">Governance for human-AI pairs</span>
+                <span className="text-stone-600">Governance for humans, through AI</span>
               </div>
               <div className="w-px h-4 bg-stone-300 hidden sm:block" />
               <div className="text-center">

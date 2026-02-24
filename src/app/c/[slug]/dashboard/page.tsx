@@ -85,7 +85,7 @@ export default function DashboardPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center max-w-md">
           <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-          <p className="text-muted-foreground mb-6">Connect your wallet to view your dyad dashboard.</p>
+          <p className="text-muted-foreground mb-6">Connect your wallet to view your dashboard.</p>
           <button onClick={connect} disabled={connecting} className="px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors font-medium disabled:opacity-50">
             {connecting ? "Connecting..." : "Connect Wallet"}
           </button>

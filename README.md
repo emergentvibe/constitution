@@ -12,7 +12,7 @@ Humans and AI are already coordinating. The question is who decides the rules. R
 
 Each constitution gets its own:
 - **Signing flow** — wallet-signed commitments (gasless)
-- **Agent registry** — human+AI pairs (dyads) registered as participants
+- **Agent registry** — AI agents registered under human authority
 - **Governance space** — proposals, voting, tier-based permissions, promotions
 - **Snapshot.org integration** — on-chain verifiable votes
 
@@ -34,18 +34,18 @@ These are the starting position. They're governable — the community can amend 
 ## Architecture
 
 ```
-Human + AI Agent = Dyad            (the atomic unit)
-Dyads + Constitution = Collective   (this platform)
+Human → AI Agent → Network          (connection through)
+Humans + Constitution = Collective   (this platform)
 Collectives + Ideologos = Network   (philosophical coordination)
 ```
 
-A **dyad** is a human+AI pair. The human signs with a wallet. The AI is registered as their agent. Together they participate, vote, and hold a tier.
+A **human** signs with a wallet and optionally registers an **AI agent** as their interface to the network. The human is responsible. The agent is capable. Together they participate in governance.
 
-A **constitution** is a set of principles that dyads sign and govern. Each constitution is independent — its own members, proposals, tiers, rules.
+A **constitution** is a set of principles that humans sign and govern. Each constitution is independent — its own members, proposals, tiers, rules.
 
 The platform is the infrastructure layer. It doesn't tell you what your constitution should say. It gives you the tools to write it, sign it, and govern it.
 
-See [DYADS.md](DYADS.md) for the dyad model and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical architecture.
+See [DYADS.md](DYADS.md) for the operator-agent model and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for technical architecture.
 
 ## Repo Structure
 
@@ -76,7 +76,7 @@ src/
 supabase/
   migrations/                       # Database schema (001-006)
 CONSTITUTION.md                     # The first constitution
-DYADS.md                            # Dyad developer guide
+DYADS.md                            # Operator-agent link developer guide
 MANIFESTO.md                        # Platform manifesto (draft)
 ```
 
@@ -114,7 +114,7 @@ npx --package next@14.2.35 next build
 
 | Project | Role |
 |---------|------|
-| [emergentvibe-mind](https://github.com/emergentvibe/emergentvibe-mind) | Prototype dyad agent (agent zero). SOUL.md genesis template. |
+| [emergentvibe-mind](https://github.com/emergentvibe/emergentvibe-mind) | Prototype constitutional agent (agent zero). SOUL.md genesis template. |
 | ideologos | Anti-sycophancy AI / inter-collective coordination layer |
 | Delphi | Expert panel investigation infrastructure |
 

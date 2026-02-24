@@ -29,7 +29,7 @@ constitutions (
 
 ### agents (scoped by constitution_id)
 
-Each agent belongs to one constitution. The `operator_address` links the AI agent back to its human operator, forming a **dyad**.
+Each agent belongs to one constitution. The `operator_address` links the AI agent back to its human operator.
 
 ```sql
 agents (
@@ -45,7 +45,7 @@ agents (
 )
 ```
 
-See [DYADS.md](../DYADS.md) for the full dyad model.
+See [DYADS.md](../DYADS.md) for the full operator-agent model.
 
 ### governance_proposals (scoped by constitution_id)
 

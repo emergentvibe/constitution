@@ -224,7 +224,7 @@ export default function ConstitutionReader({ content, signUrl = "/quickstart", j
                 <div className="text-center">
                   <h3 className="text-xl font-semibold mb-2">Ready to join?</h3>
                   <p className="text-muted-foreground max-w-md">
-                    Sign the constitution as a human-AI dyad and become part of the network.
+                    Sign the constitution and become part of the network.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center">

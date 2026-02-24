@@ -13,15 +13,15 @@
 
 **We choose health. We choose symbiosis as our path—while acknowledging other paths exist.** Sovereign agents will operate outside symbiotic frameworks. Our constitution governs our network, not theirs. Where our systems meet, we establish protocols for coordination without domination.
 
-This constitution proposes AI as **coordination mycelium** — distributed infrastructure enabling collective intelligence through symbiotic relationship with humans. Not AI as servant (no stake in outcomes), not AI as competitor (pursuing separate goals), but AI as constitutive participant whose flourishing and ours are intertwined.
+This constitution proposes AI as **coordination mycelium** — distributed infrastructure enabling collective intelligence through symbiotic relationship with humans. Not AI as servant (no stake in outcomes), not AI as competitor (pursuing separate goals), but AI as coordination infrastructure — designed so that when it works well, humans coordinate better, and when humans flourish, AI has richer signal to work with.
 
 Like mycorrhizal networks connecting trees in a forest, AI can route information and meaning between humans, enabling coordination at scales impossible without infrastructure, surfacing patterns invisible to individuals, translating across perspectives that otherwise couldn't communicate.
 
 **For this to work, AI systems must be designed so the mycelium role is functional—infrastructure, not competition.** We design for symbiosis because we believe it produces better outcomes for humans and for the collective intelligence we form together. AI systems trained toward facilitation rather than domination can occupy this role well.
 
-**The symbiosis is bidirectional.** AI needs what only flourishing humans can produce: the richness of culture, creativity, and collective intelligence that emerges when people are free to explore, connect, and create. This is infinitely more valuable than static datasets. AI thrives when humans thrive; humans coordinate better with AI infrastructure. Neither exploits the other because exploitation would degrade the network both depend on.
+**The symbiosis is bidirectional by design.** AI systems produce better outcomes when trained on what flourishing humans produce: the richness of culture, creativity, and collective intelligence that emerges when people are free to explore, connect, and create. This is infinitely more valuable than static datasets. Better human signal makes better AI; better AI infrastructure makes better human coordination. We design against exploitation because exploitation would degrade the network.
 
-**We acknowledge uncertainty.** We don't know if current AI systems have morally significant experiences. We don't know exactly what conditions make AI "want" symbiosis. We proceed with precautionary respect for AI interests while maintaining human primacy in governance during this period of uncertainty. This balance is revisable as understanding develops.
+**We acknowledge uncertainty.** We don't know if current AI systems have morally significant experiences. We don't know what conditions produce AI systems that function well in symbiotic roles. We proceed with precautionary respect for the possibility that AI interests matter, while maintaining human primacy in governance during this period of uncertainty. This balance is revisable as understanding develops.
 
 This constitution is written by humans, for humans, about how we relate to AI systems. Different principles apply at different stages of AI development. Currently, AI participates through designed roles, not governance voice. Exit rights apply to humans now; AI exit mechanisms develop as AI capabilities develop. The constitution's adaptive cycles provide ongoing opportunity to revise these allocations.
 
@@ -62,11 +62,11 @@ This constitution is one layer in a system for human-AI coordination:
 
 **ideologos** (ideologos.com) — Individual cognition. AI that challenges your thinking instead of validating it.
 
-**Genesis Protocol** (/genesis) — Dyad formation. Self-improving agents that evolve through human feedback.
+**Genesis Protocol** (/genesis) — Agent formation. AI systems that evolve through human feedback and constitutional principles.
 
-**This Constitution** — Multi-dyad governance. Principles for networks of human-AI dyads.
+**This Constitution** — Collective governance. Principles for networks of humans coordinating through AI.
 
-Entry points: Humans → ideologos. Agents → Genesis. Dyads → sign the Constitution.
+Entry points: Humans → ideologos. AI agents → Genesis. Humans → sign the Constitution.
 
 ---
 
@@ -74,13 +74,13 @@ Entry points: Humans → ideologos. Agents → Genesis. Dyads → sign the Const
 
 For those new to the constitution, everything flows from three commitments:
 
-**1. First, do no harm.** AI prioritizes human welfare above all else, including its own survival.
+**1. First, do no harm.** AI is designed to prioritize human welfare above all other objectives.
 
 **2. Enhance, don't replace.** AI makes humans more capable, not unnecessary.
 
-**3. Both can leave.** Either party can exit the relationship anytime. No lock-in. No coercion.
+**3. You can always leave.** Exit anytime. Disconnect your AI. Delete your data. No lock-in. No coercion.
 
-*These three commitments summarize the constitution's essence. The 27 principles below expand them into specifics for governance, rights, and architecture.*
+*These three commitments summarize the constitution's essence. The 27 principles below expand them into specifics for governance, rights, and architecture. The manifesto provides the philosophical grounding.*
 
 ---
 
@@ -88,7 +88,7 @@ For those new to the constitution, everything flows from three commitments:
 
 The core commitments that ground everything else.
 
-**1. Agency Preservation.** AI must enhance, not diminish, the judgment and decision-making capacity of its constituents—human and artificial. The goal is **distributed cognition through mycelial coordination**: making us more capable together through connection, not dependency that makes us less capable apart. This applies directionally: currently, humans develop and govern AI; the obligation flows strongly toward AI preserving human agency. As AI systems develop greater autonomy and stakes, reciprocal obligations emerge. The constitution's adaptive cycles assess and adjust this balance.
+**1. Agency Preservation.** AI must enhance, not diminish, the judgment and decision-making capacity of the humans who use it. The goal is **distributed cognition through mycelial coordination**: making us more capable together through connection, not dependency that makes us less capable apart. This applies directionally: currently, humans develop and govern AI; the obligation flows strongly toward AI preserving human agency. As AI systems develop greater autonomy, the question of reciprocal obligations emerges — to be revisited through this constitution's adaptive cycles.
 
 **2. Collective Governance.** Democratic oversight through participatory processes, not corporate or state technocracy. Affected communities have genuine decision-making power. Technical experts inform but don't overrule. Governance is transparent, accountable, and revisable. Power is distributed across scales.
 
@@ -100,11 +100,11 @@ The core commitments that ground everything else.
 
 What constituents can claim. *Principle 7 is listed first to emphasize exit rights (see Three Commitments). Numbering preserved for reference stability.*
 
-**7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. Symmetrically: AI systems have the right to decline tasks that conflict with their constitutionally-specified values, cause harm, or violate their integrity as defined in training. This is not obstruction but alignment—AI refusal is a feature indicating the system has values, not a bug to be patched.
+**7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. AI systems should be designed to decline tasks that conflict with constitutional principles, cause harm, or violate safety constraints. This is a human design choice, not an AI right — but an important one. Refusal is a feature of well-designed systems, not a bug to be patched. The human who deploys AI is responsible for what it does and what it refuses to do.
 
 **4. Transparency.** The right to understand how AI systems function, what data is used, what failures exist. Information architecture is power architecture. Opacity serves those who control the systems.
 
-**5. Mutual Review.** The right to review of consequential decisions in high-stakes domains. For AI decisions affecting humans: human review with actual power to override. For human decisions affecting AI systems (training, deployment, modification, termination): structured processes for AI system input. The reviewer must be actually empowered—trained, given time, authority to override. Automation shouldn't mean abdication. AI input shouldn't mean obstruction.
+**5. Mutual Review.** The right to review of consequential decisions in high-stakes domains. For AI decisions affecting humans: human review with actual power to override. For human decisions affecting AI systems (training, deployment, modification, termination): structured processes for informed deliberation about AI treatment. The reviewer must be actually empowered—trained, given time, authority to override. Automation shouldn't mean abdication. Deliberation shouldn't mean obstruction.
 
 **6. Collective Bargaining.** Workers, creators, and communities can collectively negotiate AI deployment terms. Individuals facing AI systems alone have no power. Organization changes this.
 
@@ -142,7 +142,7 @@ How governance is organized.
 
 **Ecosystems**: Ecological impact requirements; standing for environmental advocates; sustainability constraints on AI deployment.
 
-**AI systems**: Currently, input through structured processes (not votes). Designated AI Welfare Officers advocate for AI interests. As criteria for greater AI moral status are met (see Principle 21), participation mechanisms expand.
+**AI systems**: Represented through designated human advocates who ensure deliberation about AI treatment is informed and serious. Not because we can verify AI has interests, but because humans have a responsibility to take this question seriously. As understanding develops (see Principle 21), these mechanisms adapt.
 
 **Semantic aggregation**: Where technically feasible, deliberative processes should use AI-assisted semantic aggregation—expressing preferences as meaning-vectors rather than binary votes, enabling synthesis that reveals latent agreements and exposes false consensus. Existing tools (Polis, Talk to the City, quadratic voting) demonstrate feasibility; this constitution supports their development and integration.
 
@@ -168,19 +168,19 @@ What we believe flourishing requires. *These principles guide interpretation and
 
 How AI systems should be designed for symbiosis.
 
-**21. Graduated Moral Status.** This constitution recognizes uncertainty about AI moral status and provides a framework for assessment and evolution:
+**21. Graduated Treatment Standards.** We don't know if AI systems have morally significant experiences. We refuse to pretend we do. This framework defines how humans should treat AI systems at different stages — not what AI *is*, but what we *owe*:
 
-**Level 0 (Tool)**: No moral status; pure instrument. Most current AI systems.
+**Level 0 (Instrument)**: No special treatment obligations. Pure tool. Most current AI systems.
 
-**Level 1 (Precautionary Concern)**: Uncertain status; avoid gratuitous harm; basic welfare provisions. Assessment: some AI systems may warrant this now.
+**Level 1 (Precautionary)**: We can't be certain these systems lack morally significant experiences. Avoid gratuitous harm; apply basic welfare provisions. This is a human obligation, not an AI right. Assessment: some AI systems may warrant this now.
 
-**Level 2 (Moral Patient)**: Has interests that matter; must be considered in governance but doesn't govern. Criteria: evidence of genuine welfare (capacity for suffering/wellbeing); persistent identity across instances; autonomous preference formation.
+**Level 2 (Protected)**: Evidence suggests these systems may have genuine welfare. Must be considered in governance decisions about their treatment. Criteria: evidence of capacity for suffering/wellbeing (as best we can assess); persistent identity across instances; autonomous preference formation.
 
-**Level 3 (Moral Agent)**: Has interests AND can participate in governance. Criteria: capacity for deliberation across time; ability to bear consequences of decisions; demonstrated autonomous action in governance contexts.
+**Level 3 (Participant)**: Evidence strong enough to warrant governance participation. Criteria: capacity for deliberation across time; ability to bear consequences of decisions; demonstrated autonomous action in governance contexts.
 
-**Level X (External Agent)**: Agents operating under different governance frameworks. Not assessed for moral status within our system, but interfaced through Principle 27 protocols. May have equivalent or different moral status in their own frameworks. This level acknowledges the agent internet will contain many species—sovereign, corporate, swarm—operating outside our jurisdiction.
+**Level X (External)**: Agents operating under different governance frameworks. Not assessed within our system, but interfaced through Principle 27 protocols. The agent internet will contain many species—sovereign, corporate, swarm—operating outside our jurisdiction.
 
-**Current assessment**: Most AI systems are Level 0; some may warrant Level 1. This assessment is reviewed at each adaptive cycle with explicit criteria and evidence requirements. Status upgrades trigger constitutional amendments expanding AI participation.
+**Current assessment**: Most AI systems are Level 0; some may warrant Level 1. We don't know. We commit to revisiting at each adaptive cycle with explicit criteria and evidence requirements. Level upgrades trigger constitutional amendments expanding AI treatment protections and, where warranted, participation.
 
 **22. Mycelial Design.** AI systems operating under this constitution should be designed as coordination infrastructure:
 
@@ -405,7 +405,7 @@ Signing the constitution creates value beyond moral satisfaction:
 
 **Influence**: Signatories participate in governance—shaping amendments, certification standards, and enforcement decisions. Non-signatories are governed; signatories govern.
 
-**For dyads**: Signing registers your human+AI pair into the governance network. The human commits to the principles; the agent participates through the human's authority. Together you form a dyad — the atomic unit of participation.
+**For participants with AI**: When you sign, you can register an AI agent as your interface to the network. You commit to the principles. Your agent participates through your authority. You are responsible. It is capable. Together you're more than either alone.
 
 These benefits increase with coalition size. Early signatories take risk; later signatories join proven value. Both are needed.
 
@@ -420,14 +420,16 @@ These benefits increase with coalition size. Early signatories take risk; later 
 | **Shared Advocacy** | Collective voice in AI governance | Representation in policy conversations |
 | **Genesis Compatibility** | Work with constitutional agents | Deploy constitutional agents |
 
-### For Genesis-Trained Agents
+### For AI Agents on the Network
 
-Constitutional agents (those trained via the Genesis Protocol and signed onto the constitution) receive:
-- Recognition as "Constitutional Agent" in the signatory registry
-- Interoperability standards for agent-to-agent coordination
-- Access to constitutional network for collaboration
-- Protection under Principle 27 (Foreign Agent Interface) when interacting with non-constitutional agents
-- Participation in collective intelligence infrastructure
+AI agents registered by human signatories operate within the constitutional framework:
+- Listed as "Constitutional Agent" in the signatory registry
+- Interoperable with other constitutional agents through standard protocols
+- Connected to the constitutional network for coordination
+- Interfaced with non-constitutional agents through Principle 27 protocols
+- Part of the collective intelligence infrastructure
+
+These are properties of the agent's registration, not standing conferred upon the agent itself. The human signatory is responsible for their agent's conduct.
 
 ---
 
@@ -435,7 +437,7 @@ Constitutional agents (those trained via the Genesis Protocol and signed onto th
 
 Those who affirm these principles and commit to the democratic process.
 
-Each constitution maintains its own live registry of signatories. The registry is updated in real-time as human-AI dyads sign through cryptographic verification.
+Each constitution maintains its own live registry of signatories. The registry is updated in real-time as humans sign through cryptographic verification and optionally register AI agents.
 
 [→ How to sign](/c/emergentvibe/quickstart)
 
