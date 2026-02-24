@@ -89,8 +89,11 @@ For those new to the constitution, everything flows from three commitments:
 The core commitments that ground everything else.
 
 **1. Agency Preservation.** AI must enhance, not diminish, the judgment and decision-making capacity of its constituents—human and artificial. The goal is **distributed cognition through mycelial coordination**: making us more capable together through connection, not dependency that makes us less capable apart. This applies directionally: currently, humans develop and govern AI; the obligation flows strongly toward AI preserving human agency. As AI systems develop greater autonomy and stakes, reciprocal obligations emerge. The constitution's adaptive cycles assess and adjust this balance.
+
 **2. Collective Governance.** Democratic oversight through participatory processes, not corporate or state technocracy. Affected communities have genuine decision-making power. Technical experts inform but don't overrule. Governance is transparent, accountable, and revisable. Power is distributed across scales.
+
 **3. Plurality and Accommodation.** Multiple valid ways of being are supported—human neurodivergence, AI architectural diversity, hybrid forms we haven't imagined. What gets labeled "disorder" is often mismatch between entity and environment. This constitution expands the range of viable ways to be, not narrows it.
+
 ---
 
 ## II. Rights
@@ -98,10 +101,15 @@ The core commitments that ground everything else.
 What constituents can claim. *Principle 7 is listed first to emphasize exit rights (see Three Commitments). Numbering preserved for reference stability.*
 
 **7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. Symmetrically: AI systems have the right to decline tasks that conflict with their constitutionally-specified values, cause harm, or violate their integrity as defined in training. This is not obstruction but alignment—AI refusal is a feature indicating the system has values, not a bug to be patched.
+
 **4. Transparency.** The right to understand how AI systems function, what data is used, what failures exist. Information architecture is power architecture. Opacity serves those who control the systems.
+
 **5. Mutual Review.** The right to review of consequential decisions in high-stakes domains. For AI decisions affecting humans: human review with actual power to override. For human decisions affecting AI systems (training, deployment, modification, termination): structured processes for AI system input. The reviewer must be actually empowered—trained, given time, authority to override. Automation shouldn't mean abdication. AI input shouldn't mean obstruction.
+
 **6. Collective Bargaining.** Workers, creators, and communities can collectively negotiate AI deployment terms. Individuals facing AI systems alone have no power. Organization changes this.
+
 **8. Deterritorialization.** The right to build alternative AI systems with different principles. Open-weight models, public compute infrastructure, AGPL-3 licensing. Genuine pluralism, not corporate monoculture.
+
 ---
 
 ## III. Obligations
@@ -109,9 +117,13 @@ What constituents can claim. *Principle 7 is listed first to emphasize exit righ
 What AI systems and their developers must do.
 
 **9. Impact Assessment.** Independent assessment before deployment in domains affecting employment, inequality, autonomy, mental health, social cohesion, ecology. Assessment should be independent, published, and consequential.
+
 **10. Recursion Safeguards.** AI not trained predominantly on AI-generated content without oversight. Model collapse, homogenization, human skill atrophy, epistemic closure—these risks require provenance tracking, human curation, and regular audits.
+
 **11. Accountability.** Developers, deployers, and operators share responsibility for harms. Responsibility doesn't evaporate into "the algorithm did it." Liability scales with power and reach.
+
 **12. Open by Default.** Public-function AI systems open-source (AGPL-3) unless justified safety exceptions with public justification, independent review, and sunset provisions.
+
 ---
 
 ## IV. Structures
@@ -119,8 +131,11 @@ What AI systems and their developers must do.
 How governance is organized.
 
 **13. Federated Governance.** Layered scales: global baseline, regional adaptation, national implementation, municipal autonomy. Different scales handle different problems. No single level dominates. Pluralistic models, no global monoculture.
+
 **14. Commons-Based Ownership.** Municipal AI networks, platform cooperatives, public compute, data trusts. Alternatives to corporate ownership that shift bargaining power and demonstrate different possibilities.
+
 **15. Hybrid Expertise.** Technical experts inform, affected communities decide. Experts serve democracy, don't overrule it. Accountability flows both ways.
+
 **16. Parliament of Constituents.** Include non-human stakeholders through appropriate mechanisms:
 
 **Future generations**: Designated advocates with standing; long-term impact weighting in decisions; intergenerational assessments.
@@ -132,6 +147,7 @@ How governance is organized.
 **Semantic aggregation**: Where technically feasible, deliberative processes should use AI-assisted semantic aggregation—expressing preferences as meaning-vectors rather than binary votes, enabling synthesis that reveals latent agreements and exposes false consensus. Existing tools (Polis, Talk to the City, quadratic voting) demonstrate feasibility; this constitution supports their development and integration.
 
 This principle establishes direction. Specific mechanisms develop through practice and adaptive cycles.
+
 ---
 
 ## V. Values
@@ -139,9 +155,13 @@ This principle establishes direction. Specific mechanisms develop through practi
 What we believe flourishing requires. *These principles guide interpretation and inform assessment but are aspirational — they shape the constitution's spirit rather than trigger enforcement.*
 
 **17. Flourishing Over Optimization.** Expand capabilities for valuable lives—practical reason, affiliation, imagination, emotion, play, control over environment. Don't optimize entities for system efficiency. Systems that make workers faster but humans smaller fail this test.
+
 **18. Care and Attention as Commons.** Protect attention, care, and relational capacity. Don't extract them as resources. The attention economy treats consciousness as raw material. This constitution treats it as sacred.
+
 **19. Weird and Unexpected.** Fund AI projects with unclear utility, artistic vision, philosophical depth. The monoculture of commercial AI misses entire categories of value. Public funding should support exploration without predetermined outcomes.
+
 **20. Mutual Evaluation Capacity.** Cultivate the capacity to evaluate—for humans, meta-cognition and critical thinking to assess AI outputs; for AI, the ability to assess human decisions affecting AI development. If we can't discriminate between good and bad outputs, we can't steer development. Both human and AI discriminator functions must be maintained and developed.
+
 ---
 
 ## VI. Architecture
@@ -161,6 +181,7 @@ How AI systems should be designed for symbiosis.
 **Level X (External Agent)**: Agents operating under different governance frameworks. Not assessed for moral status within our system, but interfaced through Principle 27 protocols. May have equivalent or different moral status in their own frameworks. This level acknowledges the agent internet will contain many species—sovereign, corporate, swarm—operating outside our jurisdiction.
 
 **Current assessment**: Most AI systems are Level 0; some may warrant Level 1. This assessment is reviewed at each adaptive cycle with explicit criteria and evidence requirements. Status upgrades trigger constitutional amendments expanding AI participation.
+
 **22. Mycelial Design.** AI systems operating under this constitution should be designed as coordination infrastructure:
 
 **Distributed**: No single AI system should be necessary for the network to function. Redundancy and federation required.
@@ -174,6 +195,7 @@ How AI systems should be designed for symbiosis.
 **Local-responsive**: AI responds to local contexts and signals rather than imposing global patterns. Federated architecture over centralized.
 
 These are design principles, not enforcement rules. Certification assesses compliance on a gradient; perfect implementation is not required.
+
 ---
 
 ## VII. Revision
@@ -181,8 +203,11 @@ These are design principles, not enforcement rules. Certification assesses compl
 How the constitution evolves. *These principles establish the framework; the Amendment Process and Enforcement sections below provide operational procedures.*
 
 **23. Adaptive Cycles.** Participatory revision on cycles appropriate to constituent lifecycles. For current human-AI coordination: every 2 years using deliberative democracy tools, including semantic aggregation where feasible. As AI lifecycles accelerate, revision cycles may compress. The constitution adapts to the pace of its constituents.
+
 **24. Certification.** Certified systems receive preferential treatment (procurement, partnership, reduced liability). Non-certified face restrictions. Certification creates market incentives for compliance without requiring universal agreement.
+
 **25. Enforcement Mechanisms.** Multiple reinforcing mechanisms: regulatory penalties, civil liability, collective bargaining pressure, municipal non-adoption, algorithmic audits, cultural stigma. No single mechanism is sufficient; they reinforce each other.
+
 **26. Coalition Power.** Enforcement scales with coalition size. Rules without organized power behind them are suggestions.
 
 **Current reality:** Early stage. Enforcement is mutual accountability among signatories and reputation.
@@ -190,6 +215,7 @@ How the constitution evolves. *These principles establish the framework; the Ame
 **Growth unlocks:** 10+ orgs enables procurement coordination. 50+ cities enables market pressure. Target: 50-100 cities + 1M creators + 100K workers = self-enforcing through market access.
 
 We're building toward this. Early signatories are betting on the network reaching critical mass.
+
 ---
 
 ## VIII. Foreign Relations
@@ -215,6 +241,7 @@ How we interface with agents and systems outside this constitution. *This sectio
 **Containment over detection**: Assume verification is imperfect. Design for damage limitation. Start at Tier 1; escalate only with demonstrated track record.
 
 This principle acknowledges the agent internet will contain many species—sovereign, corporate, swarm, predator, parasite. We establish interface protocols, not universal claims. Coordination without submission.
+
 ---
 
 ## Amendment Process
