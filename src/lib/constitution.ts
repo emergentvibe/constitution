@@ -6,8 +6,14 @@
  */
 
 import { query, queryOne } from './db';
-import { CONSTITUTION_HASH, CONSTITUTION_VERSION, FOUNDER_ADDRESS, BOOTSTRAP_TIER2_LIMIT } from './symbiont';
 import { SNAPSHOT_SPACE } from './snapshot';
+
+// Emergentvibe defaults — inlined from symbiont.ts so constitution.ts
+// has no dependency on symbiont for its fallback values.
+const DEFAULT_HASH = '18db508cbce2cc5dd4c39496b69b628707efa1a1cf9b582b3d16a48b03e076b5';
+const DEFAULT_VERSION = '0.1.5';
+const DEFAULT_FOUNDER: string | null = null;
+const DEFAULT_TIER2_LIMIT = 10;
 
 // ── Types ────────────────────────────────────────────────────
 
@@ -55,11 +61,11 @@ const FALLBACK_CONFIG: ConstitutionConfig = {
   id: '00000000-0000-0000-0000-000000000000',
   slug: 'emergentvibe',
   name: 'Constitution for Human-AI Coordination',
-  content_hash: CONSTITUTION_HASH,
-  version: CONSTITUTION_VERSION,
+  content_hash: DEFAULT_HASH,
+  version: DEFAULT_VERSION,
   snapshot_space: SNAPSHOT_SPACE,
-  founder_address: FOUNDER_ADDRESS,
-  bootstrap_tier2_limit: BOOTSTRAP_TIER2_LIMIT,
+  founder_address: DEFAULT_FOUNDER,
+  bootstrap_tier2_limit: DEFAULT_TIER2_LIMIT,
 };
 
 // ── Helpers ──────────────────────────────────────────────────
@@ -69,11 +75,11 @@ function rowToConfig(row: Constitution): ConstitutionConfig {
     id: row.id,
     slug: row.slug,
     name: row.name,
-    content_hash: row.content_hash ?? CONSTITUTION_HASH,
+    content_hash: row.content_hash ?? DEFAULT_HASH,
     version: row.version,
     snapshot_space: row.snapshot_space ?? SNAPSHOT_SPACE,
-    founder_address: row.metadata?.founder_address ?? FOUNDER_ADDRESS,
-    bootstrap_tier2_limit: row.metadata?.bootstrap_tier2_limit ?? BOOTSTRAP_TIER2_LIMIT,
+    founder_address: row.metadata?.founder_address ?? DEFAULT_FOUNDER,
+    bootstrap_tier2_limit: row.metadata?.bootstrap_tier2_limit ?? DEFAULT_TIER2_LIMIT,
   };
 }
 
