@@ -217,7 +217,8 @@ By signing this message, I confirm:
  */
 export function verifyOperatorTokenFlexible(
   token: string,
-  agentName: string
+  agentName: string,
+  constitutionConfig?: { name: string; version: string; content_hash: string }
 ): { valid: boolean; operatorAddress?: string; error?: string } {
   try {
     // Decode base64 token
@@ -287,6 +288,31 @@ Constitution hash: ${CONSTITUTION_HASH}
 Wallet: ${decoded.operator}
 Timestamp: ${decoded.timestamp}`;
       messagesToTry.push(humanOnlyMessage);
+    }
+
+    // Generic format (multi-constitution quickstart — no hardcoded commitments)
+    if (constitutionConfig) {
+      const genericMsg = `I, ${decoded.operatorName || ''}, sign ${constitutionConfig.name} (v${constitutionConfig.version}).
+
+I commit to the principles set out in this constitution.
+
+I authorize "${decoded.agent || agentName}" as my AI agent in this network.
+
+Constitution hash: ${constitutionConfig.content_hash}
+Operator: ${decoded.operator}
+Timestamp: ${decoded.timestamp}`;
+      messagesToTry.push(genericMsg);
+
+      if (!decoded.agent) {
+        const genericHumanOnly = `I, ${decoded.operatorName || ''}, sign ${constitutionConfig.name} (v${constitutionConfig.version}).
+
+I commit to the principles set out in this constitution.
+
+Constitution hash: ${constitutionConfig.content_hash}
+Wallet: ${decoded.operator}
+Timestamp: ${decoded.timestamp}`;
+        messagesToTry.push(genericHumanOnly);
+      }
     }
 
     for (const message of messagesToTry) {

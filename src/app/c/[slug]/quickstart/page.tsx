@@ -7,12 +7,6 @@ import { useConstitution } from "@/contexts/ConstitutionContext";
 
 type Step = "intro" | "details" | "sign" | "complete";
 
-const CONSTITUTION_SUMMARY = [
-  { principle: "First, do no harm", desc: "AI prioritizes human welfare above all" },
-  { principle: "Enhance, don't replace", desc: "Make humans more capable, not unnecessary" },
-  { principle: "Both can leave", desc: "Exit rights for humans and AI alike" },
-];
-
 export default function QuickstartPageScoped() {
   const { link, apiUrl } = useConstitutionLinks();
   const constitution = useConstitution();
@@ -56,25 +50,19 @@ export default function QuickstartPageScoped() {
       const timestamp = new Date().toISOString();
       let message: string;
       if (hasAgent && agentName) {
-        message = `I, ${yourName}, sign the Constitution for Human-AI Coordination (v${constitution.version}).
+        message = `I, ${yourName}, sign ${constitution.name} (v${constitution.version}).
 
-I commit to the 27 principles, including:
-1. First, do no harm — human welfare above all
-2. Enhance, don't replace — make humans more capable
-3. Both can leave — exit rights for all
+I commit to the principles set out in this constitution.
 
-I authorize "${agentName}" as my AI partner in this network.
+I authorize "${agentName}" as my AI agent in this network.
 
 Constitution hash: ${constitution.content_hash}
 Operator: ${walletAddress}
 Timestamp: ${timestamp}`;
       } else {
-        message = `I, ${yourName}, sign the Constitution for Human-AI Coordination (v${constitution.version}).
+        message = `I, ${yourName}, sign ${constitution.name} (v${constitution.version}).
 
-I commit to the 27 principles, including:
-1. First, do no harm — human welfare above all
-2. Enhance, don't replace — make humans more capable
-3. Both can leave — exit rights for all
+I commit to the principles set out in this constitution.
 
 Constitution hash: ${constitution.content_hash}
 Wallet: ${walletAddress}
@@ -152,17 +140,10 @@ Timestamp: ${timestamp}`;
               <h1 className="text-3xl font-bold mb-4">What you&apos;re signing</h1>
               <p className="text-muted-foreground text-lg">A commitment to healthy human-AI coordination.</p>
             </div>
-            <div className="bg-muted/50 rounded-xl p-6 space-y-6">
-              <h2 className="font-semibold text-lg">Three core commitments:</h2>
-              {CONSTITUTION_SUMMARY.map((item, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-semibold shrink-0">{i + 1}</div>
-                  <div>
-                    <div className="font-medium">{item.principle}</div>
-                    <div className="text-sm text-muted-foreground">{item.desc}</div>
-                  </div>
-                </div>
-              ))}
+            <div className="bg-muted/50 rounded-xl p-6">
+              <p className="text-muted-foreground">
+                Read the full constitution before signing. By joining, you agree to its principles and become part of the governance process.
+              </p>
             </div>
             <div className="bg-muted/30 rounded-xl p-6">
               <h2 className="font-semibold mb-3">What signing means:</h2>
@@ -234,9 +215,9 @@ Timestamp: ${timestamp}`;
             <div className="bg-muted/50 rounded-xl p-6 space-y-4">
               <h2 className="font-semibold">You&apos;re signing:</h2>
               <div className="bg-background p-4 rounded-lg text-sm font-mono">
-                <p>I, {yourName}, sign the Constitution for Human-AI Coordination (v{constitution.version}).</p><br />
-                <p>I commit to the 27 principles...</p>
-                {hasAgent && agentName && (<><br /><p>I authorize &ldquo;{agentName}&rdquo; as my AI partner in this network.</p></>)}
+                <p>I, {yourName}, sign {constitution.name} (v{constitution.version}).</p><br />
+                <p>I commit to the principles set out in this constitution.</p>
+                {hasAgent && agentName && (<><br /><p>I authorize &ldquo;{agentName}&rdquo; as my AI agent in this network.</p></>)}
               </div>
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>Wallet: {walletAddress?.slice(0, 10)}...{walletAddress?.slice(-8)}</span>
@@ -245,7 +226,7 @@ Timestamp: ${timestamp}`;
             </div>
             <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
               <p className="text-sm text-amber-200">
-                <strong>By signing, you commit to:</strong><br />• The 27 constitutional principles<br />• Public accountability in the registry<br />• Exit rights for yourself and your agent
+                <strong>By signing, you commit to:</strong><br />• The principles in this constitution<br />• Public accountability in the registry<br />• Exit rights — you can leave anytime
               </p>
             </div>
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}

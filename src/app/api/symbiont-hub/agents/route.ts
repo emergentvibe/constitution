@@ -157,6 +157,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Resolve constitution early (needed for token verification)
+    let constitution;
+    try {
+      constitution = await resolveConstitution(constitutionSlug);
+    } catch (err) {
+      if (err instanceof ConstitutionNotFoundError) {
+        return NextResponse.json({ error: err.message }, { status: 404 });
+      }
+      throw err;
+    }
+
     let operatorAddress: string | null = null;
     let agentWalletAddress = wallet_address;
     let isHumanOnly = false;
@@ -173,7 +184,7 @@ export async function POST(request: NextRequest) {
 
       isHumanOnly = !decoded.agent;
 
-      const tokenVerification = verifyOperatorTokenFlexible(operator_token, name);
+      const tokenVerification = verifyOperatorTokenFlexible(operator_token, name, constitution);
       if (!tokenVerification.valid) {
         return NextResponse.json(
           {
@@ -219,17 +230,6 @@ export async function POST(request: NextRequest) {
         { error: 'Must provide either operator_token OR (wallet_address + signature)' },
         { status: 400 }
       );
-    }
-
-    // Resolve constitution
-    let constitution;
-    try {
-      constitution = await resolveConstitution(constitutionSlug);
-    } catch (err) {
-      if (err instanceof ConstitutionNotFoundError) {
-        return NextResponse.json({ error: err.message }, { status: 404 });
-      }
-      throw err;
     }
 
     // Check if agent already registered (within this constitution)
