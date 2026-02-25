@@ -34,19 +34,28 @@ Verify compliance (evals, challenge-response)
 Repeat
 ```
 
-## Who Is the Customer
+## Positioning
 
-### Now (wallet auth fits perfectly):
-- **Edge City / popup cities** — 12K+ participants, governance explicitly unsolved (Vitalik: "governance is not solved"). EdgeOS + ZuPass exist, but no AI governance layer. Edge Esmeralda → permanent village in Cloverdale.
-- **DAOs deploying AI agents** — Arbitrum, Gnosis, Uniswap. <10% voter participation, deploying AI for proposals/treasury. Need constitutional governance for those agents.
-- **Cooperative web3 projects** — Breadchain/Bread Cooperative, solidarity primitives. Our constitutions = "governance primitives."
+**Category:** "AI Constitution Platform" — **Tagline:** "Community rules for AI"
 
-### Next:
-- **Platform cooperatives** (240+ worldwide), permanent network states, ZuVillages
-- **Municipal/public services** deploying AI (needs simpler auth, but proven product)
+The unique wedge is the **closed loop**: rules that AI actually follows. Nobody else connects deliberation + voting + machine-readable endpoint that AI consumes. Lead with this in all messaging.
 
-### The pitch to Edge City:
-"You've built EdgeOS for coordination, ZuPass for identity. Governance is the acknowledged unsolved problem. We're the constitutional layer for your AI systems."
+**Competitive framing (complement, don't compete):**
+- vs CIP: "CIP finds consensus, emergentvibe implements it"
+- vs Polis: "Polis for input, emergentvibe for standing governance"
+- vs Anthropic/OpenAI: "Your constitution, not theirs"
+
+## Who Is the Customer (priority order from GTM research)
+
+1. **Primary: DAOs with AI agent plans** — Arbitrum Trailblazer, Gnosis. Existing Snapshot infra, treasury, governance culture, emerging AI needs. Wallet auth is table stakes.
+2. **Secondary: Popup cities** — Edge Esmeralda 2026 (May 30 - Jun 27). Faster feedback, engaged communities. Use for iteration + case studies.
+3. **Long-term: Platform cooperatives** — 240+ orgs, authentic democratic values. Partner with PCC. May need OAuth.
+4. **Deprioritize: Municipal government** — Different product, different market. Not now.
+
+### Path to 50 Constitutions
+- **Q1-Q2 2026 (1-5):** Personal network + Edge Esmeralda pilot
+- **Q3 2026 (6-15):** DAO pilots + CIP network + content marketing
+- **Q4 2026-Q1 2027 (16-50):** Trailblazer ecosystem + PCC + B2B partnerships
 
 ## Architecture
 
@@ -94,16 +103,21 @@ npx --package next@14.2.35 next build   # MUST pin version
 3. Deliberation (threaded comments on proposals, tier 1+ can comment)
 6. Members/agents data model split (manifesto-aligned separation)
 
-## What's Next (Phases 4-5)
+## What's Next
 
-4. Twitter/X OAuth — display names, verified identity
+**Immediate (THE proof point):**
+- ideologos integration — first AI that reads from the constitution endpoint, closing the loop. Observable compliance = MVP.
+- Edge Esmeralda pilot proposal to programming committee (March 2026)
+
+**Technical phases remaining:**
+4. Twitter/X OAuth — display names, verified identity (needs API keys)
 5. Snapshot sub-spaces — auto-provision under emergentvibe.eth
-- ideologos integration — first AI that reads from the constitution endpoint, closing the loop (THE proof point)
 - On-chain registry (ERC-8004) — deferred until 50+ active constitutions
 
 ## Key Files
 
 - **Plan:** `.claude/plans/lexical-exploring-pine.md` — full execution plan. Read before planning new work.
-- **Market research:** Memory file `market-research.md` — customer segments, competitive landscape, go-to-market.
+- **Market research:** Memory file `market-research.md` — customer segments, positioning, go-to-market, 7 unresolved tensions.
+- **GTM symposium:** `.ai-symposium/investigations/emergentvibe-gtm/findings.md` — 3 panels, 15 experts, 19 recommendations. The strategic playbook.
 - **Landscape research:** Memory file `landscape-research.md` — CIP, Polis, democratic AI governance field.
-- **Symposium investigations:** `.ai-symposium/` — expert panel research (~370K+ words across panels).
+- **Symposium investigations:** `.ai-symposium/` — 8 expert panel investigations (~400K+ words).
