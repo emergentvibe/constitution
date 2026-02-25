@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useConstitutionLinks } from "@/hooks/useConstitutionLinks";
 import { useConstitution } from "@/contexts/ConstitutionContext";
 import { DiffViewer } from "@/components/governance/DiffViewer";
+import { CommentThread } from "@/components/governance/CommentThread";
 
 import { formatDistanceToNow, formatDate } from "@/lib/format";
 
@@ -251,6 +252,9 @@ export default function ProposalPageScoped() {
             )}
           </div>
         )}
+
+        {/* Discussion */}
+        <CommentThread proposalId={id} />
 
         {/* Thresholds */}
         <div className="bg-muted/30 border border-border rounded-lg p-6">

@@ -70,6 +70,45 @@ export async function canVoteOnProposal(
 }
 
 /**
+ * Check if a wallet can comment on a governance proposal.
+ * Returns commenter info if eligible, or an error message.
+ * Tier 1+ can comment (lower barrier than voting which requires Tier 2+).
+ */
+export async function canCommentOnProposal(
+  walletAddress: string,
+  proposalId: string,
+  constitutionId?: string
+): Promise<{ eligible: true; commenter: { id: string; tier: number } } | { eligible: false; error: string; status: number }> {
+  const agent = constitutionId
+    ? await queryOne<{ id: string; tier: number }>(
+        'SELECT id, tier FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
+        [walletAddress.toLowerCase(), constitutionId]
+      )
+    : await queryOne<{ id: string; tier: number }>(
+        'SELECT id, tier FROM agents WHERE wallet_address = $1',
+        [walletAddress.toLowerCase()]
+      );
+
+  if (!agent) {
+    return { eligible: false, error: 'Not a registered member', status: 403 };
+  }
+
+  if (agent.tier < 1) {
+    return { eligible: false, error: 'Only registered members can comment', status: 403 };
+  }
+
+  const proposal = await queryOne<{ id: string }>(
+    'SELECT id FROM governance_proposals WHERE id = $1',
+    [proposalId]
+  );
+  if (!proposal) {
+    return { eligible: false, error: 'Proposal not found', status: 404 };
+  }
+
+  return { eligible: true, commenter: agent };
+}
+
+/**
  * Check if an agent can vote on a promotion.
  * Returns voter info if eligible, or an error message.
  * When constitutionId is provided, voter must belong to that constitution.
