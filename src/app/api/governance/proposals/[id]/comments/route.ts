@@ -91,9 +91,9 @@ export async function GET(
         c.id, c.proposal_id, c.parent_comment_id,
         c.author_wallet, c.content, c.deleted_at,
         c.created_at, c.updated_at,
-        a.tier as author_tier
+        m.tier as author_tier
       FROM proposal_comments c
-      LEFT JOIN agents a ON a.id = c.author_agent_id
+      LEFT JOIN members m ON m.id = c.author_agent_id
       WHERE c.proposal_id = ${id}::uuid
       ORDER BY c.created_at ASC
     `;

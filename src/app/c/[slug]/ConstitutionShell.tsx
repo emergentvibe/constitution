@@ -18,7 +18,8 @@ export default function ConstitutionShell({
 
   const tabs = [
     { href: base, label: "Constitution", exact: true },
-    { href: `${base}/registry`, label: "Registry" },
+    { href: `${base}/members`, label: "Members" },
+    { href: `${base}/registry`, label: "AI Agents" },
     { href: `${base}/governance`, label: "Governance" },
     ...(walletAddress ? [{ href: `${base}/dashboard`, label: "Dashboard" }] : []),
   ];

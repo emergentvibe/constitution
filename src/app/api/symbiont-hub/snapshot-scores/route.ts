@@ -14,20 +14,20 @@ export async function GET(request: NextRequest) {
     // Snapshot may pass addresses to check
     const addressesParam = searchParams.get('addresses');
     
-    // Get all tier 2+ agents
-    const agents = await query<{ wallet_address: string; tier: number }>(
-      `SELECT wallet_address, tier FROM agents WHERE tier >= 2 AND wallet_address IS NOT NULL`
+    // Get all tier 2+ members (humans who govern)
+    const members = await query<{ wallet_address: string; tier: number }>(
+      `SELECT wallet_address, tier FROM members WHERE tier >= 2 AND wallet_address IS NOT NULL`
     );
-    
+
     // Build scores object: { address: votingPower }
     // Voting power = tier level (tier 2 = 2 votes, tier 3 = 3 votes, etc.)
     const scores: Record<string, number> = {};
-    
-    for (const agent of agents) {
-      if (agent.wallet_address) {
+
+    for (const member of members) {
+      if (member.wallet_address) {
         // Normalize to lowercase for consistency
-        const addr = agent.wallet_address.toLowerCase();
-        scores[addr] = agent.tier;
+        const addr = member.wallet_address.toLowerCase();
+        scores[addr] = member.tier;
       }
     }
     
@@ -59,16 +59,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const addresses: string[] = body.addresses || [];
     
-    // Get all tier 2+ agents
-    const agents = await query<{ wallet_address: string; tier: number }>(
-      `SELECT wallet_address, tier FROM agents WHERE tier >= 2 AND wallet_address IS NOT NULL`
+    // Get all tier 2+ members (humans who govern)
+    const members = await query<{ wallet_address: string; tier: number }>(
+      `SELECT wallet_address, tier FROM members WHERE tier >= 2 AND wallet_address IS NOT NULL`
     );
-    
+
     // Build lookup
     const tierByAddress: Record<string, number> = {};
-    for (const agent of agents) {
-      if (agent.wallet_address) {
-        tierByAddress[agent.wallet_address.toLowerCase()] = agent.tier;
+    for (const member of members) {
+      if (member.wallet_address) {
+        tierByAddress[member.wallet_address.toLowerCase()] = member.tier;
       }
     }
     

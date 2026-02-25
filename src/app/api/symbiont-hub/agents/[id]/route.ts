@@ -2,38 +2,48 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 import { verifyMessage } from 'ethers';
 
-// GET /api/symbiont-hub/agents/[id] - Get agent by ID or wallet address
+// GET /api/symbiont-hub/agents/[id] - Get agent or member by ID or wallet address
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
-    
+
     // Try UUID first, then wallet address
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-    
-    const sql = isUuid
+
+    const agentSql = isUuid
       ? 'SELECT * FROM agents WHERE id = $1'
       : 'SELECT * FROM agents WHERE wallet_address = $1';
-    
-    const agent = await queryOne(sql, [id]);
-    
-    if (!agent) {
-      return NextResponse.json(
-        { error: 'Agent not found' },
-        { status: 404 }
-      );
+
+    const agent = await queryOne(agentSql, [id]);
+
+    if (agent) {
+      await query('UPDATE agents SET last_seen_at = NOW() WHERE id = $1', [agent.id]);
+      return NextResponse.json({ ...agent, type: 'agent' });
     }
 
-    // Update last_seen
-    await query('UPDATE agents SET last_seen_at = NOW() WHERE id = $1', [agent.id]);
+    // Fallback: check members table (UUID shared during migration)
+    const memberSql = isUuid
+      ? 'SELECT * FROM members WHERE id = $1'
+      : 'SELECT * FROM members WHERE wallet_address = $1';
 
-    return NextResponse.json(agent);
-  } catch (error) {
-    console.error('Error fetching agent:', error);
+    const member = await queryOne(memberSql, [id]);
+
+    if (member) {
+      await query('UPDATE members SET last_seen_at = NOW() WHERE id = $1', [member.id]);
+      return NextResponse.json({ ...member, type: 'member' });
+    }
+
     return NextResponse.json(
-      { error: 'Failed to fetch agent' },
+      { error: 'Not found' },
+      { status: 404 }
+    );
+  } catch (error) {
+    console.error('Error fetching agent/member:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch' },
       { status: 500 }
     );
   }

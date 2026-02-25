@@ -12,14 +12,8 @@ describe('canVoteOnProposal', () => {
     resetDbMocks();
   });
 
-  it('allows Tier 2 voter with no prior vote', async () => {
-    // queryOne: find voter
-    mockQueryOne.mockResolvedValueOnce({
-      id: 'voter-1',
-      tier: 2,
-      operator_address: null,
-    });
-    // query: check existing vote → empty
+  it('allows Tier 2 member with no prior vote', async () => {
+    mockQueryOne.mockResolvedValueOnce({ id: 'voter-1', tier: 2 });
     mockQuery.mockResolvedValueOnce([]);
 
     const result = await canVoteOnProposal('0xvoter', 'proposal-1');
@@ -32,17 +26,13 @@ describe('canVoteOnProposal', () => {
     const result = await canVoteOnProposal('0xunknown', 'proposal-1');
     expect(result.eligible).toBe(false);
     if (!result.eligible) {
-      expect(result.error).toContain('Not a registered agent');
+      expect(result.error).toContain('Not a registered member');
       expect(result.status).toBe(403);
     }
   });
 
-  it('blocks Tier 1 voter', async () => {
-    mockQueryOne.mockResolvedValueOnce({
-      id: 'voter-1',
-      tier: 1,
-      operator_address: null,
-    });
+  it('blocks Tier 1 member', async () => {
+    mockQueryOne.mockResolvedValueOnce({ id: 'voter-1', tier: 1 });
 
     const result = await canVoteOnProposal('0xvoter', 'proposal-1');
     expect(result.eligible).toBe(false);
@@ -52,12 +42,7 @@ describe('canVoteOnProposal', () => {
   });
 
   it('blocks duplicate vote', async () => {
-    mockQueryOne.mockResolvedValueOnce({
-      id: 'voter-1',
-      tier: 2,
-      operator_address: null,
-    });
-    // Existing vote found
+    mockQueryOne.mockResolvedValueOnce({ id: 'voter-1', tier: 2 });
     mockQuery.mockResolvedValueOnce([{ id: 'vote-1' }]);
 
     const result = await canVoteOnProposal('0xvoter', 'proposal-1');
@@ -67,30 +52,8 @@ describe('canVoteOnProposal', () => {
     }
   });
 
-  it('blocks operator dedup: same operator via different agent', async () => {
-    mockQueryOne.mockResolvedValueOnce({
-      id: 'voter-agent-2',
-      tier: 2,
-      operator_address: '0xoperator',
-    });
-    // No direct vote
-    mockQuery.mockResolvedValueOnce([]);
-    // But operator already voted via another agent
-    mockQuery.mockResolvedValueOnce([{ id: 'vote-from-agent-1' }]);
-
-    const result = await canVoteOnProposal('0xvoter', 'proposal-1');
-    expect(result.eligible).toBe(false);
-    if (!result.eligible) {
-      expect(result.error).toContain('operator has already voted');
-    }
-  });
-
-  it('allows Tier 3 voter', async () => {
-    mockQueryOne.mockResolvedValueOnce({
-      id: 'voter-1',
-      tier: 3,
-      operator_address: null,
-    });
+  it('allows Tier 3 member', async () => {
+    mockQueryOne.mockResolvedValueOnce({ id: 'voter-1', tier: 3 });
     mockQuery.mockResolvedValueOnce([]);
 
     const result = await canVoteOnProposal('0xvoter', 'proposal-1');
@@ -103,8 +66,8 @@ describe('canVoteOnPromotion', () => {
     resetDbMocks();
   });
 
-  it('allows same-tier voter who is not a nominee', async () => {
-    mockQueryOne.mockResolvedValueOnce({ tier: 2, name: 'voter', operator_address: null });
+  it('allows same-tier member who is not a nominee', async () => {
+    mockQueryOne.mockResolvedValueOnce({ tier: 2, name: 'voter' });
 
     const result = await canVoteOnPromotion('voter-1', 'promo-1', 2, ['nominee-1']);
     expect(result.eligible).toBe(true);
@@ -119,7 +82,7 @@ describe('canVoteOnPromotion', () => {
   });
 
   it('blocks voter from different tier', async () => {
-    mockQueryOne.mockResolvedValueOnce({ tier: 1, name: 'voter', operator_address: null });
+    mockQueryOne.mockResolvedValueOnce({ tier: 1, name: 'voter' });
 
     const result = await canVoteOnPromotion('voter-1', 'promo-1', 2, ['nominee-1']);
     expect(result.eligible).toBe(false);
@@ -127,21 +90,11 @@ describe('canVoteOnPromotion', () => {
   });
 
   it('blocks nominee self-vote', async () => {
-    mockQueryOne.mockResolvedValueOnce({ tier: 2, name: 'nominee', operator_address: null });
+    mockQueryOne.mockResolvedValueOnce({ tier: 2, name: 'nominee' });
 
     const result = await canVoteOnPromotion('nominee-1', 'promo-1', 2, ['nominee-1']);
     expect(result.eligible).toBe(false);
     if (!result.eligible) expect(result.error).toContain('Nominees cannot vote');
-  });
-
-  it('blocks operator dedup', async () => {
-    mockQueryOne
-      .mockResolvedValueOnce({ tier: 2, name: 'voter', operator_address: '0xop' })
-      .mockResolvedValueOnce({ voter_id: 'other-agent' }); // operator already voted
-
-    const result = await canVoteOnPromotion('voter-1', 'promo-1', 2, ['nominee-1']);
-    expect(result.eligible).toBe(false);
-    if (!result.eligible) expect(result.error).toContain('operator has already voted');
   });
 });
 

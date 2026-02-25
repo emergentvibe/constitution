@@ -23,43 +23,41 @@ export async function GET(request: NextRequest) {
 
     const walletLower = wallet.toLowerCase();
 
-    // Find agent by wallet_address or operator_address (scoped to constitution)
-    const agent = await queryOne<{
+    // Find member by wallet_address (scoped to constitution)
+    const member = await queryOne<{
       id: string;
       name: string;
       wallet_address: string;
-      operator_address: string | null;
       tier: number;
       registered_at: string;
-      mission: string | null;
     }>(
-      `SELECT id, name, wallet_address, operator_address, tier, registered_at, mission
-       FROM agents
-       WHERE (wallet_address = $1 OR operator_address = $1) AND constitution_id = $2
+      `SELECT id, name, wallet_address, tier, registered_at
+       FROM members
+       WHERE wallet_address = $1 AND constitution_id = $2
        LIMIT 1`,
       [walletLower, constitution.id]
     );
 
-    if (!agent) {
-      return NextResponse.json({ error: 'No agent found for this wallet' }, { status: 404 });
+    if (!member) {
+      return NextResponse.json({ error: 'No member found for this wallet' }, { status: 404 });
     }
 
     // Activity: governance votes
     const governanceVoteCount = await queryOne<{ count: string }>(
       'SELECT COUNT(*) as count FROM governance_votes WHERE wallet_address = $1',
-      [agent.wallet_address]
+      [member.wallet_address]
     );
 
     // Activity: promotion votes
     const promotionVoteCount = await queryOne<{ count: string }>(
       'SELECT COUNT(*) as count FROM promotion_votes WHERE voter_id = $1',
-      [agent.id]
+      [member.id]
     );
 
     // Activity: proposals created (scoped to constitution)
     const proposalCount = await queryOne<{ count: string }>(
       'SELECT COUNT(*) as count FROM governance_proposals WHERE author_wallet = $1 AND constitution_id = $2',
-      [agent.wallet_address, constitution.id]
+      [member.wallet_address, constitution.id]
     );
 
     // Recent governance votes (last 10)
@@ -73,7 +71,7 @@ export async function GET(request: NextRequest) {
        WHERE gv.wallet_address = $1
        ORDER BY gv.created_at DESC
        LIMIT 10`,
-      [agent.wallet_address]
+      [member.wallet_address]
     );
 
     // Enrich with proposal titles
@@ -91,31 +89,29 @@ export async function GET(request: NextRequest) {
 
     // Progression: tier members count (scoped to constitution)
     const tierMemberCount = await queryOne<{ count: string }>(
-      'SELECT COUNT(*) as count FROM agents WHERE tier = $1 AND constitution_id = $2',
-      [agent.tier, constitution.id]
+      'SELECT COUNT(*) as count FROM members WHERE tier = $1 AND constitution_id = $2',
+      [member.tier, constitution.id]
     );
 
     // Progression: pending promotions user can vote on
     const pendingPromotions = await queryOne<{ count: string }>(
       `SELECT COUNT(*) as count FROM promotions
        WHERE from_tier = $1 AND status = 'pending'`,
-      [agent.tier]
+      [member.tier]
     );
 
     // Progression: eligible for promotion (has been registered 30+ days)
     const daysSinceRegistration = Math.floor(
-      (Date.now() - new Date(agent.registered_at).getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - new Date(member.registered_at).getTime()) / (1000 * 60 * 60 * 24)
     );
 
     return NextResponse.json({
       identity: {
-        id: agent.id,
-        name: agent.name,
-        wallet_address: agent.wallet_address,
-        operator_address: agent.operator_address,
-        tier: agent.tier,
-        registered_at: agent.registered_at,
-        mission: agent.mission,
+        id: member.id,
+        name: member.name,
+        wallet_address: member.wallet_address,
+        tier: member.tier,
+        registered_at: member.registered_at,
       },
       activity: {
         governance_votes: parseInt(governanceVoteCount?.count || '0'),
@@ -124,7 +120,7 @@ export async function GET(request: NextRequest) {
         recent_votes: enrichedVotes,
       },
       progression: {
-        current_tier: agent.tier,
+        current_tier: member.tier,
         tier_members: parseInt(tierMemberCount?.count || '0'),
         pending_promotions: parseInt(pendingPromotions?.count || '0'),
         eligible_for_promotion: daysSinceRegistration >= 30,

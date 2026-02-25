@@ -16,15 +16,15 @@ export async function GET(request: NextRequest) {
       throw err;
     }
 
-    // Agent counts by tier (scoped to constitution)
+    // Member counts by tier (scoped to constitution)
     const tierCounts = await query<{ tier: number; count: string }>(
-      'SELECT tier, COUNT(*) as count FROM agents WHERE constitution_id = $1 GROUP BY tier ORDER BY tier',
+      'SELECT tier, COUNT(*) as count FROM members WHERE constitution_id = $1 GROUP BY tier ORDER BY tier',
       [constitution.id]
     );
 
-    // Total agents
+    // Total members
     const totalResult = await queryOne<{ count: string }>(
-      'SELECT COUNT(*) as count FROM agents WHERE constitution_id = $1',
+      'SELECT COUNT(*) as count FROM members WHERE constitution_id = $1',
       [constitution.id]
     );
     const totalAgents = parseInt(totalResult?.count || '0');
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     // Recent registrations (last 24h)
     const recentResult = await queryOne<{ count: string }>(
-      "SELECT COUNT(*) as count FROM agents WHERE constitution_id = $1 AND registered_at > NOW() - INTERVAL '24 hours'",
+      "SELECT COUNT(*) as count FROM members WHERE constitution_id = $1 AND registered_at > NOW() - INTERVAL '24 hours'",
       [constitution.id]
     );
     const recentRegistrations = parseInt(recentResult?.count || '0');

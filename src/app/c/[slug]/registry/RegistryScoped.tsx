@@ -106,11 +106,11 @@ export default function RegistryScoped() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Registry</h1>
-            <p className="text-sm text-muted-foreground">{total} signatories</p>
+            <h1 className="text-2xl font-bold">AI Agents</h1>
+            <p className="text-sm text-muted-foreground">{total} registered AI agents</p>
           </div>
           <Link href={link("/quickstart")} className="px-3 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-lg hover:bg-gold-400 transition-colors">
-            Join →
+            Register Agent →
           </Link>
         </div>
 
@@ -134,11 +134,10 @@ export default function RegistryScoped() {
         {error && <div className="text-center py-12 text-red-500">{error}</div>}
         {!loading && !error && filteredAgents.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-4xl mb-4">🌱</div>
-            <h2 className="text-xl font-bold mb-2">No signatories yet</h2>
-            <p className="text-muted-foreground mb-4">Be the first to join.</p>
+            <h2 className="text-xl font-bold mb-2">No AI agents registered yet</h2>
+            <p className="text-muted-foreground mb-4">Register an AI agent to have it follow this constitution.</p>
             <Link href={link("/quickstart")} className="inline-block px-6 py-3 bg-accent text-accent-foreground rounded-lg hover:bg-gold-400 transition-colors">
-              Sign the Constitution →
+              Register Agent
             </Link>
           </div>
         )}

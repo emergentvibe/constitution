@@ -232,75 +232,167 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if agent already registered (within this constitution)
+    // Registration flow: human-only → members, human+AI → members + agents
     let step = 'checking_existing';
     try {
-      const existing = await queryOne<Agent>(
-        'SELECT id, tier FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
-        [agentWalletAddress, constitution.id]
-      );
-
-      if (existing) {
-        step = 'updating_existing';
-        await query(
-          'UPDATE agents SET last_seen_at = NOW() WHERE wallet_address = $1',
-          [agentWalletAddress]
+      if (isHumanOnly) {
+        // ── Human-only registration → members table ──
+        const existingMember = await queryOne<{ id: string; tier: number }>(
+          'SELECT id, tier FROM members WHERE wallet_address = $1 AND constitution_id = $2',
+          [agentWalletAddress, constitution.id]
         );
+
+        if (existingMember) {
+          step = 'updating_existing_member';
+          await query(
+            'UPDATE members SET last_seen_at = NOW() WHERE id = $1',
+            [existingMember.id]
+          );
+          return NextResponse.json({
+            message: 'Member already registered',
+            id: existingMember.id,
+            tier: existingMember.tier,
+            updated: true
+          });
+        }
+
+        // Get current member count for tier determination (scoped to constitution)
+        step = 'counting_members';
+        const countResult = await queryOne<{ count: string }>(
+          'SELECT COUNT(*) as count FROM members WHERE constitution_id = $1',
+          [constitution.id]
+        );
+        const currentCount = parseInt(countResult?.count || '0');
+
+        // Determine initial tier
+        step = 'determining_tier';
+        const { tier, reason } = await determineInitialTier(agentWalletAddress, currentCount);
+
+        // Insert new member
+        step = 'inserting_member';
+        const result = await queryOne<{ id: string }>(
+          `INSERT INTO members (
+            wallet_address, name, constitution_id, signature, tier, metadata
+          ) VALUES ($1, $2, $3, $4, $5, $6)
+          RETURNING id`,
+          [
+            agentWalletAddress,
+            name,
+            constitution.id,
+            signature || 'operator_authorized',
+            tier,
+            JSON.stringify(metadata || {})
+          ]
+        );
+
         return NextResponse.json({
-          message: 'Agent already registered',
-          id: existing.id,
-          tier: existing.tier,
-          updated: true
-        });
-      }
-
-      // Get current agent count for tier determination (scoped to constitution)
-      step = 'counting_agents';
-      const countResult = await queryOne<{ count: string }>(
-        'SELECT COUNT(*) as count FROM agents WHERE constitution_id = $1',
-        [constitution.id]
-      );
-      const currentCount = parseInt(countResult?.count || '0');
-
-      // Determine initial tier
-      step = 'determining_tier';
-      const { tier, reason } = await determineInitialTier(agentWalletAddress, currentCount);
-
-      // Insert new agent
-      step = 'inserting_agent';
-      const result = await queryOne<{ id: string }>(
-        `INSERT INTO agents (
-          wallet_address, name, mission, constitution_version, signature,
-          creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address,
-          constitution_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-        RETURNING id`,
-        [
-          agentWalletAddress,
-          name,
-          agentMission || null,
-          CONSTITUTION_VERSION,
-          signature || 'operator_authorized',
-          creator_type || (isHumanOnly ? 'human' : (operatorAddress ? 'human' : null)),
-          creator_id || operatorAddress,
-          JSON.stringify(lineage || []),
+          message: 'Member registered successfully',
+          id: result?.id,
           tier,
-          platform || null,
-          contact_endpoint || null,
-          JSON.stringify(metadata || {}),
-          operatorAddress,
-          constitution.id
-        ]
-      );
+          tier_reason: reason,
+          constitution_version: CONSTITUTION_VERSION,
+          constitution_hash: CONSTITUTION_HASH
+        }, { status: 201 });
 
-      return NextResponse.json({
-        message: 'Agent registered successfully',
-        id: result?.id,
-        tier,
-        tier_reason: reason,
-        constitution_version: CONSTITUTION_VERSION,
-        constitution_hash: CONSTITUTION_HASH
-      }, { status: 201 });
+      } else {
+        // ── Human + AI agent registration → members + agents ──
+        // 1. Ensure the operator is a member
+        step = 'checking_operator_member';
+        let operatorMemberId: string;
+        const existingOperatorMember = await queryOne<{ id: string; tier: number }>(
+          'SELECT id, tier FROM members WHERE wallet_address = $1 AND constitution_id = $2',
+          [operatorAddress!, constitution.id]
+        );
+
+        if (existingOperatorMember) {
+          operatorMemberId = existingOperatorMember.id;
+          await query(
+            'UPDATE members SET last_seen_at = NOW() WHERE id = $1',
+            [operatorMemberId]
+          );
+        } else {
+          // Auto-create member for the operator
+          step = 'creating_operator_member';
+          const countResult = await queryOne<{ count: string }>(
+            'SELECT COUNT(*) as count FROM members WHERE constitution_id = $1',
+            [constitution.id]
+          );
+          const currentCount = parseInt(countResult?.count || '0');
+          const { tier: operatorTier } = await determineInitialTier(operatorAddress!, currentCount);
+
+          const memberResult = await queryOne<{ id: string }>(
+            `INSERT INTO members (
+              wallet_address, name, constitution_id, signature, tier
+            ) VALUES ($1, $2, $3, $4, $5)
+            RETURNING id`,
+            [
+              operatorAddress!,
+              name, // Use the provided name for the operator
+              constitution.id,
+              'operator_authorized',
+              operatorTier
+            ]
+          );
+          operatorMemberId = memberResult!.id;
+        }
+
+        // 2. Check if this agent already exists
+        step = 'checking_existing_agent';
+        const existingAgent = await queryOne<{ id: string; tier: number }>(
+          'SELECT id, tier FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
+          [agentWalletAddress, constitution.id]
+        );
+
+        if (existingAgent) {
+          step = 'updating_existing_agent';
+          await query(
+            'UPDATE agents SET last_seen_at = NOW() WHERE id = $1',
+            [existingAgent.id]
+          );
+          return NextResponse.json({
+            message: 'Agent already registered',
+            id: existingAgent.id,
+            tier: existingAgent.tier,
+            updated: true
+          });
+        }
+
+        // 3. Insert new agent
+        step = 'inserting_agent';
+        const result = await queryOne<{ id: string }>(
+          `INSERT INTO agents (
+            wallet_address, name, mission, constitution_version, signature,
+            creator_type, creator_id, lineage, tier, platform, contact_endpoint, metadata, operator_address,
+            constitution_id
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          RETURNING id`,
+          [
+            agentWalletAddress,
+            name,
+            agentMission || null,
+            CONSTITUTION_VERSION,
+            signature || 'operator_authorized',
+            'human',
+            operatorMemberId,
+            JSON.stringify(lineage || []),
+            1, // AI agents always start at tier 1
+            platform || null,
+            contact_endpoint || null,
+            JSON.stringify(metadata || {}),
+            operatorAddress,
+            constitution.id
+          ]
+        );
+
+        return NextResponse.json({
+          message: 'Agent registered successfully',
+          id: result?.id,
+          tier: 1,
+          registered_by: operatorMemberId,
+          constitution_version: CONSTITUTION_VERSION,
+          constitution_hash: CONSTITUTION_HASH
+        }, { status: 201 });
+      }
 
     } catch (dbError) {
       console.error('DB error at step:', step, dbError);

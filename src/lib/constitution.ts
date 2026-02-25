@@ -171,7 +171,7 @@ export async function listConstitutions(): Promise<(ConstitutionConfig & { membe
   try {
     const rows = await query<Constitution & { member_count: string; proposal_count: string }>(
       `SELECT c.*,
-              (SELECT COUNT(*) FROM agents WHERE constitution_id = c.id) as member_count,
+              (SELECT COUNT(*) FROM members WHERE constitution_id = c.id) as member_count,
               (SELECT COUNT(*) FROM governance_proposals WHERE constitution_id = c.id) as proposal_count
        FROM constitutions c
        WHERE c.is_active = true AND c.is_published = true

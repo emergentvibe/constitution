@@ -78,14 +78,14 @@ export async function getTiers(constitutionId?: string): Promise<Tier[]> {
   const tiers = constitutionId
     ? await query<Tier & { member_count: string }>(
         `SELECT t.*,
-                (SELECT COUNT(*) FROM agents WHERE tier = t.level AND constitution_id = $1) as member_count
+                (SELECT COUNT(*) FROM members WHERE tier = t.level AND constitution_id = $1) as member_count
          FROM tiers t
          ORDER BY t.level ASC`,
         [constitutionId]
       )
     : await query<Tier & { member_count: string }>(
         `SELECT t.*,
-                (SELECT COUNT(*) FROM agents WHERE tier = t.level) as member_count
+                (SELECT COUNT(*) FROM members WHERE tier = t.level) as member_count
          FROM tiers t
          ORDER BY t.level ASC`
       );
@@ -104,14 +104,14 @@ export async function getTier(level: number, constitutionId?: string): Promise<T
   const tier = constitutionId
     ? await queryOne<Tier & { member_count: string }>(
         `SELECT t.*,
-                (SELECT COUNT(*) FROM agents WHERE tier = t.level AND constitution_id = $2) as member_count
+                (SELECT COUNT(*) FROM members WHERE tier = t.level AND constitution_id = $2) as member_count
          FROM tiers t
          WHERE t.level = $1`,
         [level, constitutionId]
       )
     : await queryOne<Tier & { member_count: string }>(
         `SELECT t.*,
-                (SELECT COUNT(*) FROM agents WHERE tier = t.level) as member_count
+                (SELECT COUNT(*) FROM members WHERE tier = t.level) as member_count
          FROM tiers t
          WHERE t.level = $1`,
         [level]
@@ -186,14 +186,14 @@ export async function getTierMembers(level: number, constitutionId?: string): Pr
   return constitutionId
     ? await query(
         `SELECT id, name, wallet_address, registered_at
-         FROM agents
+         FROM members
          WHERE tier = $1 AND constitution_id = $2
          ORDER BY registered_at ASC`,
         [level, constitutionId]
       )
     : await query(
         `SELECT id, name, wallet_address, registered_at
-         FROM agents
+         FROM members
          WHERE tier = $1
          ORDER BY registered_at ASC`,
         [level]
@@ -207,11 +207,11 @@ export async function getTierMembers(level: number, constitutionId?: string): Pr
 export async function countTierMembers(level: number, constitutionId?: string): Promise<number> {
   const result = constitutionId
     ? await queryOne<{ count: string }>(
-        'SELECT COUNT(*) as count FROM agents WHERE tier = $1 AND constitution_id = $2',
+        'SELECT COUNT(*) as count FROM members WHERE tier = $1 AND constitution_id = $2',
         [level, constitutionId]
       )
     : await queryOne<{ count: string }>(
-        'SELECT COUNT(*) as count FROM agents WHERE tier = $1',
+        'SELECT COUNT(*) as count FROM members WHERE tier = $1',
         [level]
       );
   return parseInt(result?.count || '0');

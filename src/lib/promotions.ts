@@ -53,7 +53,7 @@ export async function createPromotion(
 ): Promise<Promotion> {
   // Get proposer
   const proposer = await queryOne<{ tier: number; name: string }>(
-    'SELECT tier, name FROM agents WHERE id = $1',
+    'SELECT tier, name FROM members WHERE id = $1',
     [proposerId]
   );
   if (!proposer) {
@@ -65,7 +65,7 @@ export async function createPromotion(
   
   // Validate nominees exist and are same tier
   const nominees = await query<{ id: string; tier: number; name: string }>(
-    'SELECT id, tier, name FROM agents WHERE id = ANY($1)',
+    'SELECT id, tier, name FROM members WHERE id = ANY($1)',
     [nomineeIds]
   );
   
@@ -176,13 +176,13 @@ export async function getPromotionWithDetails(id: string, constitutionId?: strin
 
   // Get proposer name
   const proposer = await queryOne<{ name: string }>(
-    'SELECT name FROM agents WHERE id = $1',
+    'SELECT name FROM members WHERE id = $1',
     [promo.proposed_by]
   );
 
   // Get nominee names
   const nominees = await query<{ name: string }>(
-    'SELECT name FROM agents WHERE id = ANY($1)',
+    'SELECT name FROM members WHERE id = ANY($1)',
     [promo.nominees]
   );
 
@@ -278,42 +278,26 @@ export async function voteOnPromotion(
     throw new Error('Voting period has ended');
   }
   
-  // Get voter
-  const voter = await queryOne<{ tier: number; name: string; operator_address: string | null }>(
-    'SELECT tier, name, operator_address FROM agents WHERE id = $1',
+  // Get voter (from members — humans govern)
+  const voter = await queryOne<{ tier: number; name: string }>(
+    'SELECT tier, name FROM members WHERE id = $1',
     [voterId]
   );
   if (!voter) {
     throw new Error('Voter not found');
   }
-  
+
   // Must be same tier
   if (voter.tier !== promo.from_tier) {
     throw new Error('Only members of the same tier can vote');
   }
-  
+
   // Can't vote if you're a nominee
   if (promo.nominees.includes(voterId)) {
     throw new Error('Nominees cannot vote on their own promotion');
   }
-  
-  // Check operator-level dedup: block if same operator already voted via a different agent
-  if (voter.operator_address) {
-    const operatorVote = await queryOne<{ voter_id: string }>(
-      `SELECT pv.voter_id FROM promotion_votes pv
-       JOIN agents a ON a.id = pv.voter_id
-       WHERE pv.promotion_id = $1
-         AND a.operator_address = $2
-         AND a.operator_address IS NOT NULL
-         AND pv.voter_id != $3`,
-      [promotionId, voter.operator_address, voterId]
-    );
-    if (operatorVote) {
-      throw new Error('Your operator has already voted on this promotion via another agent');
-    }
-  }
 
-  // Check if already voted (same agent — allow vote change)
+  // Check if already voted (same member — allow vote change)
   const existingVote = await queryOne<{ id: string }>(
     'SELECT id FROM promotion_votes WHERE promotion_id = $1 AND voter_id = $2',
     [promotionId, voterId]
@@ -447,13 +431,13 @@ async function resolvePromotion(
     for (const nomineeId of promo.nominees) {
       // Update tier
       await query(
-        'UPDATE agents SET tier = $1 WHERE id = $2',
+        'UPDATE members SET tier = $1 WHERE id = $2',
         [promo.to_tier, nomineeId]
       );
-      
+
       // Add to promotion history
       await query(
-        `UPDATE agents 
+        `UPDATE members
          SET promotion_history = promotion_history || $1
          WHERE id = $2`,
         [JSON.stringify([{
@@ -504,9 +488,9 @@ export async function withdrawPromotion(
  */
 export async function getPromotionVotes(promotionId: string): Promise<PromotionVote[]> {
   return await query<PromotionVote>(
-    `SELECT pv.*, a.name as voter_name
+    `SELECT pv.*, m.name as voter_name
      FROM promotion_votes pv
-     JOIN agents a ON pv.voter_id = a.id
+     JOIN members m ON pv.voter_id = m.id
      WHERE pv.promotion_id = $1
      ORDER BY pv.created_at ASC`,
     [promotionId]
