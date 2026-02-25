@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useConstitutionLinks } from "@/hooks/useConstitutionLinks";
 import { useConstitution } from "@/contexts/ConstitutionContext";
+import { AmendmentEditor } from "@/components/governance/AmendmentEditor";
 import {
   SNAPSHOT_DOMAIN,
   createProposalPayload,
@@ -42,6 +43,7 @@ export default function NewProposalPageScoped() {
   const [category, setCategory] = useState("");
   const [impactAssessment, setImpactAssessment] = useState("");
   const [amendmentText, setAmendmentText] = useState("");
+  const [amendmentDiff, setAmendmentDiff] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submittingSnapshot, setSubmittingSnapshot] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +85,8 @@ export default function NewProposalPageScoped() {
           category,
           impact_assessment: impactAssessment,
           amendment_text: isAmendment ? amendmentText : undefined,
+          amendment_diff: isAmendment ? amendmentDiff : undefined,
+          amendment_base_version: isAmendment ? constitution.version : undefined,
           author_wallet: walletAddress,
         }),
       });
@@ -204,13 +208,16 @@ export default function NewProposalPageScoped() {
             <div className="text-xs text-muted-foreground mt-1">{description.length}/100 minimum characters</div>
           </div>
 
-          {/* Amendment Text */}
+          {/* Amendment Editor */}
           {isAmendment && (
-            <div>
-              <label htmlFor="amendmentText" className="block text-sm font-medium mb-2">Proposed Amendment Text</label>
-              <textarea id="amendmentText" value={amendmentText} onChange={(e) => setAmendmentText(e.target.value)} placeholder="The proposed constitutional text..." rows={6}
-                className="w-full px-4 py-3 bg-background border border-border rounded-lg placeholder-muted-foreground focus:outline-none focus:border-accent resize-y font-mono text-sm" />
-            </div>
+            <AmendmentEditor
+              slug={constitution.slug}
+              value={amendmentText}
+              onChange={(diff, modified) => {
+                setAmendmentDiff(diff);
+                setAmendmentText(modified);
+              }}
+            />
           )}
 
           {/* Impact Assessment */}

@@ -8,6 +8,7 @@ import { SnapshotSubmit } from "@/components/governance/SnapshotSubmit";
 import { useAuth } from "@/hooks/useAuth";
 import { useConstitutionLinks } from "@/hooks/useConstitutionLinks";
 import { useConstitution } from "@/contexts/ConstitutionContext";
+import { DiffViewer } from "@/components/governance/DiffViewer";
 
 import { formatDistanceToNow, formatDate } from "@/lib/format";
 
@@ -30,6 +31,8 @@ interface Proposal {
   end?: number;
   snapshot_id?: string;
   amendment_text?: string;
+  amendment_diff?: string;
+  amendment_base_version?: string;
   impact_assessment?: string;
   quorum_threshold?: number;
   approval_threshold?: number;
@@ -225,11 +228,15 @@ export default function ProposalPageScoped() {
           <p className="whitespace-pre-wrap">{proposal.description || proposal.body}</p>
         </div>
 
-        {/* Amendment Text */}
-        {proposal.amendment_text && (
+        {/* Amendment */}
+        {(proposal.amendment_diff || proposal.amendment_text) && (
           <div className="bg-muted/30 border border-border rounded-lg p-6 mb-8">
             <h3 className="text-lg font-semibold mb-4">Proposed Amendment</h3>
-            <pre className="bg-background border border-border rounded-lg p-4 text-sm overflow-x-auto">{proposal.amendment_text}</pre>
+            {proposal.amendment_diff ? (
+              <DiffViewer diff={proposal.amendment_diff} />
+            ) : (
+              <pre className="bg-background border border-border rounded-lg p-4 text-sm overflow-x-auto">{proposal.amendment_text}</pre>
+            )}
           </div>
         )}
 
