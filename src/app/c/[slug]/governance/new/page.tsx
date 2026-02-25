@@ -7,14 +7,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useConstitutionLinks } from "@/hooks/useConstitutionLinks";
 import { useConstitution } from "@/contexts/ConstitutionContext";
 import { AmendmentEditor } from "@/components/governance/AmendmentEditor";
-import {
-  SNAPSHOT_DOMAIN,
-  createProposalPayload,
-  submitProposal,
-  getCurrentBlock,
-  getVotingPeriod,
-  ProposalType as SnapshotProposalType,
-} from "@/lib/snapshot";
 
 type ProposalType =
   | "constitutional_amendment"
@@ -33,7 +25,7 @@ const proposalTypes: { value: ProposalType; label: string; description: string; 
 
 export default function NewProposalPageScoped() {
   const router = useRouter();
-  const { walletAddress, connect, connecting, signTypedData } = useAuth();
+  const { walletAddress, connect, connecting } = useAuth();
   const { link, apiUrl } = useConstitutionLinks();
   const constitution = useConstitution();
 
@@ -45,7 +37,6 @@ export default function NewProposalPageScoped() {
   const [amendmentText, setAmendmentText] = useState("");
   const [amendmentDiff, setAmendmentDiff] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [submittingSnapshot, setSubmittingSnapshot] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userTier, setUserTier] = useState<number | null>(null);
 
@@ -93,51 +84,12 @@ export default function NewProposalPageScoped() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create proposal");
 
-      setSubmitting(false);
-      setSubmittingSnapshot(true);
-
-      try {
-        const currentBlock = await getCurrentBlock();
-        const now = Math.floor(Date.now() / 1000);
-        const votingPeriod = getVotingPeriod(type as SnapshotProposalType);
-        const startTimestamp = now + 60;
-        const endTimestamp = now + votingPeriod;
-
-        const fullBody = isAmendment && amendmentText
-          ? `${description}\n\n---\n\n**Proposed Amendment:**\n${amendmentText}`
-          : description;
-
-        const payload = createProposalPayload(
-          walletAddress!,
-          title,
-          fullBody,
-          type as SnapshotProposalType,
-          startTimestamp,
-          endTimestamp,
-          currentBlock,
-          constitution.snapshot_space
-        );
-
-        const signature = await signTypedData(SNAPSHOT_DOMAIN, payload.types, payload.message);
-
-        if (signature) {
-          const snapshotResult = await submitProposal(walletAddress!, signature, payload.message);
-          await fetch(`/api/governance/proposals/${data.proposal.id}/link`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ snapshot_id: snapshotResult.id, author_wallet: walletAddress }),
-          });
-        }
-      } catch (snapshotErr: any) {
-        console.error("Snapshot submission failed:", snapshotErr);
-      }
-
+      // Redirect to proposal detail page — user submits to Snapshot from there
       router.push(link(`/governance/${data.proposal.id}`));
     } catch (err: any) {
       setError(err.message);
     } finally {
       setSubmitting(false);
-      setSubmittingSnapshot(false);
     }
   }
 
@@ -233,7 +185,7 @@ export default function NewProposalPageScoped() {
             <Link href={link("/governance")} className="px-6 py-3 bg-muted hover:bg-muted/80 rounded-lg font-medium transition-colors">Cancel</Link>
             <button type="submit" disabled={submitting || !walletAddress}
               className="flex-1 bg-accent hover:bg-gold-400 disabled:bg-muted disabled:text-muted-foreground text-accent-foreground px-6 py-3 rounded-lg font-medium transition-colors">
-              {submitting ? "Creating..." : submittingSnapshot ? "Submitting to Snapshot..." : "Create Draft Proposal"}
+              {submitting ? "Creating..." : "Create Draft Proposal"}
             </button>
           </div>
         </form>

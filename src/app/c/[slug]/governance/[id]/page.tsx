@@ -172,7 +172,7 @@ export default function ProposalPageScoped() {
         {isDraft && isAuthor && (
           <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-lg p-4 mb-8">
             <h3 className="text-yellow-400 font-medium mb-2">Draft Proposal</h3>
-            <p className="text-sm mb-4">This proposal is a draft. To start voting, sign and submit it to Snapshot.</p>
+            <p className="text-sm mb-4">Your proposal has been created as a draft. To open it for voting, sign and submit it to Snapshot below.</p>
             <SnapshotSubmit proposal={proposal} onSuccess={fetchProposal} />
           </div>
         )}
