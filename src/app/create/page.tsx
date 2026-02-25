@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,8 +16,30 @@ export default function CreateConstitutionPage() {
   const [content, setContent] = useState("");
   const [snapshotSpace, setSnapshotSpace] = useState("");
   const [githubUrl, setGithubUrl] = useState("");
+  const [githubInstalled, setGithubInstalled] = useState<boolean | null>(null);
+  const [checkingGithub, setCheckingGithub] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Check GitHub App installation when URL changes
+  useEffect(() => {
+    if (!githubUrl || !githubUrl.includes("github.com/")) {
+      setGithubInstalled(null);
+      return;
+    }
+    const timeout = setTimeout(async () => {
+      setCheckingGithub(true);
+      try {
+        const res = await fetch(`/api/github/check-install?repo=${encodeURIComponent(githubUrl)}`);
+        const data = await res.json();
+        setGithubInstalled(data.installed ?? null);
+      } catch {
+        setGithubInstalled(null);
+      }
+      setCheckingGithub(false);
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [githubUrl]);
 
   function generateSlug(name: string) {
     return name
@@ -161,10 +183,27 @@ export default function CreateConstitutionPage() {
           </div>
 
           <div>
-            <label htmlFor="github" className="block text-sm font-medium mb-2">GitHub URL (optional)</label>
+            <label htmlFor="github" className="block text-sm font-medium mb-2">GitHub Repository (optional)</label>
             <input id="github" type="url" value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)}
               placeholder="https://github.com/your-org/your-constitution"
               className="w-full px-4 py-3 bg-background border border-border rounded-lg placeholder-muted-foreground focus:outline-none focus:border-accent" />
+            <p className="text-xs text-muted-foreground mt-1">Link a GitHub repo to automatically create PRs for constitutional amendments.</p>
+            {checkingGithub && (
+              <p className="text-xs text-muted-foreground mt-1">Checking GitHub App installation...</p>
+            )}
+            {!checkingGithub && githubInstalled === true && (
+              <p className="text-xs text-green-400 mt-1">GitHub App is installed on this repo</p>
+            )}
+            {!checkingGithub && githubInstalled === false && (
+              <p className="text-xs text-amber-400 mt-1">
+                GitHub App not installed.{" "}
+                <a href="https://github.com/apps/emergentvibe-governance/installations/new"
+                  target="_blank" rel="noopener noreferrer" className="underline hover:text-amber-300">
+                  Install it
+                </a>{" "}
+                to enable automatic PRs for amendments.
+              </p>
+            )}
           </div>
 
           {error && <div className="bg-red-900/20 border border-red-700/30 rounded-lg p-4 text-red-400">{error}</div>}

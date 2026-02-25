@@ -33,6 +33,8 @@ interface Proposal {
   amendment_text?: string;
   amendment_diff?: string;
   amendment_base_version?: string;
+  github_pr_number?: number;
+  github_pr_url?: string;
   impact_assessment?: string;
   quorum_threshold?: number;
   approval_threshold?: number;
@@ -236,6 +238,16 @@ export default function ProposalPageScoped() {
               <DiffViewer diff={proposal.amendment_diff} />
             ) : (
               <pre className="bg-background border border-border rounded-lg p-4 text-sm overflow-x-auto">{proposal.amendment_text}</pre>
+            )}
+            {proposal.github_pr_url && (
+              <a
+                href={proposal.github_pr_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-4 text-sm text-accent hover:underline"
+              >
+                View PR on GitHub →
+              </a>
             )}
           </div>
         )}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { queryOne } from '@/lib/db';
 import { listConstitutions, getConstitution } from '@/lib/constitution';
 import { verifySignature } from '@/lib/symbiont';
+import { parseRepoFullName } from '@/lib/github';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,10 +75,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Slug already taken' }, { status: 409 });
     }
 
+    // Parse GitHub repo full name if URL provided
+    const repoInfo = github_url ? parseRepoFullName(github_url) : null;
+    const repoFullName = repoInfo ? `${repoInfo.owner}/${repoInfo.repo}` : null;
+
     // Insert
     const result = await queryOne<{ id: string; slug: string }>(
-      `INSERT INTO constitutions (slug, name, tagline, version, content, snapshot_space, github_url, metadata)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `INSERT INTO constitutions (slug, name, tagline, version, content, snapshot_space, github_url, github_repo_full_name, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING id, slug`,
       [
         slug,
@@ -87,6 +92,7 @@ export async function POST(request: NextRequest) {
         content || null,
         snapshot_space || null,
         github_url || null,
+        repoFullName,
         JSON.stringify({ founder_address: wallet_address.toLowerCase() }),
       ]
     );

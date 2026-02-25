@@ -9,7 +9,7 @@ import {
   getVotingPeriod,
   getVotingThreshold
 } from '@/lib/snapshot';
-import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
+import { resolveConstitution, getConstitutionFull, ConstitutionNotFoundError } from '@/lib/constitution';
 
 export async function GET(request: NextRequest) {
   try {
@@ -175,6 +175,32 @@ export async function POST(request: NextRequest) {
       )
       RETURNING *
     `;
+
+    // Create GitHub PR if this is an amendment with a diff and the constitution has a GitHub repo
+    if (amendment_diff) {
+      try {
+        const fullConstitution = await getConstitutionFull(constitution.slug);
+        if (fullConstitution?.github_url) {
+          const { createAmendmentPR } = await import('@/lib/github');
+          const githubResult = await createAmendmentPR(
+            fullConstitution,
+            { id: proposal.id, title, description, amendment_diff, amendment_text }
+          );
+          if (githubResult) {
+            await db`
+              UPDATE governance_proposals
+              SET github_pr_number = ${githubResult.pr_number},
+                  github_pr_url = ${githubResult.pr_url}
+              WHERE id = ${proposal.id}
+            `;
+            proposal.github_pr_number = githubResult.pr_number;
+            proposal.github_pr_url = githubResult.pr_url;
+          }
+        }
+      } catch (err) {
+        console.error('GitHub PR creation failed (non-blocking):', err);
+      }
+    }
 
     return NextResponse.json({
       proposal,
