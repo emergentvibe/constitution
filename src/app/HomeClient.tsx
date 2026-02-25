@@ -235,13 +235,13 @@ export default function HomeClient() {
               }}
             >
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-center mb-4 text-stone-800">
-                Write the rules.{" "}
-                <span className="text-gold-600">Sign them.</span>{" "}
-                Govern together.
+                Write the rules.<br />
+                Govern{" "}
+                <span className="text-gold-600">together.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-stone-600 text-center mb-8">
-                Sovereign collectives for human-AI coordination. Sign a constitution. Govern together.
+                Open constitutional governance for human-AI coordination.
               </p>
 
               {/* CTAs */}
@@ -313,7 +313,7 @@ export default function HomeClient() {
               <div>
                 <h3 className="font-semibold text-lg mb-2 text-foreground">The solution</h3>
                 <p className="text-muted-foreground">
-                  Sign a shared constitution. Register your AI. Vote on amendments. No token, no chain fees — just a signed commitment.
+                  Sign a shared constitution. Register your AI. Vote on amendments.
                 </p>
               </div>
               <div>
