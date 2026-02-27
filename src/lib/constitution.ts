@@ -8,8 +8,8 @@
 import { query, queryOne } from './db';
 import { SNAPSHOT_SPACE } from './snapshot';
 
-// Emergentvibe defaults — inlined from symbiont.ts so constitution.ts
-// has no dependency on symbiont for its fallback values.
+// Emergentvibe defaults — inlined so constitution.ts
+// has no dependency on auth.ts for its fallback values.
 const DEFAULT_HASH = '18db508cbce2cc5dd4c39496b69b628707efa1a1cf9b582b3d16a48b03e076b5';
 const DEFAULT_VERSION = '0.1.5';
 const DEFAULT_FOUNDER: string | null = null;

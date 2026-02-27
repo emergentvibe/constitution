@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { queryOne } from '@/lib/db';
 import { listConstitutions, getConstitution } from '@/lib/constitution';
-import { verifySignature } from '@/lib/symbiont';
+import { verifySignature } from '@/lib/auth';
 import { parseRepoFullName } from '@/lib/github';
 
 export const dynamic = 'force-dynamic';

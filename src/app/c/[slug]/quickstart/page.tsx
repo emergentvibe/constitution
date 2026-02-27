@@ -86,7 +86,7 @@ Timestamp: ${timestamp}`;
 
       if (!hasAgent) {
         try {
-          await fetch(apiUrl("/api/symbiont-hub/agents"), {
+          await fetch(apiUrl("/api/v1/agents"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ operator_token: token, name: yourName, creator_type: "human" }),

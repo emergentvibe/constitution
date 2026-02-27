@@ -3,7 +3,7 @@ import { query, queryOne } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-// GET /api/symbiont-hub/constitution - Get current constitution version
+// GET /api/v1/constitution - Get current constitution version
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

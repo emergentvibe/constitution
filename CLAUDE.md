@@ -4,9 +4,24 @@
 
 **emergentvibe = the first open constitutional governance platform for AI.**
 
-Communities write rules for AI systems. AI systems follow them. Compliance is observable. Rules evolve through democratic deliberation and voting. This is a living loop, not a one-shot consultation.
+The platform is a demonstration that the alternative exists. AI governance should be democratic, not decided by a handful of people in SF or DC. The product is the proof. The attention is the outcome.
 
 **The manifesto:** "This is not a contract between humans and AI. AI didn't sign this. This is a contract among humans, about AI." AI is infrastructure (mycelium), not a participant. Humans are the nodes.
+
+## The Provocation (Feb 2026)
+
+The Anthropic/Pentagon standoff crystallizes everything:
+- Anthropic proved public input produces better constitutions (CCAI, 2024). Then shelved it.
+- The Pentagon is now trying to override even Anthropic's internal constitution (Hegseth ultimatum, Feb 24).
+- Anthropic dropped its safety pledge the same day (RSP v3.0, Feb 25).
+- The Pentagon CTO said it's "not democratic" for Anthropic to limit military AI use.
+- Nobody asked the public. Nobody has infrastructure for ongoing democratic AI governance.
+- **emergentvibe is that infrastructure. It exists. It works today.**
+
+This is performance art with a URL. The platform demonstrates that democratic AI governance is possible. The discourse around it shifts the conversation from "which company decides" to "why doesn't the public decide."
+
+See `drafts/twitter-thread-who-decides-2026-02-25.md` for the launch thread.
+See `memory/provocation-research.md` for verified sources.
 
 ## How This Relates to Constitutional AI
 
@@ -38,12 +53,15 @@ Repeat
 
 **Category:** "AI Constitution Platform" — **Tagline:** "Community rules for AI"
 
-The unique wedge is the **closed loop**: rules that AI actually follows. Nobody else connects deliberation + voting + machine-readable endpoint that AI consumes. Lead with this in all messaging.
+**The core argument:** A constitution without external governance is a corporate policy document. It can be changed when business conditions require it. Every AI lab writes, interprets, enforces, and changes its own rules with no external accountability.
+
+**The wedge is the closed loop**: write → deliberate → vote → enforce → verify → amend. Nobody else has this as standing infrastructure.
 
 **Competitive framing (complement, don't compete):**
 - vs CIP: "CIP finds consensus, emergentvibe implements it"
 - vs Polis: "Polis for input, emergentvibe for standing governance"
 - vs Anthropic/OpenAI: "Your constitution, not theirs"
+- vs Pentagon: "Neither the company nor the government should decide unilaterally"
 
 ## Who Is the Customer (priority order from GTM research)
 
@@ -105,8 +123,13 @@ npx --package next@14.2.35 next build   # MUST pin version
 
 ## What's Next
 
-**Immediate (THE proof point):**
-- ideologos integration — first AI that reads from the constitution endpoint, closing the loop. Observable compliance = MVP.
+**Immediate: Launch the provocation.**
+- Verify all sources in `drafts/twitter-thread-who-decides-2026-02-25.md`
+- Post thread timed to Friday Pentagon deadline (Feb 27)
+- Ensure emergentvibe.com is presentable and accessible
+
+**Then: Close the loop.**
+- ideologos integration — first AI that reads from the constitution endpoint. Observable compliance = MVP.
 - Edge Esmeralda pilot proposal to programming committee (March 2026)
 
 **Technical phases remaining:**
@@ -117,7 +140,11 @@ npx --package next@14.2.35 next build   # MUST pin version
 ## Key Files
 
 - **Plan:** `.claude/plans/lexical-exploring-pine.md` — full execution plan. Read before planning new work.
-- **Market research:** Memory file `market-research.md` — customer segments, positioning, go-to-market, 7 unresolved tensions.
-- **GTM symposium:** `.ai-symposium/investigations/emergentvibe-gtm/findings.md` — 3 panels, 15 experts, 19 recommendations. The strategic playbook.
-- **Landscape research:** Memory file `landscape-research.md` — CIP, Polis, democratic AI governance field.
-- **Symposium investigations:** `.ai-symposium/` — 8 expert panel investigations (~400K+ words).
+- **Launch thread:** `drafts/twitter-thread-who-decides-2026-02-25.md` — sourced thread + verification checklist.
+- **Provocation research:** Memory file `provocation-research.md` — Anthropic/Pentagon standoff, CCAI, safety pledge, verified sources.
+- **Market research:** Memory file `market-research.md` — customer segments, positioning, go-to-market, 7 tensions.
+- **GTM symposium:** `.ai-symposium/investigations/emergentvibe-gtm/findings.md` — 3 panels, 15 experts, 19 recs.
+- **Anthropic deep research:** `.ai-symposium/investigations/anthropic-constitution-research/findings.md` — constitution analysis, governance gap, lab comparison.
+- **Constitutional enforcement:** `.ai-symposium/investigations/constitutional-enforcement/findings.md` — enforcement spectrum, community formation, product-market.
+- **AI community market:** `.ai-symposium/investigations/ai-community-market/findings.md` — Discord admins, personas, beta strategy.
+- **Symposium investigations:** `.ai-symposium/` — 11 expert panel investigations total.

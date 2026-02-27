@@ -6,7 +6,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { mockQuery, mockQueryOne, resetDbMocks } from '../mocks/db';
 
 // Must import AFTER mock is set up
-import { checkPromotionResolution } from '@/lib/promotions';
+import { checkPromotionResolution, withdrawPromotion, createPromotion, listPromotions } from '@/lib/promotions';
 
 // Helper to build a mock promotion
 function makePromotion(overrides: Record<string, unknown> = {}) {
@@ -200,5 +200,103 @@ describe('checkPromotionResolution', () => {
     );
     expect(updateCalls.length).toBeGreaterThan(0);
     expect(updateCalls[0][1]).toContain('rejected');
+  });
+});
+
+describe('withdrawPromotion', () => {
+  beforeEach(() => resetDbMocks());
+
+  it('allows proposer to withdraw pending promotion', async () => {
+    mockQueryOne.mockResolvedValueOnce(makePromotion({ proposed_by: 'proposer-1' }));
+    mockQuery.mockResolvedValue([]);
+
+    await withdrawPromotion('promo-1', 'proposer-1');
+
+    const updateCalls = mockQuery.mock.calls.filter(
+      (call) => typeof call[0] === 'string' && call[0].includes('UPDATE promotions SET status')
+    );
+    expect(updateCalls.length).toBe(1);
+    expect(updateCalls[0][1]).toContain('withdrawn');
+  });
+
+  it('throws when promotion not found', async () => {
+    mockQueryOne.mockResolvedValueOnce(null);
+    await expect(withdrawPromotion('nonexistent', 'user-1')).rejects.toThrow('Promotion not found');
+  });
+
+  it('throws when promotion is not pending', async () => {
+    mockQueryOne.mockResolvedValueOnce(makePromotion({ status: 'approved' }));
+    await expect(withdrawPromotion('promo-1', 'proposer-1')).rejects.toThrow('Can only withdraw pending');
+  });
+
+  it('throws when non-proposer tries to withdraw', async () => {
+    mockQueryOne.mockResolvedValueOnce(makePromotion({ proposed_by: 'proposer-1' }));
+    await expect(withdrawPromotion('promo-1', 'someone-else')).rejects.toThrow('Only proposer');
+  });
+});
+
+describe('createPromotion', () => {
+  beforeEach(() => resetDbMocks());
+
+  it('throws when proposer not found', async () => {
+    mockQueryOne.mockResolvedValueOnce(null); // proposer lookup
+    await expect(createPromotion('unknown', ['nominee-1'])).rejects.toThrow('Proposer not found');
+  });
+
+  it('throws when nominees not found', async () => {
+    mockQueryOne.mockResolvedValueOnce({ tier: 2, name: 'Alice' }); // proposer
+    mockQuery.mockResolvedValueOnce([]); // nominees lookup — none found
+    await expect(createPromotion('proposer-1', ['nominee-1'])).rejects.toThrow('One or more nominees not found');
+  });
+
+  it('throws when nominee is wrong tier', async () => {
+    mockQueryOne.mockResolvedValueOnce({ tier: 2, name: 'Alice' }); // proposer at tier 2
+    mockQuery.mockResolvedValueOnce([
+      { id: 'nominee-1', tier: 1, name: 'Bob' }, // nominee at tier 1 — mismatch!
+    ]);
+    await expect(createPromotion('proposer-1', ['nominee-1'])).rejects.toThrow('not in tier 2');
+  });
+
+  it('throws when proposer tries to self-nominate', async () => {
+    mockQueryOne
+      .mockResolvedValueOnce({ tier: 2, name: 'Alice' }); // proposer
+    mockQuery
+      .mockResolvedValueOnce([{ id: 'proposer-1', tier: 2, name: 'Alice' }]); // nominee = self
+    // cooldown config lookup
+    mockQueryOne
+      .mockResolvedValueOnce({ value: '7' }) // getConfig('promotion_cooldown_days')
+      .mockResolvedValueOnce(null); // no recent failed promotions
+    await expect(createPromotion('proposer-1', ['proposer-1'])).rejects.toThrow('Cannot nominate yourself');
+  });
+});
+
+describe('listPromotions', () => {
+  beforeEach(() => resetDbMocks());
+
+  it('returns promotions with parsed JSON arrays', async () => {
+    mockQuery.mockResolvedValueOnce([
+      makePromotion({ id: 'promo-1' }),
+      makePromotion({ id: 'promo-2', status: 'approved' }),
+    ]);
+
+    const promos = await listPromotions({});
+    expect(promos).toHaveLength(2);
+    expect(promos[0].id).toBe('promo-1');
+    expect(Array.isArray(promos[0].nominees)).toBe(true);
+  });
+
+  it('returns empty array when no promotions', async () => {
+    mockQuery.mockResolvedValueOnce([]);
+    const promos = await listPromotions({});
+    expect(promos).toEqual([]);
+  });
+
+  it('filters by status', async () => {
+    mockQuery.mockResolvedValueOnce([makePromotion()]);
+
+    await listPromotions({ status: 'pending' });
+    const queryStr = mockQuery.mock.calls[0][0] as string;
+    expect(queryStr).toContain('status');
+    expect(mockQuery.mock.calls[0][1]).toContain('pending');
   });
 });

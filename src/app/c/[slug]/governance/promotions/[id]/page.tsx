@@ -50,8 +50,8 @@ export default function PromotionDetailPageScoped() {
   const [voting, setVoting] = useState(false);
   const [voteReason, setVoteReason] = useState("");
   const [voteError, setVoteError] = useState<string | null>(null);
-  const [agentId, setAgentId] = useState<string | null>(null);
-  const [agentName, setAgentName] = useState<string | null>(null);
+  const [memberId, setMemberId] = useState<string | null>(null);
+  const [memberName, setMemberName] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPromotion();
@@ -60,18 +60,18 @@ export default function PromotionDetailPageScoped() {
 
   useEffect(() => {
     if (walletAddress) {
-      fetch(apiUrl(`/api/symbiont-hub/agents/${walletAddress}`))
+      fetch(apiUrl(`/api/v1/agents/${walletAddress}`))
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           if (data) {
-            setAgentId(data.id);
-            setAgentName(data.name);
+            setMemberId(data.id);
+            setMemberName(data.name);
           }
         })
         .catch(() => {});
     } else {
-      setAgentId(null);
-      setAgentName(null);
+      setMemberId(null);
+      setMemberName(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
@@ -91,14 +91,14 @@ export default function PromotionDetailPageScoped() {
   }
 
   async function castVote(voteFor: boolean) {
-    if (!agentId) return;
+    if (!memberId) return;
     setVoting(true);
     setVoteError(null);
     try {
       const res = await fetch(apiUrl(`/api/promotions/${id}/vote`), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ voter_id: agentId, vote: voteFor, reason: voteReason || undefined }),
+        body: JSON.stringify({ voter_id: memberId, vote: voteFor, reason: voteReason || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to vote");
@@ -207,13 +207,13 @@ export default function PromotionDetailPageScoped() {
                   Connect Wallet
                 </button>
               </div>
-            ) : !agentId ? (
+            ) : !memberId ? (
               <div className="text-center py-4">
-                <p className="text-muted-foreground">No registered agent found for this wallet. You must be a signatory to vote.</p>
+                <p className="text-muted-foreground">No registered member found for this wallet. You must be a signatory to vote.</p>
               </div>
             ) : (
               <>
-                {agentName && <p className="text-sm text-muted-foreground mb-4">Voting as <span className="text-foreground font-medium">{agentName}</span></p>}
+                {memberName && <p className="text-sm text-muted-foreground mb-4">Voting as <span className="text-foreground font-medium">{memberName}</span></p>}
                 {voteError && (
                   <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-600 text-sm mb-4">{voteError}</div>
                 )}

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
-import { CONSTITUTION_VERSION, CONSTITUTION_HASH, BOOTSTRAP_TIER2_LIMIT } from '@/lib/symbiont';
+import { CONSTITUTION_VERSION, CONSTITUTION_HASH, BOOTSTRAP_TIER2_LIMIT } from '@/lib/auth';
 import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
-// GET /api/symbiont-hub/stats - Network statistics
+// GET /api/v1/stats - Network statistics
 export async function GET(request: NextRequest) {
   try {
     let constitution;

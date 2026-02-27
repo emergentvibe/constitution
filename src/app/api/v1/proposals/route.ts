@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 
-// GET /api/symbiont-hub/proposals - List proposals
+// GET /api/v1/proposals - List proposals
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/symbiont-hub/proposals - Create proposal
+// POST /api/v1/proposals - Create proposal
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

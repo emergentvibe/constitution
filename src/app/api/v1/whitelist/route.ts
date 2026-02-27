@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 
-// GET /api/symbiont-hub/whitelist
+// GET /api/v1/whitelist
 // Returns Tier 2+ wallet addresses for Snapshot voting strategy
 export async function GET() {
   try {

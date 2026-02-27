@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
-import { verifyVoteSignature } from '@/lib/symbiont';
+import { verifyVoteSignature } from '@/lib/auth';
 
-// POST /api/symbiont-hub/proposals/[id]/vote - Cast vote
+// POST /api/v1/proposals/[id]/vote - Cast vote
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -1,4 +1,4 @@
-// GET /api/symbiont-hub/snapshot-scores
+// GET /api/v1/snapshot-scores
 // Returns voting power in Snapshot api-v2 format: { address: score }
 // Used as custom voting strategy for Snapshot.org
 

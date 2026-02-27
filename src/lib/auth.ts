@@ -1,6 +1,6 @@
 /**
- * Symbiont Hub Utilities
- * Signature verification, constitution hash, tier logic
+ * Auth & Signing Utilities
+ * EIP-191 signature verification, operator tokens, tier assignment
  */
 
 import { verifyMessage } from 'ethers';

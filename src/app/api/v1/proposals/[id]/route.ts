@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 
-// GET /api/symbiont-hub/proposals/[id] - Get proposal with votes
+// GET /api/v1/proposals/[id] - Get proposal with votes
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

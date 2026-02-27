@@ -59,6 +59,24 @@ describe('canVoteOnProposal', () => {
     const result = await canVoteOnProposal('0xvoter', 'proposal-1');
     expect(result.eligible).toBe(true);
   });
+
+  it('scopes to constitution when constitutionId provided', async () => {
+    mockQueryOne.mockResolvedValueOnce({ id: 'voter-1', tier: 2 });
+    mockQuery.mockResolvedValueOnce([]);
+
+    const result = await canVoteOnProposal('0xvoter', 'proposal-1', 'const-123');
+    expect(result.eligible).toBe(true);
+    // Verify constitution-scoped query was used
+    expect(mockQueryOne.mock.calls[0][1]).toEqual(['0xvoter', 'const-123']);
+  });
+
+  it('lowercases wallet address', async () => {
+    mockQueryOne.mockResolvedValueOnce({ id: 'voter-1', tier: 2 });
+    mockQuery.mockResolvedValueOnce([]);
+
+    await canVoteOnProposal('0xABCDEF', 'proposal-1');
+    expect(mockQueryOne.mock.calls[0][1]![0]).toBe('0xabcdef');
+  });
 });
 
 describe('canVoteOnPromotion', () => {

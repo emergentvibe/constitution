@@ -20,7 +20,7 @@ export function getDb() {
   return sql;
 }
 
-// Helper for parameterized queries (for symbiont-hub)
+// Helper for parameterized queries (for extracted libs)
 export async function query<T = Record<string, unknown>>(text: string, params?: unknown[]): Promise<T[]> {
   const db = getDb();
   // Convert $1, $2 style params to postgres.js style

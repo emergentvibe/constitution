@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSigningMessage, CONSTITUTION_VERSION, CONSTITUTION_HASH } from '@/lib/symbiont';
+import { getSigningMessage, CONSTITUTION_VERSION, CONSTITUTION_HASH } from '@/lib/auth';
 
-// GET /api/symbiont-hub/signing-message - Get the message to sign
+// GET /api/v1/signing-message - Get the message to sign
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const name = searchParams.get('name');
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   if (!name || !wallet) {
     return NextResponse.json({
       error: 'Provide ?name=... and ?wallet=... query params',
-      example: '/api/symbiont-hub/signing-message?name=my-agent&wallet=0x...'
+      example: '/api/v1/signing-message?name=my-agent&wallet=0x...'
     }, { status: 400 });
   }
 

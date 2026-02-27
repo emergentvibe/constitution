@@ -11,9 +11,10 @@ import {
   verifyProposalSignature,
   verifyOperatorToken,
   verifyOperatorTokenFlexible,
+  determineInitialTier,
   CONSTITUTION_HASH,
   CONSTITUTION_VERSION,
-} from '@/lib/symbiont';
+} from '@/lib/auth';
 
 describe('verifySignature', () => {
   it('accepts a valid signature from the correct wallet', async () => {
@@ -298,5 +299,138 @@ Timestamp: ${timestamp}`;
     const result = verifyOperatorTokenFlexible(token, 'test');
     expect(result.valid).toBe(false);
     expect(result.error).toContain('missing required fields');
+  });
+
+  it('accepts generic multi-constitution format with constitutionConfig', async () => {
+    const agentName = 'my-agent';
+    const operatorName = 'Test User';
+    const timestamp = new Date().toISOString();
+    const expires = new Date(Date.now() + 3600_000).toISOString();
+
+    const constitutionConfig = {
+      name: 'My Community Constitution',
+      version: '1.0.0',
+      content_hash: 'abc123hash',
+    };
+
+    const message = `I, ${operatorName}, sign ${constitutionConfig.name} (v${constitutionConfig.version}).
+
+I commit to the principles set out in this constitution.
+
+I authorize "${agentName}" as my AI agent in this network.
+
+Constitution hash: ${constitutionConfig.content_hash}
+Operator: ${operatorWallet.address}
+Timestamp: ${timestamp}`;
+
+    const signature = await operatorWallet.signMessage(message);
+    const token = btoa(JSON.stringify({
+      agent: agentName,
+      operator: operatorWallet.address,
+      operatorName,
+      signature,
+      timestamp,
+      expires,
+    }));
+
+    const result = verifyOperatorTokenFlexible(token, agentName, constitutionConfig);
+    expect(result.valid).toBe(true);
+    expect(result.operatorAddress).toBe(operatorWallet.address);
+  });
+
+  it('accepts generic human-only multi-constitution format', async () => {
+    const operatorName = 'Test User';
+    const timestamp = new Date().toISOString();
+    const expires = new Date(Date.now() + 3600_000).toISOString();
+
+    const constitutionConfig = {
+      name: 'My Community Constitution',
+      version: '2.0.0',
+      content_hash: 'def456hash',
+    };
+
+    const message = `I, ${operatorName}, sign ${constitutionConfig.name} (v${constitutionConfig.version}).
+
+I commit to the principles set out in this constitution.
+
+Constitution hash: ${constitutionConfig.content_hash}
+Wallet: ${operatorWallet.address}
+Timestamp: ${timestamp}`;
+
+    const signature = await operatorWallet.signMessage(message);
+    const token = btoa(JSON.stringify({
+      agent: null,
+      operator: operatorWallet.address,
+      operatorName,
+      signature,
+      timestamp,
+      expires,
+    }));
+
+    const result = verifyOperatorTokenFlexible(token, 'any-name', constitutionConfig);
+    expect(result.valid).toBe(true);
+    expect(result.operatorAddress).toBe(operatorWallet.address);
+  });
+
+  it('rejects agent name mismatch', async () => {
+    const timestamp = new Date().toISOString();
+    const expires = new Date(Date.now() + 3600_000).toISOString();
+
+    const message = `I authorize "agent-a" to join the emergentvibe constitutional network.
+
+Agent: agent-a
+Description: agent-a
+Operator: ${operatorWallet.address}
+Timestamp: ${timestamp}
+
+By signing this message, I confirm:
+1. I am the operator responsible for this agent
+2. I have read the constitution at emergentvibe.com/constitution
+3. I authorize this agent to register and participate in governance`;
+
+    const signature = await operatorWallet.signMessage(message);
+    const token = btoa(JSON.stringify({
+      agent: 'agent-a',
+      operator: operatorWallet.address,
+      signature,
+      timestamp,
+      expires,
+    }));
+
+    const result = verifyOperatorTokenFlexible(token, 'agent-b');
+    expect(result.valid).toBe(false);
+    expect(result.error).toContain('Token is for agent');
+  });
+});
+
+describe('determineInitialTier', () => {
+  it('assigns Tier 2 when under bootstrap limit', async () => {
+    const result = await determineInitialTier('0xsomeone', 3);
+    expect(result.tier).toBe(2);
+    expect(result.reason).toBe('bootstrap');
+  });
+
+  it('assigns Tier 1 when at or over bootstrap limit', async () => {
+    const result = await determineInitialTier('0xsomeone', 10);
+    expect(result.tier).toBe(1);
+    expect(result.reason).toBe('default');
+  });
+
+  it('assigns Tier 1 when well over bootstrap limit', async () => {
+    const result = await determineInitialTier('0xsomeone', 100);
+    expect(result.tier).toBe(1);
+    expect(result.reason).toBe('default');
+  });
+
+  it('assigns Tier 2 at count 0 (first member)', async () => {
+    const result = await determineInitialTier('0xfirst', 0);
+    expect(result.tier).toBe(2);
+    expect(result.reason).toBe('bootstrap');
+  });
+
+  it('assigns Tier 2 at count 9 (last bootstrap slot)', async () => {
+    const result = await determineInitialTier('0xlast', 9);
+    expect(result.tier).toBe(2);
+    expect(result.reason).toBe('bootstrap');
   });
 });

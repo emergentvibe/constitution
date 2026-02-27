@@ -38,7 +38,7 @@ export default function RegistryScoped() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(apiUrl("/api/symbiont-hub/agents"));
+        const res = await fetch(apiUrl("/api/v1/agents"));
         if (!res.ok) throw new Error("Failed to fetch registry");
         const data = await res.json();
         setAgents(data.agents || []);

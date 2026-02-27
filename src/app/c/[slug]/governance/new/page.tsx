@@ -42,16 +42,10 @@ export default function NewProposalPageScoped() {
 
   useEffect(() => {
     if (!walletAddress) { setUserTier(null); return; }
-    fetch(apiUrl("/api/symbiont-hub/agents", { wallet: walletAddress }))
+    fetch(apiUrl(`/api/v1/agents/${walletAddress}`))
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        const agents = data?.agents || [];
-        const match = agents.find(
-          (a: { wallet_address?: string; operator_address?: string }) =>
-            a.wallet_address?.toLowerCase() === walletAddress.toLowerCase() ||
-            a.operator_address?.toLowerCase() === walletAddress.toLowerCase()
-        );
-        setUserTier(match?.tier ?? null);
+        setUserTier(data?.tier ?? null);
       })
       .catch(() => setUserTier(null));
   }, [walletAddress, apiUrl]);

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@/lib/db';
 import { verifyMessage } from 'ethers';
 
-// GET /api/symbiont-hub/agents/[id] - Get agent or member by ID or wallet address
+// GET /api/v1/agents/[id] - Get agent or member by ID or wallet address
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -49,7 +49,7 @@ export async function GET(
   }
 }
 
-// PATCH /api/symbiont-hub/agents/[id] - Update agent
+// PATCH /api/v1/agents/[id] - Update agent
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -141,7 +141,7 @@ export async function PATCH(
   }
 }
 
-// DELETE /api/symbiont-hub/agents/[id] - Unregister agent (exit)
+// DELETE /api/v1/agents/[id] - Unregister agent (exit)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

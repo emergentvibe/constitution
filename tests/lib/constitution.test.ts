@@ -4,7 +4,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mockQuery, mockQueryOne, resetDbMocks } from '../mocks/db';
 
-import { getDefaultConstitution, getConstitution, resolveConstitution, listConstitutions, ConstitutionNotFoundError } from '@/lib/constitution';
+import { getDefaultConstitution, getConstitution, getConstitutionFull, resolveConstitution, listConstitutions, ConstitutionNotFoundError } from '@/lib/constitution';
 
 describe('getDefaultConstitution', () => {
   beforeEach(() => {
@@ -230,5 +230,73 @@ describe('listConstitutions', () => {
 
     const result = await listConstitutions();
     expect(result).toHaveLength(0);
+  });
+
+  it('handles member_count as zero string', async () => {
+    mockQuery.mockResolvedValueOnce([
+      {
+        id: 'abc',
+        slug: 'test',
+        name: 'Test',
+        content_hash: 'hash',
+        version: '1.0',
+        snapshot_space: null,
+        metadata: {},
+        is_default: false,
+        is_active: true,
+        member_count: '0',
+        proposal_count: '0',
+      },
+    ]);
+
+    const result = await listConstitutions();
+    expect(result[0].member_count).toBe(0);
+    expect(result[0].proposal_count).toBe(0);
+  });
+});
+
+describe('getConstitutionFull', () => {
+  beforeEach(() => resetDbMocks());
+
+  it('returns full DB row by slug', async () => {
+    const fullRow = {
+      id: 'abc-123',
+      slug: 'test',
+      name: 'Test',
+      content: '# Test Constitution',
+      content_hash: 'hash',
+      version: '1.0',
+      snapshot_space: null,
+      metadata: {},
+      github_url: 'https://github.com/test/test',
+      github_branch: 'main',
+    };
+    mockQueryOne.mockResolvedValueOnce(fullRow);
+
+    const result = await getConstitutionFull('test');
+    expect(result).not.toBeNull();
+    expect(result!.content).toBe('# Test Constitution');
+    expect(result!.github_url).toBe('https://github.com/test/test');
+  });
+
+  it('returns full DB row by UUID', async () => {
+    const uuid = '123e4567-e89b-12d3-a456-426614174000';
+    mockQueryOne.mockResolvedValueOnce({ id: uuid, slug: 'test', content: '# Test' });
+
+    await getConstitutionFull(uuid);
+    const queryArg = mockQueryOne.mock.calls[0][0] as string;
+    expect(queryArg).toContain('id');
+  });
+
+  it('returns null when not found', async () => {
+    mockQueryOne.mockResolvedValueOnce(null);
+    const result = await getConstitutionFull('nonexistent');
+    expect(result).toBeNull();
+  });
+
+  it('returns null when table missing', async () => {
+    mockQueryOne.mockRejectedValueOnce(new Error('relation "constitutions" does not exist'));
+    const result = await getConstitutionFull('test');
+    expect(result).toBeNull();
   });
 });

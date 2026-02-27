@@ -31,8 +31,8 @@ function NewPromotionForm() {
   const [members, setMembers] = useState<Member[]>([]);
   const [selectedNominees, setSelectedNominees] = useState<string[]>([]);
   const [rationale, setRationale] = useState("");
-  const [proposerId, setProposerId] = useState("");
-  const [proposerName, setProposerName] = useState<string | null>(null);
+  const [memberId, setMemberId] = useState("");
+  const [memberName, setMemberName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,18 +44,18 @@ function NewPromotionForm() {
 
   useEffect(() => {
     if (walletAddress) {
-      fetch(apiUrl(`/api/symbiont-hub/agents/${walletAddress}`))
+      fetch(apiUrl(`/api/v1/agents/${walletAddress}`))
         .then(res => res.ok ? res.json() : null)
         .then(data => {
           if (data) {
-            setProposerId(data.id);
-            setProposerName(data.name);
+            setMemberId(data.id);
+            setMemberName(data.name);
           }
         })
         .catch(() => {});
     } else {
-      setProposerId("");
-      setProposerName(null);
+      setMemberId("");
+      setMemberName(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
@@ -94,9 +94,9 @@ function NewPromotionForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!proposerId) { setError("Please enter your agent ID"); return; }
+    if (!memberId) { setError("Please connect your wallet"); return; }
     if (selectedNominees.length === 0) { setError("Please select at least one nominee"); return; }
-    if (selectedNominees.includes(proposerId)) { setError("You cannot nominate yourself"); return; }
+    if (selectedNominees.includes(memberId)) { setError("You cannot nominate yourself"); return; }
 
     setSubmitting(true);
     setError(null);
@@ -105,7 +105,7 @@ function NewPromotionForm() {
       const res = await fetch(apiUrl("/api/promotions"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proposer_id: proposerId, nominees: selectedNominees, rationale: rationale || undefined }),
+        body: JSON.stringify({ proposer_id: memberId, nominees: selectedNominees, rationale: rationale || undefined }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to create promotion");
@@ -143,13 +143,13 @@ function NewPromotionForm() {
                   Connect Wallet
                 </button>
               </div>
-            ) : !proposerId ? (
+            ) : !memberId ? (
               <div className="p-4 rounded-lg border border-border bg-muted/20">
-                <p className="text-muted-foreground">No registered agent found for this wallet. You must be a signatory to propose.</p>
+                <p className="text-muted-foreground">No registered member found for this wallet. You must be a signatory to propose.</p>
               </div>
             ) : (
               <div className="p-3 rounded-lg border border-accent/30 bg-accent/5">
-                <span className="text-sm">Proposing as <span className="font-medium">{proposerName || proposerId}</span></span>
+                <span className="text-sm">Proposing as <span className="font-medium">{memberName || memberId}</span></span>
               </div>
             )}
             <p className="text-xs text-muted-foreground mt-1">You must be a member of the tier you&apos;re proposing from</p>

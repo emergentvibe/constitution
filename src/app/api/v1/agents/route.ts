@@ -6,7 +6,7 @@ import {
   determineInitialTier,
   CONSTITUTION_VERSION,
   CONSTITUTION_HASH
-} from '@/lib/symbiont';
+} from '@/lib/auth';
 import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
 
 interface Agent {
@@ -49,7 +49,7 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
-// GET /api/symbiont-hub/agents - List all agents
+// GET /api/v1/agents - List all agents
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/symbiont-hub/agents - Register a new agent
+// POST /api/v1/agents - Register a new agent
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
@@ -239,7 +239,7 @@ export async function POST(request: NextRequest) {
         // ── Human-only registration → members table ──
         const existingMember = await queryOne<{ id: string; tier: number }>(
           'SELECT id, tier FROM members WHERE wallet_address = $1 AND constitution_id = $2',
-          [agentWalletAddress, constitution.id]
+          [agentWalletAddress.toLowerCase(), constitution.id]
         );
 
         if (existingMember) {
@@ -276,7 +276,7 @@ export async function POST(request: NextRequest) {
           ) VALUES ($1, $2, $3, $4, $5, $6)
           RETURNING id`,
           [
-            agentWalletAddress,
+            agentWalletAddress.toLowerCase(),
             name,
             constitution.id,
             signature || 'operator_authorized',
@@ -301,7 +301,7 @@ export async function POST(request: NextRequest) {
         let operatorMemberId: string;
         const existingOperatorMember = await queryOne<{ id: string; tier: number }>(
           'SELECT id, tier FROM members WHERE wallet_address = $1 AND constitution_id = $2',
-          [operatorAddress!, constitution.id]
+          [operatorAddress!.toLowerCase(), constitution.id]
         );
 
         if (existingOperatorMember) {
@@ -326,7 +326,7 @@ export async function POST(request: NextRequest) {
             ) VALUES ($1, $2, $3, $4, $5)
             RETURNING id`,
             [
-              operatorAddress!,
+              operatorAddress!.toLowerCase(),
               name, // Use the provided name for the operator
               constitution.id,
               'operator_authorized',
@@ -340,7 +340,7 @@ export async function POST(request: NextRequest) {
         step = 'checking_existing_agent';
         const existingAgent = await queryOne<{ id: string; tier: number }>(
           'SELECT id, tier FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
-          [agentWalletAddress, constitution.id]
+          [agentWalletAddress.toLowerCase(), constitution.id]
         );
 
         if (existingAgent) {
@@ -367,7 +367,7 @@ export async function POST(request: NextRequest) {
           ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
           RETURNING id`,
           [
-            agentWalletAddress,
+            agentWalletAddress.toLowerCase(),
             name,
             agentMission || null,
             CONSTITUTION_VERSION,

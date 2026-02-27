@@ -3,9 +3,9 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
-import { queryOne } from '@/lib/db';
 import { createVoteMessage } from '@/lib/snapshot';
 import { resolveConstitution, ConstitutionNotFoundError } from '@/lib/constitution';
+import { canVoteOnProposal } from '@/lib/governance';
 
 export async function POST(
   request: NextRequest,
@@ -30,83 +30,44 @@ export async function POST(
       throw err;
     }
 
-    // Check voter exists and has sufficient tier (scoped to constitution)
-    const voter = await queryOne<{ id: string; tier: number; operator_address: string | null }>(
-      'SELECT id, tier, operator_address FROM agents WHERE wallet_address = $1 AND constitution_id = $2',
-      [wallet_address.toLowerCase(), constitution.id]
-    );
-
-    if (!voter) {
-      return NextResponse.json({ error: 'Not a registered agent' }, { status: 403 });
+    // Check voter eligibility (queries members table, checks tier + dedup)
+    const eligibility = await canVoteOnProposal(wallet_address, id, constitution.id);
+    if (!eligibility.eligible) {
+      return NextResponse.json({ error: eligibility.error }, { status: eligibility.status });
     }
-
-    if (voter.tier < 2) {
-      return NextResponse.json(
-        { error: 'Only Tier 2+ agents can vote on governance proposals', your_tier: voter.tier },
-        { status: 403 }
-      );
-    }
+    const voter = eligibility.voter;
 
     // Validate choice
     if (typeof choice !== 'number' || choice < 1) {
-      return NextResponse.json({ 
-        error: 'Invalid choice. Must be a positive integer (1-indexed)' 
+      return NextResponse.json({
+        error: 'Invalid choice. Must be a positive integer (1-indexed)'
       }, { status: 400 });
     }
-    
+
     const db = getDb();
-    
+
     // Get the proposal
     const [proposal] = await db`
       SELECT * FROM governance_proposals WHERE id = ${id}::uuid
     `;
-    
+
     if (!proposal) {
       return NextResponse.json({ error: 'Proposal not found' }, { status: 404 });
     }
-    
+
     // Check proposal is active
     if (proposal.status !== 'active') {
-      return NextResponse.json({ 
-        error: 'Can only vote on active proposals' 
-      }, { status: 400 });
-    }
-    
-    // Check choice is valid for this proposal
-    const choices = proposal.choices || ['For', 'Against', 'Abstain'];
-    if (choice > choices.length) {
-      return NextResponse.json({ 
-        error: `Invalid choice. Must be between 1 and ${choices.length}` 
-      }, { status: 400 });
-    }
-    
-    // Check if already voted
-    const [existingVote] = await db`
-      SELECT id FROM governance_votes 
-      WHERE proposal_id = ${id}::uuid AND wallet_address = ${wallet_address.toLowerCase()}
-    `;
-    
-    if (existingVote) {
       return NextResponse.json({
-        error: 'You have already voted on this proposal'
+        error: 'Can only vote on active proposals'
       }, { status: 400 });
     }
 
-    // Check operator-level dedup: if this agent has an operator, check if any
-    // other agent with the same operator has already voted on this proposal
-    if (voter.operator_address) {
-      const [operatorVote] = await db`
-        SELECT gv.id FROM governance_votes gv
-        JOIN agents a ON a.wallet_address = gv.wallet_address
-        WHERE gv.proposal_id = ${id}::uuid
-          AND a.operator_address = ${voter.operator_address.toLowerCase()}
-          AND a.operator_address IS NOT NULL
-      `;
-      if (operatorVote) {
-        return NextResponse.json({
-          error: 'Your operator has already voted on this proposal via another agent'
-        }, { status: 400 });
-      }
+    // Check choice is valid for this proposal
+    const choices = proposal.choices || ['For', 'Against', 'Abstain'];
+    if (choice > choices.length) {
+      return NextResponse.json({
+        error: `Invalid choice. Must be between 1 and ${choices.length}`
+      }, { status: 400 });
     }
 
     // Record vote
