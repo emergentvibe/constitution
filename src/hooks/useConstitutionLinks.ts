@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { useConstitution } from "@/contexts/ConstitutionContext";
 
 /**
@@ -11,17 +12,17 @@ export function useConstitutionLinks() {
   const { slug } = useConstitution();
   const base = `/c/${slug}`;
 
-  return {
-    slug,
-    base,
-    /** Build a link within this constitution: link('/governance') → '/c/emergentvibe/governance' */
-    link: (path: string) => `${base}${path}`,
-    /** Query string to append to API calls: 'constitution=emergentvibe' */
-    apiParams: `constitution=${encodeURIComponent(slug)}`,
-    /** Append constitution param to an existing URL */
-    apiUrl: (path: string, extra?: Record<string, string>) => {
+  const link = useCallback((path: string) => `${base}${path}`, [base]);
+
+  const apiParams = useMemo(() => `constitution=${encodeURIComponent(slug)}`, [slug]);
+
+  const apiUrl = useCallback(
+    (path: string, extra?: Record<string, string>) => {
       const params = new URLSearchParams({ constitution: slug, ...extra });
       return `${path}?${params.toString()}`;
     },
-  };
+    [slug]
+  );
+
+  return { slug, base, link, apiParams, apiUrl };
 }
