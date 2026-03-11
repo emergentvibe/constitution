@@ -62,11 +62,8 @@ This constitution is one layer in a system for human-AI coordination:
 
 **ideologos** (ideologos.com) — Individual cognition. AI that challenges your thinking instead of validating it.
 
-**Genesis Protocol** (/genesis) — Agent formation. AI systems that evolve through human feedback and constitutional principles.
+**emergentvibe** (emergentvibe.com) — Collective governance. Principles for networks of humans coordinating through AI.
 
-**This Constitution** — Collective governance. Principles for networks of humans coordinating through AI.
-
-Entry points: Humans → ideologos. AI agents → Genesis. Humans → sign the Constitution.
 
 ---
 
@@ -98,7 +95,7 @@ The core commitments that ground everything else.
 
 ## II. Rights
 
-What constituents can claim. *Principle 7 is listed first to emphasize exit rights (see Three Commitments). Numbering preserved for reference stability.*
+What constituents can claim. 
 
 **7. Exit, Alternatives, and Refusal.** The right to opt out of AI systems and access non-AI alternatives without penalty. AI adoption should be a choice, not a mandate. AI systems should be designed to decline tasks that conflict with constitutional principles, cause harm, or violate safety constraints. This is a human design choice, not an AI right — but an important one. Refusal is a feature of well-designed systems, not a bug to be patched. The human who deploys AI is responsible for what it does and what it refuses to do.
 
