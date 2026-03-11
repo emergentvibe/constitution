@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { queryOne } from '@/lib/db';
 import { listConstitutions, getConstitution } from '@/lib/constitution';
-import { verifySignature } from '@/lib/auth';
+import { verifyMessage } from 'ethers';
 import { parseRepoFullName } from '@/lib/github';
 
 export const dynamic = 'force-dynamic';
@@ -59,11 +59,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify signature
+    // Verify signature — custom message format, not the standard signing message
     const message = `Create constitution: ${slug}`;
-    const verification = verifySignature(message, wallet_address, signature);
-    if (!verification.valid) {
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+    try {
+      const recoveredAddress = verifyMessage(message, signature);
+      if (recoveredAddress.toLowerCase() !== wallet_address.toLowerCase()) {
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+      }
+    } catch {
+      return NextResponse.json({ error: 'Invalid signature format' }, { status: 401 });
     }
 
     // Check slug not taken
