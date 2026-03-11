@@ -84,16 +84,27 @@ Timestamp: ${timestamp}`;
       );
       setAuthToken(token);
 
-      if (!hasAgent) {
-        try {
-          await fetch(apiUrl("/api/v1/agents"), {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ operator_token: token, name: yourName, creator_type: "human" }),
-          });
-        } catch (_regErr) {
-          setRegistrationWarning("Signed successfully, but auto-registration failed. Your agent can register later via the API.");
+      // Auto-register: human-only or human+agent
+      try {
+        const regBody: Record<string, string> = {
+          operator_token: token,
+          name: hasAgent ? agentName : yourName,
+          constitution: constitution.slug,
+        };
+        if (hasAgent && agentMission) {
+          regBody.description = agentMission;
         }
+        const regRes = await fetch(apiUrl("/api/v1/agents"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(regBody),
+        });
+        if (!regRes.ok) {
+          const regData = await regRes.json().catch(() => ({}));
+          setRegistrationWarning(regData.error || "Signed successfully, but registration failed.");
+        }
+      } catch (_regErr) {
+        setRegistrationWarning("Signed successfully, but auto-registration failed.");
       }
 
       setStep("complete");

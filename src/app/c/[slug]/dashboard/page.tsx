@@ -10,10 +10,8 @@ interface DashboardData {
     id: string;
     name: string;
     wallet_address: string;
-    operator_address: string | null;
     tier: number;
     registered_at: string;
-    mission: string | null;
   };
   activity: {
     governance_votes: number;
@@ -72,7 +70,7 @@ export default function DashboardPage() {
 
     fetch(apiUrl("/api/dashboard", { wallet: walletAddress }))
       .then((r) => {
-        if (!r.ok) throw new Error(r.status === 404 ? "No agent found for this wallet. Sign the constitution first." : "Failed to load dashboard");
+        if (!r.ok) throw new Error(r.status === 404 ? "No member found for this wallet. Sign the constitution first." : "Failed to load dashboard");
         return r.json();
       })
       .then(setData)
@@ -123,10 +121,8 @@ export default function DashboardPage() {
             <h1 className="text-2xl font-bold">{identity.name}</h1>
             <span className={`px-2 py-0.5 text-xs rounded-full ${tierColor(identity.tier)}`}>{tierLabel(identity.tier)}</span>
           </div>
-          {identity.mission && <p className="text-muted-foreground text-sm mb-3 italic">&ldquo;{identity.mission}&rdquo;</p>}
           <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-            {identity.operator_address && <span className="font-mono">Operator: {truncate(identity.operator_address)}</span>}
-            <span className="font-mono">Agent: {truncate(identity.wallet_address)}</span>
+            <span className="font-mono">Wallet: {truncate(identity.wallet_address)}</span>
             <span>Member since {new Date(identity.registered_at).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}</span>
           </div>
         </div>
